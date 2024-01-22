@@ -1,0 +1,24 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td class="text-center">
+        <a (click)="removeUser(user)"
+          ><i class="bi bi-trash" style="color: red; font-size: 18px"></i
+        ></a>
+      </td>
+      <td>{{ user.id }}</td>
+      <td>{{ user.name }}</td>
+      <td>
+        <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

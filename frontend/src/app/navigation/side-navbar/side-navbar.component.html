@@ -1,0 +1,76 @@
+<div class="l-navbar show">
+  <nav class="sidebar">
+    <div class="nav_list">
+      <!-- Home menu -->
+      <a href="" class="nav_link active">
+        <span class="nav_name">Home</span>
+      </a>
+
+      <!-- Courses menu -->
+      <a
+        class="nav_link submenu"
+        data-bs-toggle="collapse"
+        href="#coursesCollapse"
+        role="button"
+        aria-expanded="false"
+        aria-controls="coursesCollapse"
+        (click)="rotateChevron($event.currentTarget)"
+      >
+        <span class="nav_name"
+          >Courses
+          <i
+            class="bi bi-chevron-right"
+            style="position: absolute; right: 15px"
+          ></i
+        ></span>
+      </a>
+      <!-- Courses submenu -->
+      <div class="collapse" id="coursesCollapse">
+        <div class="submenu-items">
+          <a class="nav_link submenu-item" href="" class="nav_link">
+            <span class="nav_name">Breakfast</span>
+          </a>
+          <a class="nav_link submenu-item" href="" class="nav_link">
+            <span class="nav_name">Lunch & Dinner</span>
+          </a>
+          <a class="nav_link submenu-item" href="" class="nav_link">
+            <span class="nav_name">Dessert</span>
+          </a>
+          <a class="nav_link submenu-item" href="" class="nav_link">
+            <span class="nav_name">Snacks</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Cuisine menu -->
+      <a
+        class="nav_link submenu"
+        data-bs-toggle="collapse"
+        href="#cuisinesCollapse"
+        role="button"
+        aria-expanded="false"
+        aria-controls="cuisinesCollapse"
+        (click)="rotateChevron($event.currentTarget)"
+      >
+        <span class="nav_name"
+          >Cuisines
+          <i
+            class="bi bi-chevron-right"
+            style="position: absolute; right: 15px"
+          ></i
+        ></span>
+      </a>
+      <!-- Cuisine submenu -->
+      <div class="collapse" id="cuisinesCollapse">
+        <div class="submenu-items">
+          <a class="nav_link submenu-item" href="" class="nav_link">
+            <span class="nav_name">American</span>
+          </a>
+          <a class="nav_link submenu-item" href="" class="nav_link">
+            <span class="nav_name">Mexican</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>

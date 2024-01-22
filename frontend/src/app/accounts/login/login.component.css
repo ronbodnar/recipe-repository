@@ -1,0 +1,56 @@
+a {
+    color: var(--green);
+    transition: 0.3s all ease-in-out;
+  }
+  
+  a:hover {
+    opacity: 0.7;
+  }
+  
+  h1 {
+    font-size: 2em;
+    text-align: center;
+  }
+  
+  input {
+    width: 100%;
+    height: 2em;
+    border: none;
+    border-bottom: 1px solid var(--dark-bg);
+    opacity: 0.7;
+    background-color: inherit;
+    transition: 0.3s opacity ease-in-out;
+  }
+  
+  input:focus {
+    font-weight: 500;
+    box-shadow: none;
+    outline: none;
+    border: none;
+    opacity: 1;
+    border-bottom: 2px solid var(--dark-bg);
+    background-color: inherit;
+  }
+  
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100dvh - 100px);
+  }
+  
+  .form-signin {
+    width: 100%;
+    max-width: 350px;
+    padding: 15px;
+    margin: 0 auto;
+  }
+  
+  .form-control {
+    border-radius: 0;
+  }
+  
+  .login-form {
+      width: 100%;
+  }
+  
