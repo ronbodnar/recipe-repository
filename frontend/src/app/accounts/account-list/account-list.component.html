@@ -3,7 +3,10 @@
     <tr>
       <th scope="col"></th>
       <th scope="col">#</th>
-      <th scope="col">Name</th>
+      <th scope="col">Username</th>
+      <th scope="col">Display Name</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
       <th scope="col">Email</th>
     </tr>
   </thead>
@@ -15,7 +18,10 @@
         ></a>
       </td>
       <td>{{ user.id }}</td>
-      <td>{{ user.name }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.displayName }}</td>
+      <td>{{ user.firstName }}</td>
+      <td>{{ user.lastName }}</td>
       <td>
         <a href="mailto:{{ user.email }}">{{ user.email }}</a>
       </td>

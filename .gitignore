@@ -1,5 +1,7 @@
-# Front-end gitignore
+.git/
+.idea/
 
+### FRONT-END ###
 # Compiled output
 frontend/dist
 frontend/tmp
@@ -43,9 +45,7 @@ frontend/Thumbs.db
 
 frontend/TODO
 
-
-
-# Back-end gitignore
+### BACK-END ###
 backend/HELP.md
 backend/target/
 backend/!.mvn/wrapper/maven-wrapper.jar
