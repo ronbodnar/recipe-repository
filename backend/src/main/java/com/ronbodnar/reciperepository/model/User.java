@@ -10,7 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Account {
+@Table(name="'user'")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,11 +25,10 @@ public class Account {
     private String firstName;
     private String lastName;
 
-    //TODO: password encryption
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    public Account(String username, String displayName, String firstName, String lastName, String email, String password) {
+    public User(String username, String displayName, String firstName, String lastName, String email, String password) {
         this.username = username;
         this.displayName = displayName;
         this.firstName = firstName;
@@ -39,7 +39,7 @@ public class Account {
 
     @Override
     public String toString() {
-        return String.format("Account(id=%s, username=%s, displayName=%s, firstName=%s, lastName=%s, email=%s)",
+        return String.format("User(id=%s, username=%s, displayName=%s, firstName=%s, lastName=%s, email=%s)",
                 this.id, this.username, this.displayName, this.firstName, this.lastName, this.email);
     }
 

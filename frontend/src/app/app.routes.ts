@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { UserListComponent } from './accounts/account-list/account-list.component';
-import { LoginComponent } from './accounts/login/login.component';
-import { CreateAccountComponent } from './accounts/create-account/create-account.component';
+import { UserListComponent } from './users/user-list/user-list.component';
+import { LoginComponent } from './users/login/login.component';
+import { CreateAccountComponent } from './users/register/register.component';
 
 export const routes: Routes = [
   {
@@ -9,11 +9,11 @@ export const routes: Routes = [
     component: UserListComponent,
   },
   {
-    path: 'account/login',
+    path: 'users/login',
     component: LoginComponent,
   },
   {
-    path: 'account/create',
+    path: 'users/register',
     component: CreateAccountComponent,
   },
 ];

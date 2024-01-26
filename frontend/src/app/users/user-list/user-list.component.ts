@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from "@angular/common";
-import { User } from "../account";
-import { UserService } from "../account.service";
+import { User } from "../user";
+import { UserService } from "../user.service";
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './account-list.component.html',
-  styleUrl: './account-list.component.css'
+  templateUrl: './user-list.component.html',
+  styleUrl: './user-list.component.css'
 })
 export class UserListComponent {
   users!: User[];

@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { User } from '../account';
-import { UserService } from '../account.service';
+import { RouterLink } from '@angular/router';
+import { User } from '../user';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
+import { AuthenticationService } from '../../authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -16,10 +16,8 @@ export class LoginComponent {
   user!: User;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private userService: UserService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private authService: AuthenticationService,
   ) {
     this.user = new User();
   }
@@ -30,10 +28,7 @@ export class LoginComponent {
   });
 
   onSubmit() {
-    this.userService.save(this.user).subscribe((result) => this.gotoUserList());
-  }
-
-  gotoUserList() {
-    this.router.navigate(['/users']);
+    let response = this.authService.authenticate(this.loginForm.value.username!, this.loginForm.value.password!);
+    console.log(response.forEach(element => console.log(element)));
   }
 }
