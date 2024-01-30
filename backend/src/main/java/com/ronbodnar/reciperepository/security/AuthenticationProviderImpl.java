@@ -1,0 +1,40 @@
+package com.ronbodnar.reciperepository.security;
+
+import com.ronbodnar.reciperepository.model.User;
+import com.ronbodnar.reciperepository.repository.UserRepository;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+
+@Component
+public class AuthenticationProviderImpl implements AuthenticationProvider {
+
+    private final UserRepository userRepository;
+
+    public AuthenticationProviderImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        String name = authentication.getName();
+        String password = authentication.getCredentials().toString();
+
+        User user = userRepository.findByUsername(name);
+
+        if (user != null && user.getPassword().equals(password)) {
+            return new UsernamePasswordAuthenticationToken(name, password, new ArrayList<>());
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+    }
+}

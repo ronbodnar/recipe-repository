@@ -28,7 +28,6 @@ export class LoginComponent {
   });
 
   onSubmit() {
-    let response = this.authService.authenticate(this.loginForm.value.username!, this.loginForm.value.password!);
-    console.log(response.forEach(element => console.log(element)));
+    this.authService.authenticate(this.loginForm.value.username!, this.loginForm.value.password!);
   }
 }

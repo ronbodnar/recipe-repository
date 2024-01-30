@@ -6,11 +6,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name="'user'")
+@Table(name="users",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "username"),
+                @UniqueConstraint(columnNames = "email")
+        })
 public class User {
 
     @Id
@@ -39,8 +46,8 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("User(id=%s, username=%s, displayName=%s, firstName=%s, lastName=%s, email=%s)",
-                this.id, this.username, this.displayName, this.firstName, this.lastName, this.email);
+        return String.format("User(id=%s, username=%s, displayName=%s, firstName=%s, lastName=%s, email=%s, password=%s)",
+                this.id, this.username, this.displayName, this.firstName, this.lastName, this.email, this.password);
     }
 
 }

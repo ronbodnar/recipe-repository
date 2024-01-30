@@ -79,3 +79,5 @@ backend/!**/src/test/**/build/
 
 ### VS Code ###
 backend/.vscode/
+
+backend/src/main/resources/application.properties
