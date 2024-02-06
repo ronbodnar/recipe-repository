@@ -81,3 +81,5 @@ backend/!**/src/test/**/build/
 backend/.vscode/
 
 backend/src/main/resources/application.properties
+
+.vscode/

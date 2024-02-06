@@ -1,11 +1,18 @@
 package com.ronbodnar.reciperepository;
 
+import com.ronbodnar.reciperepository.model.Role;
 import com.ronbodnar.reciperepository.model.User;
+import com.ronbodnar.reciperepository.repository.RoleRepository;
 import com.ronbodnar.reciperepository.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @SpringBootApplication
 public class RecipeRepositoryApplication {
@@ -15,16 +22,25 @@ public class RecipeRepositoryApplication {
     }
 
     @Bean
-    CommandLineRunner init(UserRepository userRepository) {
+    CommandLineRunner init(UserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
-            User user1 = new User("test", "JoDoe", "John", "Doe", "jodoe@outlook.com", "hi");
-            userRepository.save(user1);
+            roleRepository.save(new Role(0, "ROLE_USER"));
+            roleRepository.save(new Role(0, "ROLE_PREMIUM"));
+            roleRepository.save(new Role(0, "ROLE_ADMIN"));
 
-            User user2 = new User("test1", "JaDoe", "Jane", "Doe", "jadoe@outlook.com", "hi");
-            userRepository.save(user2);
+            Set<Role> roles = new HashSet<>();
 
-            System.out.println("Added users to repo:");
-            userRepository.findAll().forEach(System.out::println);
+            Optional<Role> userRole = roleRepository.findByName("ROLE_USER");
+            userRole.ifPresent(roles::add);
+
+            Optional<Role> premiumRole = roleRepository.findByName("ROLE_PREMIUM");
+            premiumRole.ifPresent(roles::add);
+
+            String password = new BCryptPasswordEncoder().encode("password");
+
+            User user = new User("user", "John", "Doe", "jodoe@outlook.com", password);
+            user.setRoles(roles);
+            userRepository.save(user);
         };
     }
 }

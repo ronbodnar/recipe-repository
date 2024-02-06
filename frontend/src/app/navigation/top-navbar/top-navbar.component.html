@@ -8,7 +8,10 @@
     </div>
 
     <div class="">
-        <button class="btn btn-secondary" routerLink="/users/login">Log In</button>
+        <span *ngIf="authenticated()">You are authenticated!</span>
+        <span *ngIf="!authenticated()">You are NOT authenticated!</span>
+        <button *ngIf="authenticated()" class="btn btn-secondary ms-5" (click)="deauthenticate()">Log Out</button>
+        <button *ngIf="!authenticated()" class="btn btn-secondary ms-5" routerLink="/users/login">Log In</button>
     </div>
 
     <!-- If signed in, show this -->

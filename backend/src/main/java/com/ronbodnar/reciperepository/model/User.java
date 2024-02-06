@@ -21,13 +21,12 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     private String email;
 
     private String username;
-    private String displayName;
 
     private String firstName;
     private String lastName;
@@ -35,9 +34,14 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    public User(String username, String displayName, String firstName, String lastName, String email, String password) {
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
+    public User(String username, String firstName, String lastName, String email, String password) {
         this.username = username;
-        this.displayName = displayName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -46,8 +50,8 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("User(id=%s, username=%s, displayName=%s, firstName=%s, lastName=%s, email=%s, password=%s)",
-                this.id, this.username, this.displayName, this.firstName, this.lastName, this.email, this.password);
+        return String.format("User(id=%s, username=%s, firstName=%s, lastName=%s, email=%s, password=%s, roles=%s)",
+                this.id, this.username, this.firstName, this.lastName, this.email, this.password, this.roles.toString());
     }
 
 }

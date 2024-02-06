@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.Optional;
 
 @Component
 public class AuthenticationProviderImpl implements AuthenticationProvider {
@@ -24,10 +24,10 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
         String name = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        User user = userRepository.findByUsername(name);
+        Optional<User> user = userRepository.findByUsername(name);
 
-        if (user != null && user.getPassword().equals(password)) {
-            return new UsernamePasswordAuthenticationToken(name, password, new ArrayList<>());
+        if (user.isPresent() && user.get().getPassword().equals(password)) {
+            return new UsernamePasswordAuthenticationToken(user.get(), password);
         } else {
             return null;
         }

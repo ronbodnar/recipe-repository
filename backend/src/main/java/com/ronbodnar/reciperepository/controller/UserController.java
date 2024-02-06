@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*", allowCredentials = "true")
 @RestController
 public class UserController {
 
@@ -43,7 +43,6 @@ public class UserController {
         Optional<User> userToUpdate = userRepository.findById(id);
         if (userToUpdate.isPresent()) {
             userToUpdate.get().setUsername(user.getUsername());
-            userToUpdate.get().setDisplayName(user.getDisplayName());
 
             userToUpdate.get().setEmail(user.getEmail());
 

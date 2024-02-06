@@ -1,48 +1,110 @@
 package com.ronbodnar.reciperepository.controller;
 
+import com.ronbodnar.reciperepository.model.Role;
+import com.ronbodnar.reciperepository.repository.RoleRepository;
+import com.ronbodnar.reciperepository.security.service.JwtService;
+import com.ronbodnar.reciperepository.security.service.UserDetailsImpl;
 import com.ronbodnar.reciperepository.util.MessageResponse;
 import com.ronbodnar.reciperepository.model.User;
 import com.ronbodnar.reciperepository.repository.UserRepository;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*", allowCredentials = "true")
 @RestController
 public class AuthenticationController {
 
+    private final JwtService jwtService;
+
+    private final RoleRepository roleRepository;
+
     private final UserRepository userRepository;
 
-    public AuthenticationController(UserRepository userRepository) {
+    private final PasswordEncoder passwordEncoder;
+
+    private final AuthenticationManager authenticationManager;
+
+    public AuthenticationController(JwtService jwtService, RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+        this.jwtService = jwtService;
+        this.roleRepository = roleRepository;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
     }
 
-    public record LoginRequest(String username, String password) {}
+    public record LoginRequest(String username, String password) {
+    }
+
+    public record RegisterRequest(String username, String email, String firstName, String lastName, String password) {
+    }
+
+    @GetMapping("/auth/user")
+    public Principal user(Principal user) {
+        return user;
+    }
+
+    @PostMapping("/auth/revoke")
+    public ResponseEntity<?> revoke() {
+        ResponseCookie cookie = jwtService.generateDefaultCookie();
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body("");
+    }
 
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        System.out.println("Trying to log in with credentials:");
-        System.out.println("username=" + loginRequest.username + ", password=" + loginRequest.password);
-        System.out.println();
-        System.out.println("List of accounts in userRepository:");
-        userRepository.findAll().forEach(System.out::println);
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
 
-        User user = userRepository.findByUsername(loginRequest.username);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("user not found"));
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        ResponseCookie jwtCookie = jwtService.generateCookie(userDetails);
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(userDetails);
+    }
+
+    @PostMapping("/auth/register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
+        if (userRepository.existsByUsername(registerRequest.username())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("username exists"));
         }
 
-        if (!user.getPassword().equals(loginRequest.password)) {
-            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("invalid credentials"));
+        if (userRepository.existsByEmail(registerRequest.email())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("email exists"));
         }
 
-        return new ResponseEntity<>(userRepository.findByUsername(loginRequest.username()), HttpStatus.OK);
+        Set<Role> roles = new HashSet<>();
+        Role userRole = roleRepository.findByName("ROLE_USER").orElse(null);
+
+        roles.add(userRole);
+
+        String encodedPassword = new BCryptPasswordEncoder().encode(registerRequest.password());
+
+        User user = new User();
+        user.setUsername(registerRequest.username());
+        user.setPassword(encodedPassword);
+        user.setEmail(registerRequest.email());
+        user.setFirstName(registerRequest.firstName());
+        user.setLastName(registerRequest.lastName());
+        user.setRoles(roles);
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok(new MessageResponse("user registered successfully"));
     }
 
 }
