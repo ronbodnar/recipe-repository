@@ -1,34 +1,46 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { User } from './users/user';
+
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
 
-  private authenticated: boolean = false;
+  private authenticatedUser!: User | null;
 
-  private readonly authUrl: string;
+  private readonly authUrl: string = 'http://localhost:8080/auth';
 
-  constructor(private http: HttpClient, private router: Router) {
-    this.authUrl = 'http://localhost:8080/auth'
-  }
+  constructor(private http: HttpClient, private router: Router, private storageService: StorageService) { }
 
   // Perform pre-authentication checks for the front-end
   checkIfAuthenticated() {
-    if (window.sessionStorage.getItem('user') !== null)
-      this.authenticated = true
+    // Skip if already authenticated
+    if (this.authenticatedUser !== undefined)
+      return
 
-    if (!this.authenticated)
-      this.http.get(`${this.authUrl}/user`).subscribe((data: any) => {
-        if (data !== null) {
-          this.authenticated = data.authenticated
+    // Set the authenticatedUser from session storage if it exists.
+    if (this.storageService.getUser() !== null) {
+      this.authenticatedUser = this.storageService.getUser()
+      return
+    }
 
-          if (data.principal)
-            window.sessionStorage.setItem('user', data.principal)
+    // Perform an authentication check with the server
+    this.http.get(`${this.authUrl}/user`).subscribe((data: any) => {
+      console.log(data)
+      if (data !== null) {
+        // If the user is authenticated, a Principal is received and the authenticated user is set for the session.
+        if (data.principal) {
+          this.authenticatedUser = new User()
+          this.authenticatedUser.setFromJson(data.principal)
+
+          this.storageService.setUser(this.authenticatedUser)
         }
-      });
+      }
+    });
   }
 
   // Authenticate with the back-end and set session authentication
@@ -36,10 +48,15 @@ export class AuthenticationService {
     return this.http
       .post(`${this.authUrl}/login`, { username: username, password: password })
       .subscribe((response: any) => {
-        console.log('Auth response:')
-        console.log(response)
-        window.sessionStorage.setItem('user', JSON.stringify(response))
-        this.authenticated = true
+        // Instantiate a new User and set variables from the JSON response
+        let user = new User()
+        user.setFromJson(response)
+
+        // Remove the user data from the session
+        this.authenticatedUser = user
+        this.storageService.setUser(user)
+
+        // Redirect to the home page
         this.router.navigate(['/'])
       });
   }
@@ -47,10 +64,11 @@ export class AuthenticationService {
   // Deauthenticate and clear session storage.
   deauthenticate() {
     return this.http.post(`${this.authUrl}/revoke`, {}).subscribe((response) => {
-      console.log('Deauth response:')
-      console.log(response)
-      this.authenticated = false
-      window.sessionStorage.removeItem('user')
+      // Remove the user data from the session
+      this.authenticatedUser = null
+      this.storageService.clear()
+
+      // Redirect to the home page
       this.router.navigate(['/'])
     });
   }
@@ -63,8 +81,12 @@ export class AuthenticationService {
     });
   }
 
-  // Check if the user is authenticated
-  isAuthenticated(): boolean {
-    return this.authenticated;
+  getAuthenticatedUser(): User | null {
+    return this.authenticatedUser
   }
+
+  isAuthenticated(): boolean {
+    return this.authenticatedUser != null
+  }
+
 }

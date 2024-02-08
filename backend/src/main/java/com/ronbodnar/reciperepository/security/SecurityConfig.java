@@ -22,6 +22,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private final AuthenticationEntryPointImpl authenticationEntryPoint;
+
+    public SecurityConfig(AuthenticationEntryPointImpl authenticationEntryPoint) {
+        this.authenticationEntryPoint = authenticationEntryPoint;
+    }
+
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsServiceImpl userDetailsService) {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
@@ -46,6 +52,7 @@ public class SecurityConfig {
         http
                 .cors(Customizer.withDefaults()) // fixes cors issue with auth redirection
                 .csrf(AbstractHttpConfigurer::disable) // disable csrf
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint)) // handle authentication exceptions
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // modify session policy
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/auth/**").permitAll() // allow all requests to all auth endpoints

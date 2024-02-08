@@ -4,6 +4,7 @@ import com.ronbodnar.reciperepository.model.Role;
 import com.ronbodnar.reciperepository.model.User;
 import com.ronbodnar.reciperepository.repository.RoleRepository;
 import com.ronbodnar.reciperepository.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,23 +25,27 @@ public class RecipeRepositoryApplication {
     @Bean
     CommandLineRunner init(UserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
-            roleRepository.save(new Role(0, "ROLE_USER"));
-            roleRepository.save(new Role(0, "ROLE_PREMIUM"));
-            roleRepository.save(new Role(0, "ROLE_ADMIN"));
+            boolean addData = false;
 
-            Set<Role> roles = new HashSet<>();
+            if (addData) {
+                roleRepository.save(new Role(0, "ROLE_USER"));
+                roleRepository.save(new Role(0, "ROLE_PREMIUM"));
+                roleRepository.save(new Role(0, "ROLE_ADMIN"));
 
-            Optional<Role> userRole = roleRepository.findByName("ROLE_USER");
-            userRole.ifPresent(roles::add);
+                Set<Role> roles = new HashSet<>();
 
-            Optional<Role> premiumRole = roleRepository.findByName("ROLE_PREMIUM");
-            premiumRole.ifPresent(roles::add);
+                Optional<Role> userRole = roleRepository.findByName("ROLE_USER");
+                userRole.ifPresent(roles::add);
 
-            String password = new BCryptPasswordEncoder().encode("password");
+                Optional<Role> premiumRole = roleRepository.findByName("ROLE_PREMIUM");
+                premiumRole.ifPresent(roles::add);
 
-            User user = new User("user", "John", "Doe", "jodoe@outlook.com", password);
-            user.setRoles(roles);
-            userRepository.save(user);
+                String password = new BCryptPasswordEncoder().encode("password");
+
+                User user = new User("user", "John", "Doe", "jodoe@outlook.com", password);
+                user.setRoles(roles);
+                userRepository.save(user);
+            }
         };
     }
 }

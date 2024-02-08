@@ -1,10 +1,12 @@
 package com.ronbodnar.reciperepository.controller;
 
 import com.ronbodnar.reciperepository.model.Role;
+import com.ronbodnar.reciperepository.payload.request.LoginRequest;
+import com.ronbodnar.reciperepository.payload.request.RegisterRequest;
 import com.ronbodnar.reciperepository.repository.RoleRepository;
 import com.ronbodnar.reciperepository.security.service.JwtService;
 import com.ronbodnar.reciperepository.security.service.UserDetailsImpl;
-import com.ronbodnar.reciperepository.util.MessageResponse;
+import com.ronbodnar.reciperepository.payload.response.MessageResponse;
 import com.ronbodnar.reciperepository.model.User;
 import com.ronbodnar.reciperepository.repository.UserRepository;
 import lombok.Getter;
@@ -20,7 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,12 +48,6 @@ public class AuthenticationController {
         this.authenticationManager = authenticationManager;
     }
 
-    public record LoginRequest(String username, String password) {
-    }
-
-    public record RegisterRequest(String username, String email, String firstName, String lastName, String password) {
-    }
-
     @GetMapping("/auth/user")
     public Principal user(Principal user) {
         return user;
@@ -66,7 +61,7 @@ public class AuthenticationController {
 
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -79,11 +74,11 @@ public class AuthenticationController {
 
     @PostMapping("/auth/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
-        if (userRepository.existsByUsername(registerRequest.username())) {
+        if (userRepository.existsByUsername(registerRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new MessageResponse("username exists"));
         }
 
-        if (userRepository.existsByEmail(registerRequest.email())) {
+        if (userRepository.existsByEmail(registerRequest.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponse("email exists"));
         }
 
@@ -92,14 +87,14 @@ public class AuthenticationController {
 
         roles.add(userRole);
 
-        String encodedPassword = new BCryptPasswordEncoder().encode(registerRequest.password());
+        String encodedPassword = new BCryptPasswordEncoder().encode(registerRequest.getPassword());
 
         User user = new User();
-        user.setUsername(registerRequest.username());
+        user.setUsername(registerRequest.getUsername());
         user.setPassword(encodedPassword);
-        user.setEmail(registerRequest.email());
-        user.setFirstName(registerRequest.firstName());
-        user.setLastName(registerRequest.lastName());
+        user.setEmail(registerRequest.getEmail());
+        user.setFirstName(registerRequest.getFirstName());
+        user.setLastName(registerRequest.getLastName());
         user.setRoles(roles);
 
         userRepository.save(user);

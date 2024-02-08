@@ -1,4 +1,4 @@
-package com.ronbodnar.reciperepository.util;
+package com.ronbodnar.reciperepository.payload.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
