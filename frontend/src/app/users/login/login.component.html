@@ -1,49 +1,45 @@
-<div class="container">
-  <div class="login-form">
-    <h1 class="text-center">Account Login</h1>
-    <div class="bar mb-5"></div>
+<h1 class="text-center pt-5">Account Login</h1>
+<div class="bar mb-5"></div>
 
-    <div id="message" class="text-danger text-center mb-5"></div>
-
-    <form
-      [formGroup]="loginForm"
-      (ngSubmit)="onSubmit()"
-      class="form-signin"
-      autocomplete="off"
-      novalidate
-    >
-      <div class="form-group">
-        <label for="username" class="form-label">Username</label>
-        <input
-          class="form-control"
-          id="username"
-          type="text"
-          formControlName="username"
-          placeholder="Username"
-          required
-          autofocus
-        />
-      </div>
-
-      <div class="form-group">
-        <label class="form-label mt-4" for="password">Password</label>
-        <input
-          class="form-control"
-          id="password"
-          type="password"
-          formControlName="password"
-          placeholder="Password"
-          required
-        />
-      </div>
-
-      <button class="button dark mt-5 mb-5" type="submit">Log in</button>
-
-      <p>
-        <a class="small" style="font-weight: 600" routerLink="/users/register"
-          >Need to create an account?</a
-        >
-      </p>
-    </form>
+<form
+  [formGroup]="loginForm"
+  (ngSubmit)="onSubmit()"
+  class="form-signin"
+  autocomplete="off"
+  novalidate
+>
+  <div class="form-group">
+    <label for="username" class="form-label">Username</label>
+    <input
+      class="form-control"
+      id="username"
+      type="text"
+      formControlName="username"
+      placeholder="Username"
+      required
+      autofocus
+    />
   </div>
-</div>
+
+  <div class="form-group">
+    <label class="form-label mt-4" for="password">Password</label>
+    <input
+      class="form-control"
+      id="password"
+      type="password"
+      formControlName="password"
+      placeholder="Password"
+      required
+    />
+  </div>
+
+  <div id="error" class="error mt-4" hidden></div>
+
+  <button class="button dark mt-4 mb-5" type="submit">Log in</button>
+
+  <p>
+    <a class="small" style="font-weight: 600" routerLink="/users/register"
+      >Need to create an account?</a
+    >
+  </p>
+</form>

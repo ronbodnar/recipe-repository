@@ -20,6 +20,7 @@ export class LoginComponent {
     private authService: AuthenticationService,
   ) {
     this.user = new User();
+    this.authService.setLoginComponent(this)
   }
 
   loginForm = this.formBuilder.group({
@@ -29,5 +30,20 @@ export class LoginComponent {
 
   onSubmit() {
     this.authService.authenticate(this.loginForm.value.username!, this.loginForm.value.password!);
+  }
+
+  handleError(error: any) {
+    let errorDiv = document.getElementById('error')
+    if (errorDiv) {
+      errorDiv.innerHTML = this.getErrorMessage(error)
+      errorDiv.removeAttribute('hidden')
+    }
+  }
+
+  getErrorMessage(error: any) : string {
+    let errorMessages: any = {
+      "Bad credentials": "Invalid username or password."
+    }
+    return errorMessages[error]
   }
 }

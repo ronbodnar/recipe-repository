@@ -1,6 +1,7 @@
 package com.ronbodnar.reciperepository.security;
 
 import com.ronbodnar.reciperepository.security.service.UserDetailsServiceImpl;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -53,7 +54,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) // fixes cors issue with auth redirection
                 .csrf(AbstractHttpConfigurer::disable) // disable csrf
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint)) // handle authentication exceptions
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // modify session policy
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // stateless session since authentication is done by JWT
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/auth/**").permitAll() // allow all requests to all auth endpoints
                         .anyRequest().authenticated() // allow any request where the user is authenticated

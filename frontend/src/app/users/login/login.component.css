@@ -33,9 +33,6 @@ a {
   }
   
   .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: calc(100dvh - 100px);
   }
   
@@ -49,8 +46,18 @@ a {
   .form-control {
     border-radius: 0;
   }
-  
-  .login-form {
-      width: 100%;
+
+  .error {
+    text-align: center;
+    color: red;
+    animation: fadeInAnimation ease 0.5s;
   }
   
+  @keyframes fadeInAnimation {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
