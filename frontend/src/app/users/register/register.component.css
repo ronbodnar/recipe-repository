@@ -54,6 +54,11 @@ a {
     background: inherit;
     opacity: 0.5;
   }
+
+  .bi-eye,
+  .bi-eye-slash {
+    margin-right: 1.5em;
+  }
   
   .form-label {
     font-weight: 600;

@@ -67,6 +67,19 @@ input:-webkit-autofill:focus {
 }
 
 /*
+ * Show / Hide password eye
+ */
+ .bi-eye,
+ .bi-eye-slash {
+   cursor: pointer;
+   position: relative;
+   float: right;
+   margin-top: -1.75em;
+   margin-right: 0.25em;
+   color: var(--dark-bg);
+ }
+
+/*
  * Global button styles
  */
 .button {

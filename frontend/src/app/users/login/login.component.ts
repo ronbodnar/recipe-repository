@@ -15,6 +15,8 @@ import { AuthenticationService } from '../../authentication.service';
 export class LoginComponent {
   user!: User;
 
+  showPassword: boolean = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthenticationService,
@@ -30,6 +32,23 @@ export class LoginComponent {
 
   onSubmit() {
     this.authService.authenticate(this.loginForm.value.username!, this.loginForm.value.password!);
+  }
+
+  togglePassword(event: any): void {
+    this.showPassword = !this.showPassword;
+
+    let eye = event.target
+    let passwordField = eye.parentElement.querySelector('#password')
+    
+    if (this.showPassword) {
+      eye.classList.remove('bi-eye')
+      eye.classList.add('bi-eye-slash')
+      passwordField.type = 'text'
+    } else {
+      eye.classList.add('bi-eye')
+      eye.classList.remove('bi-eye-slash')
+      passwordField.type = 'password'
+    }
   }
 
   handleError(error: any) {

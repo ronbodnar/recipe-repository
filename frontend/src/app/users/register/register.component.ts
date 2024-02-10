@@ -16,6 +16,8 @@ import { AuthenticationService } from '../../authentication.service';
 export class RegisterComponent {
   user!: User;
 
+  showPassword: boolean = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthenticationService
@@ -55,5 +57,23 @@ export class RegisterComponent {
 
       form.classList.add('was-validated');
     }, false);
+  }
+
+  // really dont need this same function twice
+  togglePassword(event: any): void {
+    this.showPassword = !this.showPassword;
+
+    let eye = event.target
+    let passwordField = eye.parentElement.querySelector('#password')
+    
+    if (this.showPassword) {
+      eye.classList.remove('bi-eye')
+      eye.classList.add('bi-eye-slash')
+      passwordField.type = 'text'
+    } else {
+      eye.classList.add('bi-eye')
+      eye.classList.remove('bi-eye-slash')
+      passwordField.type = 'password'
+    }
   }
 }
