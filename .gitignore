@@ -3,7 +3,7 @@
 
 ### FRONT-END ###
 # Compiled output
-frontend/dist
+#frontend/dist
 frontend/tmp
 frontend/out-tsc
 frontend/bazel-out
@@ -81,5 +81,6 @@ backend/!**/src/test/**/build/
 backend/.vscode/
 
 backend/src/main/resources/application.properties
+backend/*.pem
 
 .vscode/
