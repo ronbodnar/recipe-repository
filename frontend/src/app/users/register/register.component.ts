@@ -52,7 +52,7 @@ export class RegisterComponent {
   validate() {
     let forms = document.querySelectorAll('.needs-validation');
 
-    Array.prototype.slice.call(forms).forEach(function (form) {
+    Array.prototype.slice.call(forms).forEach((form) => {
       form.checkValidity();
 
       form.classList.add('was-validated');

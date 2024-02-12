@@ -8,16 +8,39 @@ import { fromEvent, throttleTime } from 'rxjs';
   templateUrl: './side-navbar.component.html',
   styleUrl: './side-navbar.component.css',
 })
-export class SideNavbarComponent {
-  rotateChevron(event: any): void {
-    console.log(event);
+export class SideNavbarComponent { 
 
-    if (event.children.length > 0)
-      event.children[0].childNodes[1].classList.toggle('rotate-chevron');
-    fromEvent(event, 'click')
-      .pipe(throttleTime(2000))
-      .subscribe((red) => {
-        console.log(red);
+  private isAnimating: boolean = false;
+
+  ngOnInit(): void {
+    let collapseChevrons = document.querySelectorAll('.collapse');
+    collapseChevrons.forEach((collapse) => {
+      collapse.addEventListener('hide.bs.collapse', (event: any) => {
+        // Get the id for the collapse target
+        let targetId = event.target.id
+
+        // replace the keywords
+        let chevronId = targetId.replace("Collapse", "Chevron")
+
+        // find the proper chevron element
+        let chevron = document.querySelector('#' + chevronId)
+
+        // toggle the chevron icon
+        chevron?.classList.toggle('rotate-chevron');
       });
+      collapse.addEventListener('show.bs.collapse', (event: any) => {
+        // Get the id for the collapse target
+        let targetId = event.target.id
+
+        // replace the keywords
+        let chevronId = targetId.replace("Collapse", "Chevron")
+
+        // find the proper chevron element
+        let chevron = document.querySelector('#' + chevronId)
+
+        // toggle the chevron icon
+        chevron?.classList.toggle('rotate-chevron');
+      });
+    });
   }
 }

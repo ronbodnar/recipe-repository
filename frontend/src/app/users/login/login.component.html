@@ -4,7 +4,7 @@
 <form
   [formGroup]="loginForm"
   (ngSubmit)="onSubmit()"
-  class="form-signin"
+  class="form-signin needs-validation"
   autocomplete="off"
   novalidate
 >
@@ -34,9 +34,13 @@
     <i class="bi bi-eye" (click)="togglePassword($event)"></i>
   </div>
 
-  <div id="error" class="error mt-4" hidden></div>
+  <div id="error" class="error mt-1" hidden></div>
 
-  <button class="button dark mt-4 mb-5" type="submit">Log in</button>
+  <button id="loginButton" class="button dark mt-3 mb-3" type="submit" [disabled]="!this.loginForm.valid">
+    <span id="loadingSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden></span>
+    <span class="visually-hidden">Loading...</span>
+    Log in
+  </button>
 
   <p>
     <a class="small" style="font-weight: 600" routerLink="/users/register"

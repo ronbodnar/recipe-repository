@@ -2,16 +2,15 @@ package com.ronbodnar.reciperepository.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.Getter;
+import jakarta.validation.constraints.*;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @Table(name="users",
         uniqueConstraints = {
@@ -24,14 +23,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Email(message = "Please provide a valid e-mail address.")
     private String email;
 
+    @Size(min = 3, max = 15, message = "Username must be between 3-15 characters.")
+    @Pattern(regexp = "^[a-z\\d]+[._]?[a-z\\d]*[_.]?[a-z\\d]*$", message = "invalid username format")
     private String username;
 
+    @NotBlank(message = "Please provide your preferred first name.")
     private String firstName;
+
+    @NotBlank(message = "Please provide your preferred last name.")
     private String lastName;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Size(min = 8, max = 30, message = "Password must be between 8-30 characters.")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)

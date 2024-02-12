@@ -9,8 +9,11 @@ import com.ronbodnar.reciperepository.security.service.UserDetailsImpl;
 import com.ronbodnar.reciperepository.payload.response.MessageResponse;
 import com.ronbodnar.reciperepository.model.User;
 import com.ronbodnar.reciperepository.repository.UserRepository;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,14 +23,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Getter
-@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*", allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:4200", "https://ronbodnar.com"}, allowedHeaders = "*", allowCredentials = "true")
 @RestController
 public class AuthenticationController {
 
@@ -76,7 +84,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/auth/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<?> register(@RequestBody @Valid RegisterRequest registerRequest) {
         if (userRepository.existsByUsername(registerRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new MessageResponse("username exists"));
         }
@@ -103,6 +111,17 @@ public class AuthenticationController {
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("user registered successfully"));
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public Map<String, String> handleValidationExceptions(ConstraintViolationException ex) {
+        // Handle ConstraintViolationExceptions and populate a map of any errors
+        Map<String, String> errors = new HashMap<>();
+        ex.getConstraintViolations().forEach((violation) -> {
+            errors.put(violation.getPropertyPath().toString(), violation.getMessage());
+        });
+        return errors;
     }
 
 }

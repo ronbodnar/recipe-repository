@@ -55,6 +55,11 @@ a {
     opacity: 0.5;
   }
 
+  .form-control.is-invalid,
+  .was-validated .form-control:invalid {
+    background-position: right 0% center;
+  }
+
   .bi-eye,
   .bi-eye-slash {
     margin-right: 1.5em;
@@ -62,9 +67,5 @@ a {
   
   .form-label {
     font-weight: 600;
-  }
-
-  .registration-form {
-      width: 100%;
   }
   
