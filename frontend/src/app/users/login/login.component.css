@@ -52,6 +52,11 @@ a {
     background-position: right 8% center;
   }
 
+  .form-control.is-invalid,
+  .was-validated .form-control:invalid {
+    background-position: right 8% center;
+  }
+
   .error {
     text-align: center;
     color: red;

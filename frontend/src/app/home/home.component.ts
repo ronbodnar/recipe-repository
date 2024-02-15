@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthenticationService } from '../authentication.service';
 
@@ -10,6 +10,8 @@ import { AuthenticationService } from '../authentication.service';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
+
+  @Input() showOverlay!: boolean;
 
   constructor(private authenticationService: AuthenticationService) {}
 

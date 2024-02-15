@@ -1,8 +1,9 @@
-import { ApplicationConfig } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { httpInterceptorProviders } from './http.interceptor';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { AuthenticationService } from './authentication.service';
 
 import { routes } from './app.routes';
 
@@ -11,6 +12,16 @@ export const appConfig: ApplicationConfig = {
     httpInterceptorProviders,
     provideHttpClient(withInterceptorsFromDi()),
     provideRouter(routes),
-    provideAnimations()
+    provideAnimations(),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (authenticationService: AuthenticationService) => {
+        return () => {
+           return authenticationService.checkAuthentication()
+        }
+      },
+      multi: true,
+      deps: [HttpClient],
+    },
   ]
 };

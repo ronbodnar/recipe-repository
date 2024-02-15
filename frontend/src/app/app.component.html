@@ -1,7 +1,13 @@
+<div *ngIf="this.showOverlay" class="loading-overlay">
+  <div class="spinner-border spinner-green" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
 <app-top-navbar></app-top-navbar>
 
 <app-side-navbar></app-side-navbar>
 
 <div class="container-fluid">
-  <router-outlet></router-outlet>
+  <router-outlet showOverlay="this.showOverlay"></router-outlet>
 </div>

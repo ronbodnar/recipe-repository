@@ -9,13 +9,13 @@ export class StorageService {
   constructor() { }
 
   public setUser(user: User) {
-    window.sessionStorage.setItem('user', JSON.stringify(user));
+    window.localStorage.setItem('user', JSON.stringify(user));
   }
 
   public getUser(): User | null {
-    let userJson = window.sessionStorage.getItem('user')
+    let userJson = window.localStorage.getItem('user')
 
-    // If the user is present in session storage, instantiate a new User from the JSON data.
+    // If the user is present in local storage, instantiate a new User from the JSON data.
     if (userJson) {
       let user = Object.assign(new User(), JSON.parse(userJson))
       return user;
@@ -24,7 +24,7 @@ export class StorageService {
   }
 
   public clear(): void {
-    window.sessionStorage.clear()
+    window.localStorage.clear()
   }
 
   

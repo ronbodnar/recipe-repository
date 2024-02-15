@@ -1,6 +1,16 @@
-import { Component, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import {
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router,
+  RouterEvent,
+  RouterLink,
+  RouterOutlet,
+} from '@angular/router';
+
 import { TopNavbarComponent } from './navigation/top-navbar/top-navbar.component';
 import { SideNavbarComponent } from './navigation/side-navbar/side-navbar.component';
 import { AuthenticationService } from './authentication.service';
@@ -21,10 +31,30 @@ import { AuthenticationService } from './authentication.service';
 export class AppComponent {
   title: string;
 
+  showOverlay: boolean = true;
+
   constructor(
+    private router: Router,
     private authenticationService: AuthenticationService
   ) {
     this.title = 'Recipe Repository';
-    this.authenticationService.checkIfAuthenticated()
+    /*this.authenticationService.checkAuthentication();
+
+    this.showOverlay = false
+
+    router.events.subscribe((event: any) => {
+      this.interceptNavigation(event);
+      console.log(event);
+    });*/
   }
+
+  // intercepting navigation routing events to toggle a loading overlay
+  interceptNavigation(event: RouterEvent): void {
+    if (event instanceof NavigationStart) {
+      this.showOverlay = true;
+    } else if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) {
+      this.showOverlay = false;
+    }
+  }
+
 }
