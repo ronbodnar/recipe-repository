@@ -1,6 +1,6 @@
 import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { httpInterceptorProviders } from './http.interceptor';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { AuthenticationService } from './authentication.service';
@@ -21,7 +21,7 @@ export const appConfig: ApplicationConfig = {
         }
       },
       multi: true,
-      deps: [HttpClient],
+      deps: [AuthenticationService],
     },
   ]
 };

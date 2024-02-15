@@ -9,11 +9,11 @@ export class StorageService {
   constructor() { }
 
   public setUser(user: User) {
-    window.localStorage.setItem('user', JSON.stringify(user));
+    window.sessionStorage.setItem('user', JSON.stringify(user));
   }
 
   public getUser(): User | null {
-    let userJson = window.localStorage.getItem('user')
+    let userJson = window.sessionStorage.getItem('user')
 
     // If the user is present in local storage, instantiate a new User from the JSON data.
     if (userJson) {
@@ -24,7 +24,7 @@ export class StorageService {
   }
 
   public clear(): void {
-    window.localStorage.clear()
+    window.sessionStorage.clear()
   }
 
   

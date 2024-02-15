@@ -31,7 +31,7 @@ import { AuthenticationService } from './authentication.service';
 export class AppComponent {
   title: string;
 
-  showOverlay: boolean = true;
+  showOverlay: boolean = false;
 
   constructor(
     private router: Router,
