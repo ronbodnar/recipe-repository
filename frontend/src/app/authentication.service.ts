@@ -6,6 +6,8 @@ import { User } from './users/user';
 import { StorageService } from './storage.service';
 import { LoginComponent } from './users/login/login.component';
 
+import { EMPTY, Observable, catchError, map } from 'rxjs';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -26,18 +28,37 @@ export class AuthenticationService {
   ) {}
 
   // Perform pre-authentication checks for the front-end.
-  checkAuthentication() {
+  checkAuthentication(): Observable<never|void> {
     // Skip if already authenticated
-    if (this.authenticatedUser !== undefined) return Promise.resolve([]);
+    if (this.authenticatedUser !== undefined) return EMPTY
 
     // Set the authenticatedUser from session storage if it exists.
     if (this.storageService.getUser() !== null) {
       this.authenticatedUser = this.storageService.getUser()
-      return Promise.resolve([]);
+      return EMPTY
     }
 
     // Perform an authentication check with the server.
-    return this.http.get(`${this.authUrl}/user`).subscribe({
+    return this.http.get(`${this.authUrl}/user`).pipe(
+      map((res: any) => {
+        console.log(res);
+        if (res !== null) {
+          // If the user is authenticated, a Principal is received and the authenticated user is set for the session.
+          if (res.principal) {
+            this.authenticatedUser = new User()
+            this.authenticatedUser.setFromJson(res.principal)
+
+            this.storageService.setUser(this.authenticatedUser)
+          }
+        }
+      }), catchError((error) => {
+        console.log('checkIfAuthenticated error:')
+        console.log(error)
+        return EMPTY
+      })
+    );
+    
+    /*subscribe({
       error: (error: any) => {
         if (error && error.error) {
           console.log('checkIfAuthenticated error:')
@@ -59,7 +80,31 @@ export class AuthenticationService {
       complete: () => { 
         console.log('done')
       },
-    });
+    });*/
+
+    /*return this.http.get(`${this.authUrl}/user`).subscribe({
+      error: (error: any) => {
+        if (error && error.error) {
+          console.log('checkIfAuthenticated error:')
+          console.log(error.error)
+        }
+      },
+      next: (next: any) => {
+        console.log(next);
+        if (next !== null) {
+          // If the user is authenticated, a Principal is received and the authenticated user is set for the session.
+          if (next.principal) {
+            this.authenticatedUser = new User()
+            this.authenticatedUser.setFromJson(next.principal)
+
+            this.storageService.setUser(this.authenticatedUser)
+          }
+        }
+      },
+      complete: () => { 
+        console.log('done')
+      },
+    });*/
   }
 
   // Authenticate with the back-end and set session authentication.

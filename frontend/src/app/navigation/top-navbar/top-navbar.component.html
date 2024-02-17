@@ -1,4 +1,84 @@
-<header class="header top-bar">
+<header>
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/">
+        Recipe Repository
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarCollapse"
+        aria-controls="navbarCollapse"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navbar Content -->
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+
+        <!-- Links -->
+        <ul class="navbar-nav me-4">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" routerLink="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Add Recipe</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link" href="#" id="coursesDropdown" data-bs-toggle="dropdown" aria-expanded="false">Courses</a>
+            <ul class="dropdown-menu" aria-labelledby="coursesDropdown">
+              <li><a class="dropdown-item" href="#">Breakfast</a></li>
+              <li><a class="dropdown-item" href="#">Lunch & Dinner</a></li>
+              <li><a class="dropdown-item" href="#">Dessert</a></li>
+              <li><a class="dropdown-item" href="#">Snacks</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link" href="#" id="cuisinesDropdown" data-bs-toggle="dropdown" aria-expanded="false">Cuisines</a>
+            <ul class="dropdown-menu" aria-labelledby="cuisinesDropdown">
+              <li><a class="dropdown-item" href="#">American</a></li>
+              <li><a class="dropdown-item" href="#">Mexican</a></li>
+              <li><a class="dropdown-item" href="#">Italian</a></li>
+            </ul>
+          </li>
+        </ul>
+
+        <!-- Log in Button -->
+        <button *ngIf="!authenticated()" class="btn btn-secondary me-2" routerLink="/users/login">Log In</button>
+
+        <!-- User Profile -->
+        <div *ngIf="authenticated()" class="dropdown">
+          <a
+            href="#"
+            class="d-flex align-items-center text-decoration-none dropdown-toggle"
+            id="dropdownUser1"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <img
+              src="/assets/images/default-profile-avatar.png"
+              alt="Avatar"
+              width="32"
+              height="32"
+              class="rounded-circle"
+            />
+            <span class="mx-2">Ron Bodnar</span>
+          </a>
+          <ul class="dropdown-menu text-small shadow">
+            <li><a class="dropdown-item" href="" id="signOut">Sign out</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!--<header class="header top-bar">
     <div class="logo d-flex justify-content-center align-items-center">
         <a routerLink="/">
             <img src="https://ronbodnar.com/assets/img/header.png" id="nav-header" alt="MRon Development" />
@@ -14,8 +94,6 @@
         <button *ngIf="!authenticated()" class="btn btn-secondary ms-5" routerLink="/users/login">Log In</button>
     </div>
 
-    <!-- If signed in, show this -->
-    <!--
     <div class="d-flex justify-content-end align-items-center">
         <div class="dropdown">
             <a href="#" class="text-mron d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -37,5 +115,5 @@
                 <li><a class="dropdown-item" href="" id="signOut">Sign out</a></li>
             </ul>
         </div>
-    </div>-->
-</header>
+    </div>
+</header>-->

@@ -8,6 +8,6 @@
     Welcome, {{ this.getAuthenticationService().getAuthenticatedUser()!.firstName }}!
 </div>
 
-<div *ngIf="!this.getAuthenticationService().isAuthenticated()">
+<div *ngIf="!this.getAuthenticationService().isAuthenticated()" style="text-align: center;">
     Please sign in.
 </div>
