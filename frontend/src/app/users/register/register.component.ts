@@ -30,7 +30,7 @@ export class RegisterComponent {
   username = new FormControl('', [Validators.required]);
   email = new FormControl('', [Validators.required]);
   password = new FormControl('', [Validators.required]);
-  confirmPassword = new FormControl({value: '', disabled: true}, [Validators.required]);
+  confirmPassword = new FormControl('', [Validators.required]);
 
   registrationForm = this.formBuilder.group({
     firstName: this.firstName,
@@ -61,10 +61,10 @@ export class RegisterComponent {
 
   // really dont need this same function twice
   togglePassword(event: any): void {
-    this.showPassword = !this.showPassword;
+    this.showPassword = !this.showPassword
 
     let eye = event.target
-    let passwordField = eye.parentElement.querySelector('#password')
+    let passwordField = eye.parentElement.querySelector('[id*="password"]')
     
     if (this.showPassword) {
       eye.classList.remove('bi-eye')

@@ -21,4 +21,5 @@ export class User {
     this.roles = response.authorities;
     this.enabled = response.enabled;
   }
+  
 }

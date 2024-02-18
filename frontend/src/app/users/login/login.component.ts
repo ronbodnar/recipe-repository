@@ -36,7 +36,7 @@ export class LoginComponent {
     let errorDiv = document.querySelector('#error')
     if (errorDiv) {
       errorDiv.innerHTML = '';
-      errorDiv.setAttribute('hidden', '')
+      //errorDiv.setAttribute('hidden', '')
     }
 
     // Disable the Log In button and display the loading spinner
@@ -73,7 +73,7 @@ export class LoginComponent {
     let errorDiv = document.getElementById('error')
     if (errorDiv) {
       errorDiv.innerHTML = this.authService.formatErrorMessage(error)
-      errorDiv.removeAttribute('hidden')
+      //errorDiv.removeAttribute('hidden')
     }
 
     if (error === 'Bad credentials') {

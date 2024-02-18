@@ -57,54 +57,6 @@ export class AuthenticationService {
         return EMPTY
       })
     );
-    
-    /*subscribe({
-      error: (error: any) => {
-        if (error && error.error) {
-          console.log('checkIfAuthenticated error:')
-          console.log(error.error)
-        }
-      },
-      next: (next: any) => {
-        console.log(next);
-        if (next !== null) {
-          // If the user is authenticated, a Principal is received and the authenticated user is set for the session.
-          if (next.principal) {
-            this.authenticatedUser = new User()
-            this.authenticatedUser.setFromJson(next.principal)
-
-            this.storageService.setUser(this.authenticatedUser)
-          }
-        }
-      },
-      complete: () => { 
-        console.log('done')
-      },
-    });*/
-
-    /*return this.http.get(`${this.authUrl}/user`).subscribe({
-      error: (error: any) => {
-        if (error && error.error) {
-          console.log('checkIfAuthenticated error:')
-          console.log(error.error)
-        }
-      },
-      next: (next: any) => {
-        console.log(next);
-        if (next !== null) {
-          // If the user is authenticated, a Principal is received and the authenticated user is set for the session.
-          if (next.principal) {
-            this.authenticatedUser = new User()
-            this.authenticatedUser.setFromJson(next.principal)
-
-            this.storageService.setUser(this.authenticatedUser)
-          }
-        }
-      },
-      complete: () => { 
-        console.log('done')
-      },
-    });*/
   }
 
   // Authenticate with the back-end and set session authentication.

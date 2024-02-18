@@ -19,6 +19,10 @@ export class TopNavbarComponent {
     return this.authenticationService.isAuthenticated()
   }
 
+  getAuthenticatedUser() {
+    return this.authenticationService.getAuthenticatedUser()
+  }
+
   deauthenticate() {
     this.authenticationService.deauthenticate()
   }

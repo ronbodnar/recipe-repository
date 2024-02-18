@@ -58,7 +58,7 @@ a {
   }
 
   .error {
-    text-align: center;
+    height: 30px;
     color: red;
     animation: fadeInAnimation ease 0.5s;
   }

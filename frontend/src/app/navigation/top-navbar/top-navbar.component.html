@@ -62,13 +62,13 @@
             <img
               src="/assets/images/default-profile-avatar.png"
               alt="Avatar"
-              width="32"
-              height="32"
+              width="42"
+              height="42"
               class="rounded-circle"
             />
-            <span class="mx-2">Ron Bodnar</span>
           </a>
           <ul class="dropdown-menu text-small shadow">
+            <li><span class="dropdown-item">{{ getAuthenticatedUser()!.firstName }}</span></li>
             <li><a class="dropdown-item" href="" id="signOut">Sign out</a></li>
           </ul>
         </div>
