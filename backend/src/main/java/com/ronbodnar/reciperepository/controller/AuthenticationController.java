@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Getter
-@CrossOrigin(origins = {"http://localhost:4200", "https://ronbodnar.com"}, allowedHeaders = "*", allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:4200", "https://ronbodnar.com", "https://ronbodnar.github.io"}, allowedHeaders = "*", allowCredentials = "true")
 @RestController
 public class AuthenticationController {
 

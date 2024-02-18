@@ -17,9 +17,8 @@ export class AuthenticationService {
 
   private authenticatedUser!: User | null;
 
-  //private readonly authUrl: string = 'https://ronbodnar.com:8443/auth';
-  //private readonly authUrl: string = 'http://ec2-18-221-117-214.us-east-2.compute.amazonaws.com:8080/auth';
-  private readonly authUrl: string = 'http://localhost:8080/auth';
+  private readonly authUrl: string = 'https://ronbodnar.com:8443/auth';
+  //private readonly authUrl: string = 'http://localhost:8080/auth';
 
   constructor(
     private http: HttpClient,
