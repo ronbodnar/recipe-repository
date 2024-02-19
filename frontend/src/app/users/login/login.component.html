@@ -1,6 +1,10 @@
 <h1 class="text-center">Account Login</h1>
 <div class="bar mb-5"></div>
 
+<div *ngIf="this.successfulRegistration" class="regristration-message">
+  Your account has been created successfully!<br /><br />Please log in using your username and password.
+</div>
+
 <form
   [formGroup]="loginForm"
   (ngSubmit)="onSubmit()"
@@ -36,8 +40,19 @@
 
   <div id="error" class="error mt-2"></div>
 
-  <button id="loginButton" class="button dark mb-3" type="submit" [disabled]="!this.loginForm.valid">
-    <span id="loadingSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden></span>
+  <button
+    id="loginButton"
+    class="button dark mb-3"
+    type="submit"
+    [disabled]="!this.loginForm.valid"
+  >
+    <span
+      id="loadingSpinner"
+      class="spinner-border spinner-border-sm"
+      role="status"
+      aria-hidden="true"
+      hidden
+    ></span>
     <span class="visually-hidden">Loading...</span>
     Log in
   </button>

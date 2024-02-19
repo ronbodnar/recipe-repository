@@ -2,7 +2,7 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css");
 
 :root {
-  --dark-bg: #0d1117;
+  --dark-bg: #212529;
   --dark-bg-rgb: 13, 17, 23;
   --green: #43b581;
   --green-rgb: 67, 181, 129;
@@ -47,7 +47,7 @@ body {
 .container-full-page {
   margin: 0 auto;
   margin-top: var(--header-height-mobile);
-  height: calc(100dvh - var(--header-height-mobile));
+  min-height: calc(100dvh - var(--header-height-mobile));
   width: 100vw;
   max-width: 100vw;
   padding: 1rem 1rem;
@@ -128,8 +128,8 @@ input:-webkit-autofill:focus {
   .container-full-page {
     margin: 0 auto;
     margin-top: var(--header-height);
-    padding: 1rem 1rem;
-    height: calc(100dvh - var(--header-height));
+    padding: 1.5rem 1.5rem;
+    min-height: calc(100dvh - var(--header-height));
     width: 75%;
     box-shadow: inset 0px 0px 9px -1px rgba(0, 0, 0, 0.75);
     background-color: var(--secondary-background-color);

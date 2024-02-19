@@ -21,5 +21,9 @@ export class User {
     this.roles = response.authorities;
     this.enabled = response.enabled;
   }
+
+  getFullName(): string {
+    return `${this.firstName} ${this.lastName}`
+  }
   
 }

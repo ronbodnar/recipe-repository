@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { User } from '../user';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
@@ -8,35 +9,41 @@ import { AuthenticationService } from '../../authentication.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
   user!: User;
 
-  showPassword: boolean = false;
+  successfulRegistration: boolean = false;
 
-  constructor(
-    private router: Router,
-    private formBuilder: FormBuilder,
-    private authService: AuthenticationService,
-  ) {
-    this.user = new User();
-    this.authService.setLoginComponent(this)
-  }
+  showPassword: boolean = false;
 
   loginForm = this.formBuilder.group({
     username: ['', Validators.required],
     password: ['', Validators.required],
   });
 
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private formBuilder: FormBuilder,
+    private authService: AuthenticationService,
+  ) {
+    this.user = new User();
+    this.authService.setLoginComponent(this)
+
+    this.route.queryParams.subscribe(params => {
+      this.successfulRegistration = params['registered']
+    });
+  }
+
   onSubmit() {
     // Clear any errors 
     let errorDiv = document.querySelector('#error')
     if (errorDiv) {
       errorDiv.innerHTML = '';
-      //errorDiv.setAttribute('hidden', '')
     }
 
     // Disable the Log In button and display the loading spinner
@@ -45,12 +52,7 @@ export class LoginComponent {
     loginButton?.setAttribute('disabled', '')
     loadingSpinner?.removeAttribute('hidden')
 
-    this.authService.authenticate(this.loginForm.value.username!, this.loginForm.value.password!)
-  }
-
-  onComplete(): void {
-      // Navigate to the home page if the login is successful
-      this.router.navigate(['/'])
+    this.authService.authenticate(this.loginForm.value.username!, this.loginForm.value.password!).subscribe(() => this.router.navigateByUrl('/'))
   }
 
   togglePassword(event: any): void {
@@ -72,8 +74,7 @@ export class LoginComponent {
     let passwordField = document.querySelector('#password');
     let errorDiv = document.getElementById('error')
     if (errorDiv) {
-      errorDiv.innerHTML = this.authService.formatErrorMessage(error)
-      //errorDiv.removeAttribute('hidden')
+      errorDiv.innerHTML = this.formatErrorMessage(error)
     }
 
     if (error === 'Bad credentials') {
@@ -86,6 +87,17 @@ export class LoginComponent {
     // Enable the Log In button and display the loading spinner
     loginButton?.removeAttribute('disabled')
     loadingSpinner?.setAttribute('hidden', '')
+  }
+
+  formatErrorMessage(error: any): string {
+    let errorMessages: any = {
+      'Bad credentials': 'Invalid username or password.',
+    }
+    // Connection error
+    if (error instanceof ProgressEvent) {
+      return 'Unable to reach login server.'
+    }
+    return errorMessages.hasOwnProperty(error) ? errorMessages[error] : error
   }
 
 }

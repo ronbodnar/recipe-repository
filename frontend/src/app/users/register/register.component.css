@@ -57,7 +57,7 @@ a {
 
   .form-control.is-invalid,
   .was-validated .form-control:invalid {
-    background-position: right 0% center;
+    background: none !important;
   }
 
   .bi-eye,

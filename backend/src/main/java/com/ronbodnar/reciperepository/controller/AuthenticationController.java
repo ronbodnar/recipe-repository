@@ -3,6 +3,7 @@ package com.ronbodnar.reciperepository.controller;
 import com.ronbodnar.reciperepository.model.Role;
 import com.ronbodnar.reciperepository.payload.request.LoginRequest;
 import com.ronbodnar.reciperepository.payload.request.RegisterRequest;
+import com.ronbodnar.reciperepository.payload.response.FieldError;
 import com.ronbodnar.reciperepository.repository.RoleRepository;
 import com.ronbodnar.reciperepository.security.service.JwtService;
 import com.ronbodnar.reciperepository.security.service.UserDetailsImpl;
@@ -23,16 +24,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @CrossOrigin(origins = {"http://localhost:4200", "https://ronbodnar.com", "https://ronbodnar.github.io"}, allowedHeaders = "*", allowCredentials = "true")
@@ -84,14 +80,24 @@ public class AuthenticationController {
     }
 
     @PostMapping("/auth/register")
-    public ResponseEntity<?> register(@RequestBody @Valid RegisterRequest registerRequest) {
-        if (userRepository.existsByUsername(registerRequest.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("username exists"));
+    public ResponseEntity<?> register(@RequestBody @Valid RegisterRequest registerRequest, Errors errors) {
+        if (errors.hasErrors())
+            return ResponseEntity.badRequest().body(errors.getAllErrors());
+
+        List<FieldError> fieldErrorList = new ArrayList<FieldError>();
+        if (userRepository.existsByUsername(registerRequest.getUsername()))
+            fieldErrorList.add(new FieldError("username", "Username already taken, please try another."));
+
+        if (userRepository.existsByEmail(registerRequest.getEmail()))
+            fieldErrorList.add(new FieldError("email", "E-mail address has already been registered."));
+
+        if (!registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) {
+            fieldErrorList.add(new FieldError("password", "Password fields do not match."));
+            fieldErrorList.add(new FieldError("confirmPassword", "Password fields do not match."));
         }
 
-        if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("email exists"));
-        }
+        if (!fieldErrorList.isEmpty())
+            return ResponseEntity.badRequest().body(fieldErrorList);
 
         Set<Role> roles = new HashSet<>();
         Role userRole = roleRepository.findByName("ROLE_USER").orElse(null);

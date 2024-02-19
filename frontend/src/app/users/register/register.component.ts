@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { User } from '../user';
 import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { AuthenticationService } from '../../authentication.service';
+import { EMPTY, Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-account',
@@ -19,10 +21,13 @@ export class RegisterComponent {
   showPassword: boolean = false;
 
   constructor(
+    private router: Router,
+    private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private authService: AuthenticationService
   ) {
     this.user = new User();
+    this.authService.setRegisterComponent(this);
   }
 
   firstName = new FormControl('', [Validators.required]);
@@ -42,11 +47,28 @@ export class RegisterComponent {
   });
 
   onSubmit() {
+    // Clear form validation
+    Array.from(document.getElementsByClassName('form-control')).forEach((div) =>
+      div.classList.remove('is-invalid')
+    );
+
+    // Disable the Register button and display the loading spinner
+    let registerButton = document.querySelector('#registerButton');
+    let loadingSpinner = document.querySelector('#loadingSpinner');
+    registerButton?.setAttribute('disabled', '');
+    loadingSpinner?.removeAttribute('hidden');
+
     if (!this.registrationForm.valid) {
       this.validate();
       return;
     }
-    this.authService.register(this.registrationForm.value!);
+
+    this.authService.register(this.registrationForm.value!).subscribe(() => {
+      this.router.navigate(['/users/login'], { skipLocationChange: true, queryParams: { registered: true } })
+    });
+
+    registerButton?.removeAttribute('disabled');
+    loadingSpinner?.setAttribute('hidden', '');
   }
 
   validate() {
@@ -59,21 +81,40 @@ export class RegisterComponent {
     }, false);
   }
 
+  handleErrors(errors: any): Observable<any> {
+    errors.forEach((error: any) => {
+      let fieldElement = document.getElementById(error.field);
+      fieldElement?.classList.add('is-invalid');
+
+      // Populate the invalid field validation error
+      let feedbackDiv = fieldElement?.closest('div');
+      if (feedbackDiv && feedbackDiv.lastElementChild)
+        feedbackDiv.lastElementChild.innerHTML = error.defaultMessage;
+    });
+
+    let registerButton = document.querySelector('#registerButton');
+    let loadingSpinner = document.querySelector('#loadingSpinner');
+
+    // Enable the Register button and display the loading spinner
+    registerButton?.removeAttribute('disabled');
+    loadingSpinner?.setAttribute('hidden', '');
+
+    return EMPTY;
+  }
+
   // really dont need this same function twice
   togglePassword(event: any): void {
-    this.showPassword = !this.showPassword
+    // Toggle the showPassword state
+    this.showPassword = !this.showPassword;
 
-    let eye = event.target
-    let passwordField = eye.parentElement.querySelector('[id*="password"]')
-    
-    if (this.showPassword) {
-      eye.classList.remove('bi-eye')
-      eye.classList.add('bi-eye-slash')
-      passwordField.type = 'text'
-    } else {
-      eye.classList.add('bi-eye')
-      eye.classList.remove('bi-eye-slash')
-      passwordField.type = 'password'
-    }
+    let eye = event.target;
+    let passwordField = eye.parentElement.querySelector('[id*="password" i]');
+
+    // Toggle the bi-eye and bi-eye-slash depending on showPassword state
+    eye.classList.remove(this.showPassword ? 'bi-eye' : 'bi-eye-slash');
+    eye.classList.add(this.showPassword ? 'bi-eye-slash' : 'bi-eye');
+
+    // Toggle the password input type depending on showPassword state
+    passwordField.type = this.showPassword ? 'text' : 'password';
   }
 }

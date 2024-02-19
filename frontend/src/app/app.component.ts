@@ -13,7 +13,6 @@ import {
 
 import { TopNavbarComponent } from './navigation/top-navbar/top-navbar.component';
 import { SideNavbarComponent } from './navigation/side-navbar/side-navbar.component';
-import { AuthenticationService } from './authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -29,32 +28,26 @@ import { AuthenticationService } from './authentication.service';
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-  title: string;
-
   showOverlay: boolean = false;
 
-  constructor(
-    private router: Router,
-    private authenticationService: AuthenticationService
-  ) {
-    this.title = 'Recipe Repository';
-    /*this.authenticationService.checkAuthentication();
-
-    this.showOverlay = false
+  constructor(private router: Router) {
+    this.showOverlay = false;
 
     router.events.subscribe((event: any) => {
       this.interceptNavigation(event);
-      console.log(event);
-    });*/
+    });
   }
 
   // intercepting navigation routing events to toggle a loading overlay
   interceptNavigation(event: RouterEvent): void {
     if (event instanceof NavigationStart) {
       this.showOverlay = true;
-    } else if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) {
+    } else if (
+      event instanceof NavigationEnd ||
+      event instanceof NavigationCancel ||
+      event instanceof NavigationError
+    ) {
       this.showOverlay = false;
     }
   }
-
 }

@@ -21,7 +21,7 @@
       <div class="collapse navbar-collapse" id="navbarCollapse">
 
         <!-- Links -->
-        <ul class="navbar-nav me-4">
+        <ul class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" routerLink="/">Home</a>
           </li>
@@ -29,8 +29,12 @@
             <a class="nav-link" href="#">Add Recipe</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link" href="#" id="coursesDropdown" data-bs-toggle="dropdown" aria-expanded="false">Courses</a>
-            <ul class="dropdown-menu" aria-labelledby="coursesDropdown">
+            <a class="nav-link" href="#" id="coursesDropdown" data-bs-toggle="collapse" data-bs-target=".courses-dropdown" aria-expanded="false">Courses <i
+              id="coursesChevron"
+              class="bi bi-chevron-right"
+            ></i
+          ></a>
+            <ul class="dropdown-menu courses-dropdown collapse" aria-labelledby="coursesDropdown">
               <li><a class="dropdown-item" href="#">Breakfast</a></li>
               <li><a class="dropdown-item" href="#">Lunch & Dinner</a></li>
               <li><a class="dropdown-item" href="#">Dessert</a></li>
@@ -38,24 +42,46 @@
             </ul>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link" href="#" id="cuisinesDropdown" data-bs-toggle="dropdown" aria-expanded="false">Cuisines</a>
-            <ul class="dropdown-menu" aria-labelledby="cuisinesDropdown">
+            <a class="nav-link" href="#" id="cuisinesDropdown" data-bs-toggle="collapse" data-bs-target=".cuisines-dropdown" aria-expanded="false">Cuisines <i
+              id="cuisinesChevron"
+              class="bi bi-chevron-right"
+            ></i
+          ></a>
+            <ul class="dropdown-menu cuisines-dropdown collapse" aria-labelledby="cuisinesDropdown">
               <li><a class="dropdown-item" href="#">American</a></li>
               <li><a class="dropdown-item" href="#">Mexican</a></li>
               <li><a class="dropdown-item" href="#">Italian</a></li>
             </ul>
           </li>
+          <li *ngIf="authenticated()" class="nav-item dropdown">
+            <a class="nav-link" href="#" id="cuisinesDropdown" data-bs-toggle="collapse" data-bs-target=".user-dropdown" aria-expanded="false"><img
+              src="/assets/images/default-profile-avatar.png"
+              alt="Avatar"
+              width="36"
+              height="36"
+              class="rounded-circle"
+            />  <i
+            id="cuisinesChevron"
+            class="bi bi-chevron-right"
+          ></i
+        ></a>
+            <ul class="dropdown-menu dropdown-menu-end user-dropdown collapse" aria-labelledby="userDropdown">
+              <li><h6 class="dropdown-header">{{ getAuthenticatedUser()!.getFullName() }}</h6></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" id="signOut" (click)="deauthenticate()">Sign out</a></li>
+            </ul>
+          </li>
+          <li *ngIf="!authenticated()" class="nav-item">
+            <a class="nav-link btn btn-secondary" routerLink="/users/login">Log In</a>
+          </li>
         </ul>
 
-        <!-- Log in Button -->
-        <button *ngIf="!authenticated()" class="btn btn-secondary me-2" routerLink="/users/login">Log In</button>
-
         <!-- User Profile -->
-        <div *ngIf="authenticated()" class="dropdown">
+        <!--<div *ngIf="authenticated()" class="user-dropdown">
           <a
             href="#"
             class="d-flex align-items-center text-decoration-none dropdown-toggle"
-            id="dropdownUser1"
+            id="userDropdown"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
@@ -67,11 +93,12 @@
               class="rounded-circle"
             />
           </a>
-          <ul class="dropdown-menu text-small shadow">
-            <li><span class="dropdown-item">{{ getAuthenticatedUser()!.firstName }}</span></li>
-            <li><a class="dropdown-item" href="" id="signOut">Sign out</a></li>
+          <ul class="dropdown-menu dropdown-menu-end text-small shadow">
+            <li><span class="dropdown-item fw-bold">{{ getAuthenticatedUser()!.getFullName() }}</span></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" id="signOut" (click)="deauthenticate()">Sign out</a></li>
           </ul>
-        </div>
+        </div>-->
 
       </div>
     </div>

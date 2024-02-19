@@ -5,6 +5,7 @@
   <div id="message" class="text-danger text-center mb-5"></div>
 
   <form
+    id="registrationForm"
     [formGroup]="registrationForm"
     (ngSubmit)="onSubmit()"
     class="form-register needs-validation row"
@@ -21,9 +22,7 @@
         placeholder="Enter your first name"
         required
       />
-      <div class="invalid-feedback">
-        
-      </div>
+      <div class="invalid-feedback"></div>
     </div>
     <div class="form-group col-md-6">
       <label for="lastName" class="form-label">Last Name</label>
@@ -35,9 +34,10 @@
         placeholder="Enter your last name"
         required
       />
+      <div class="invalid-feedback"></div>
     </div>
-    <div class="form-group col-md-6">
-      <label for="username" class="form-label pt-3"
+    <div class="form-group col-md-6 pt-4">
+      <label for="username" class="form-label"
         >Username
         <small style="font-size: 0.75em; font-style: italic"
           >&mdash; This can be changed at any time.</small
@@ -51,9 +51,10 @@
         placeholder="Enter your desired username"
         required
       />
+      <div class="invalid-feedback"></div>
     </div>
-    <div class="form-group col-md-6">
-      <label for="email" class="form-label pt-3">E-mail</label>
+    <div class="form-group col-md-6 pt-4">
+      <label for="email" class="form-label">E-mail</label>
       <input
         class="form-control"
         id="email"
@@ -62,9 +63,10 @@
         placeholder="Enter your e-mail"
         required
       />
+      <div class="invalid-feedback"></div>
     </div>
 
-    <div class="form-group col-md-6 pt-3">
+    <div class="form-group col-md-6 pt-4">
       <label class="form-label" for="password">Password</label>
       <input
         class="form-control"
@@ -75,25 +77,46 @@
         required
       />
       <i class="bi bi-eye" (click)="togglePassword($event)"></i>
+      <div class="invalid-feedback"></div>
     </div>
 
-    <div class="form-group col-md-6 pt-3">
-      <label class="form-label" for="password"
-        >Confirm Password</label
-      >
+    <div class="form-group col-md-6 pt-4">
+      <label class="form-label" for="password">Confirm Password</label>
       <input
         class="form-control"
-        id="confirm-password"
+        id="confirmPassword"
         type="password"
         formControlName="confirmPassword"
         placeholder="Confirm your password"
         required
       />
       <i class="bi bi-eye" (click)="togglePassword($event)"></i>
+      <div class="invalid-feedback"></div>
     </div>
 
-    <div class="col-md-6">
-      <button class="button dark mt-5 mb-5" type="submit">Register</button>
+    <div class="col-md-6 pt-4">
+      <button
+        id="registerButton"
+        class="button dark mb-3"
+        type="submit"
+        [disabled]="!this.registrationForm.valid"
+      >
+        <span
+          id="loadingSpinner"
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+          hidden
+        ></span>
+        <span class="visually-hidden">Loading...</span>
+        Register
+      </button>
     </div>
+
+    <p>
+      <a class="small" style="font-weight: 600" routerLink="/users/login"
+        >Already have an account?</a
+      >
+    </p>
   </form>
 </div>
