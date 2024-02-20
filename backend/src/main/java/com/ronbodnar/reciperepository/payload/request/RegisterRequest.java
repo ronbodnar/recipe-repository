@@ -20,7 +20,7 @@ public class RegisterRequest {
     private String lastName;
 
     @Size(min = 3, max = 15, message = "Username must be between 3-15 characters.")
-    @Pattern(regexp = "^[a-z\\d]+[._]?[a-z\\d]*[_.]?[a-z\\d]*$", message = "Username may only contain the special characters (. and _).")
+    @Pattern(regexp = "^[a-zA-Z\\d]+[._]?[a-zA-Z\\d]*[_.]?[a-zA-Z\\d]*$", message = "Username may only contain the special characters (. and _).")
     private String username;
 
     @Email(message = "Please provide a valid e-mail address.")

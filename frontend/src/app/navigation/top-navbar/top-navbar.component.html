@@ -1,6 +1,6 @@
 <header>
   <!-- Fixed navbar -->
-  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <nav class="navbar navbar-expand-md fixed-top bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" routerLink="/">
         Recipe Repository
@@ -21,51 +21,51 @@
       <div class="collapse navbar-collapse" id="navbarCollapse">
 
         <!-- Links -->
-        <ul class="navbar-nav">
+        <ul class="navbar-nav" id="nav-items">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" routerLink="/">Home</a>
+            <a class="nav-link {{ this.getRouter().url === '/' ? 'active' : '' }}" aria-current="page" routerLink="/">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Add Recipe</a>
+            <a class="nav-link {{ this.getRouter().url === '/recipes/add' ? 'active' : '' }}" routerLink="/recipes/add">Add Recipe</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link" href="#" id="coursesDropdown" data-bs-toggle="collapse" data-bs-target=".courses-dropdown" aria-expanded="false">Courses <i
+            <a class="nav-link {{ this.getRouter().url.startsWith('/courses/') ? 'active' : '' }}" href="#" id="coursesDropdown" data-bs-toggle="collapse" data-bs-target="#coursesCollapse" aria-expanded="false">Courses <i
               id="coursesChevron"
               class="bi bi-chevron-right"
             ></i
           ></a>
-            <ul class="dropdown-menu courses-dropdown collapse" aria-labelledby="coursesDropdown">
-              <li><a class="dropdown-item" href="#">Breakfast</a></li>
-              <li><a class="dropdown-item" href="#">Lunch & Dinner</a></li>
-              <li><a class="dropdown-item" href="#">Dessert</a></li>
-              <li><a class="dropdown-item" href="#">Snacks</a></li>
+            <ul class="dropdown-menu courses-dropdown collapse" id="coursesCollapse" data-bs-parent="#nav-items" aria-labelledby="coursesDropdown">
+              <li><a class="dropdown-item disabled" href="#">Breakfast</a></li>
+              <li><a class="dropdown-item disabled" href="#">Lunch & Dinner</a></li>
+              <li><a class="dropdown-item disabled" href="#">Dessert</a></li>
+              <li><a class="dropdown-item disabled" href="#">Snacks</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link" href="#" id="cuisinesDropdown" data-bs-toggle="collapse" data-bs-target=".cuisines-dropdown" aria-expanded="false">Cuisines <i
+            <a class="nav-link {{ this.getRouter().url.startsWith('/cuisines/') ? 'active' : '' }}" href="#" id="cuisinesDropdown" data-bs-toggle="collapse" data-bs-target="#cuisinesCollapse" aria-expanded="false">Cuisines <i
               id="cuisinesChevron"
               class="bi bi-chevron-right"
             ></i
           ></a>
-            <ul class="dropdown-menu cuisines-dropdown collapse" aria-labelledby="cuisinesDropdown">
-              <li><a class="dropdown-item" href="#">American</a></li>
-              <li><a class="dropdown-item" href="#">Mexican</a></li>
-              <li><a class="dropdown-item" href="#">Italian</a></li>
+            <ul class="dropdown-menu cuisines-dropdown collapse" id="cuisinesCollapse" data-bs-parent="#nav-items" aria-labelledby="cuisinesDropdown">
+              <li><a class="dropdown-item disabled" href="#">American</a></li>
+              <li><a class="dropdown-item disabled" href="#">Mexican</a></li>
+              <li><a class="dropdown-item disabled" href="#">Italian</a></li>
             </ul>
           </li>
           <li *ngIf="authenticated()" class="nav-item dropdown">
-            <a class="nav-link" href="#" id="cuisinesDropdown" data-bs-toggle="collapse" data-bs-target=".user-dropdown" aria-expanded="false"><img
+            <a class="nav-link {{ this.getRouter().url.startsWith('/user? account?/') ? 'active' : '' }}" href="#" id="userDropdown" data-bs-toggle="collapse" data-bs-target="#userCollapse" aria-expanded="false"><img
               src="/assets/images/default-profile-avatar.png"
               alt="Avatar"
               width="36"
               height="36"
               class="rounded-circle"
             />  <i
-            id="cuisinesChevron"
+            id="userChevron"
             class="bi bi-chevron-right"
           ></i
         ></a>
-            <ul class="dropdown-menu dropdown-menu-end user-dropdown collapse" aria-labelledby="userDropdown">
+            <ul class="dropdown-menu dropdown-menu-end user-dropdown collapse" id="userCollapse" data-bs-parent="#nav-items" aria-labelledby="userDropdown">
               <li><h6 class="dropdown-header">{{ getAuthenticatedUser()!.getFullName() }}</h6></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" id="signOut" (click)="deauthenticate()">Sign out</a></li>

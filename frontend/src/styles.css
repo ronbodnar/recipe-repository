@@ -19,6 +19,9 @@
   --header-height-mobile: 4rem;
   --header-height: 4rem;
 
+  --footer-height-mobile: 5rem;
+  --footer-height: 2.5rem;
+
   --radio-outline-color: #c4c6c2;
   --card-border-color: #c4c6c2;
   --light-text-color: #cccccc;
@@ -47,7 +50,7 @@ body {
 .container-full-page {
   margin: 0 auto;
   margin-top: var(--header-height-mobile);
-  min-height: calc(100dvh - var(--header-height-mobile));
+  min-height: calc(100dvh - var(--header-height-mobile) - var(--footer-height-mobile));
   width: 100vw;
   max-width: 100vw;
   padding: 1rem 1rem;
@@ -90,6 +93,23 @@ input:-webkit-autofill:focus {
 }
 
 /*
+ * Global text styles
+ */
+.text-green {
+  color: var(--green);
+  transition: 0.3s all ease-in-out;
+}
+
+a.text-green {
+  text-decoration: none;
+}
+
+a.text-green:hover {
+  color: var(--green);
+  opacity: 0.6;
+}
+
+/*
  * Global button styles
  */
 .button {
@@ -129,7 +149,7 @@ input:-webkit-autofill:focus {
     margin: 0 auto;
     margin-top: var(--header-height);
     padding: 1.5rem 1.5rem;
-    min-height: calc(100dvh - var(--header-height));
+    min-height: calc(100dvh - var(--header-height) - var(--footer-height));
     width: 75%;
     box-shadow: inset 0px 0px 9px -1px rgba(0, 0, 0, 0.75);
     background-color: var(--secondary-background-color);

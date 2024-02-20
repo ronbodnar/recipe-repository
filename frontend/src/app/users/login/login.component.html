@@ -1,8 +1,9 @@
 <h1 class="text-center">Account Login</h1>
 <div class="bar mb-5"></div>
 
-<div *ngIf="this.successfulRegistration" class="regristration-message">
+<div *ngIf="this.successfulRegistration" class="alert alert-success alert-dismissible fade show mb-4" role="alert">
   Your account has been created successfully!<br /><br />Please log in using your username and password.
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 
 <form

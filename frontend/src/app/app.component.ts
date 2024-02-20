@@ -11,6 +11,7 @@ import {
   RouterOutlet,
 } from '@angular/router';
 
+import { FooterComponent } from './navigation/footer/footer.component';
 import { TopNavbarComponent } from './navigation/top-navbar/top-navbar.component';
 import { SideNavbarComponent } from './navigation/side-navbar/side-navbar.component';
 
@@ -21,6 +22,7 @@ import { SideNavbarComponent } from './navigation/side-navbar/side-navbar.compon
     CommonModule,
     RouterLink,
     RouterOutlet,
+    FooterComponent,
     TopNavbarComponent,
     SideNavbarComponent,
   ],

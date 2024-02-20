@@ -1,104 +1,90 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { AuthenticationService } from '../../authentication.service';
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-top-navbar',
   standalone: true,
   imports: [RouterLink, CommonModule],
   templateUrl: './top-navbar.component.html',
-  styleUrl: './top-navbar.component.css'
+  styleUrl: './top-navbar.component.css',
 })
 export class TopNavbarComponent {
 
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(
+    private router: Router,
+    private authenticationService: AuthenticationService
+  ) {
+  }
 
-  ngOnInit(): void {
-    let collapseChevrons = document.querySelectorAll('.dropdown-menu.collapse');
-    collapseChevrons.forEach((collapse) => {
+  /*
+   * After the view is initialized, add event listeners to all collapsible fields to:
+   *    - Toggle chevrons when a collapse div is opened/closed
+   *    - Close all other collapsible divs when a click is registered
+   */
+  ngAfterViewInit(): void {
+    let collapseDivs = document.querySelectorAll('.collapse:not(.navbar-collapse)');
+
+    collapseDivs.forEach((collapse) => {
       collapse.addEventListener('hide.bs.collapse', (event: any) => {
         // Get the id for the collapse target
-        let targetId = event.target.id
+        let targetId = event.target.id;
 
         // replace the keywords
-        let chevronId = targetId.replace("Collapse", "Chevron")
+        let chevronId = targetId.replace('Collapse', 'Chevron');
 
         // find the proper chevron element
-        let chevron = document.querySelector('#' + chevronId)
+        let chevron = document.querySelector('#' + chevronId);
 
         // toggle the chevron icon
         chevron?.classList.toggle('rotate-chevron');
       });
       collapse.addEventListener('show.bs.collapse', (event: any) => {
         // Get the id for the collapse target
-        let targetId = event.target.id
+        let targetId = event.target.id;
 
         // replace the keywords
-        let chevronId = targetId.replace("Collapse", "Chevron")
+        let chevronId = targetId.replace('Collapse', 'Chevron');
 
         // find the proper chevron element
-        let chevron = document.querySelector('#' + chevronId)
+        let chevron = document.querySelector('#' + chevronId);
 
         // toggle the chevron icon
         chevron?.classList.toggle('rotate-chevron');
       });
     });
 
-    /*let collapseChevrons = document.querySelectorAll('.collapse');
-    collapseChevrons.forEach((collapse) => {
-      collapse.addEventListener('hide.bs.collapse', (event: any) => {
+    // Add a click listener that closes all other collapse elements, if the click is outside of a dropdown.
+    document.addEventListener('click', (event: any) => {
+      let parent = event.target.parentElement;
+      collapseDivs.forEach((collapse: any) => {
+        // Skip dropdown elements
+        if (parent.classList.contains('dropdown') || parent.classList.contains('dropdown-menu')) return;
 
-        // Get the id for the collapse target
-        let targetId = event.target.id
-
-        console.log(targetId)
-
-        // replace the keywords
-        let chevronId = targetId.replace("Dropdown", "Chevron")
-
-        console.log(chevronId)
-
-        // find the proper chevron element
-        let chevron = document.querySelector('#' + chevronId)
-
-        console.log(chevron)
-
-        // toggle the chevron icon
-        chevron?.classList.toggle('rotate-chevron');
+        // Get the Collapse instance from the element and hide it
+        var bsCollapse = bootstrap.Collapse.getInstance(collapse);
+        if (bsCollapse) bsCollapse.hide();
       });
-      collapse.addEventListener('show.bs.collapse', (event: any) => {
-        // Get the id for the collapse target
-        let targetId = event.target.id
-
-        console.log(targetId)
-
-        // replace the keywords
-        let chevronId = targetId.replace("Dropdown", "Chevron")
-
-        console.log(chevronId)
-
-        // find the proper chevron element
-        let chevron = document.querySelector('#' + chevronId)
-
-        console.log(chevron)
-
-        // toggle the chevron icon
-        chevron?.classList.toggle('rotate-chevron');
-      });
-    });*/
+    });
   }
 
   authenticated() {
-    return this.authenticationService.isAuthenticated()
+    return this.authenticationService.isAuthenticated();
   }
 
   getAuthenticatedUser() {
-    return this.authenticationService.getAuthenticatedUser()
+    return this.authenticationService.getAuthenticatedUser();
   }
 
   deauthenticate() {
-    this.authenticationService.deauthenticate().subscribe()
+    this.authenticationService.deauthenticate().subscribe();
+  }
+
+  getRouter(): Router {
+    return this.router;
   }
 }
