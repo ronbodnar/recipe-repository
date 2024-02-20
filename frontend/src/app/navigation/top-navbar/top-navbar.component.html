@@ -1,10 +1,11 @@
 <header>
-  <!-- Fixed navbar -->
   <nav class="navbar navbar-expand-md fixed-top bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" routerLink="/">
         Recipe Repository
       </a>
+
+      <!-- Responsive navbar toggler -->
       <button
         class="navbar-toggler"
         type="button"
@@ -55,7 +56,7 @@
           </li>
           <li *ngIf="authenticated()" class="nav-item dropdown">
             <a class="nav-link {{ this.getRouter().url.startsWith('/user? account?/') ? 'active' : '' }}" href="#" id="userDropdown" data-bs-toggle="collapse" data-bs-target="#userCollapse" aria-expanded="false"><img
-              src="/assets/images/default-profile-avatar.png"
+              src="../../../assets/images/default-profile-avatar.png"
               alt="Avatar"
               width="36"
               height="36"
@@ -65,8 +66,14 @@
             class="bi bi-chevron-right"
           ></i
         ></a>
-            <ul class="dropdown-menu dropdown-menu-end user-dropdown collapse" id="userCollapse" data-bs-parent="#nav-items" aria-labelledby="userDropdown">
-              <li><h6 class="dropdown-header">{{ getAuthenticatedUser()!.getFullName() }}</h6></li>
+            <ul class="dropdown-menu user-dropdown collapse" id="userCollapse" data-bs-parent="#nav-items" aria-labelledby="userDropdown">
+              <div id="userDetails">
+                <li><h5 class="full-name">{{ getAuthenticatedUser()!.getFullName() }}</h5></li>
+                <li><h5 class="username">{{ getAuthenticatedUser()!.username }}</h5></li>
+              </div>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item disabled"><i class="bi bi-person"></i> Your profile</a></li>
+              <li><a class="dropdown-item disabled"><i class="bi bi-gear"></i> Settings</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" id="signOut" (click)="deauthenticate()">Sign out</a></li>
             </ul>
@@ -75,72 +82,7 @@
             <a class="nav-link btn btn-secondary" routerLink="/users/login">Log In</a>
           </li>
         </ul>
-
-        <!-- User Profile -->
-        <!--<div *ngIf="authenticated()" class="user-dropdown">
-          <a
-            href="#"
-            class="d-flex align-items-center text-decoration-none dropdown-toggle"
-            id="userDropdown"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <img
-              src="/assets/images/default-profile-avatar.png"
-              alt="Avatar"
-              width="42"
-              height="42"
-              class="rounded-circle"
-            />
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end text-small shadow">
-            <li><span class="dropdown-item fw-bold">{{ getAuthenticatedUser()!.getFullName() }}</span></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" id="signOut" (click)="deauthenticate()">Sign out</a></li>
-          </ul>
-        </div>-->
-
       </div>
     </div>
   </nav>
 </header>
-
-<!--<header class="header top-bar">
-    <div class="logo d-flex justify-content-center align-items-center">
-        <a routerLink="/">
-            <img src="https://ronbodnar.com/assets/img/header.png" id="nav-header" alt="MRon Development" />
-        </a>
-    
-        <div class="header-toggle-mobile"><i class="bi bi-list"></i></div>
-    </div>
-
-    <div class="">
-        <span *ngIf="authenticated()">You are authenticated!</span>
-        <span *ngIf="!authenticated()">You are NOT authenticated!</span>
-        <button *ngIf="authenticated()" class="btn btn-secondary ms-5" (click)="deauthenticate()">Log Out</button>
-        <button *ngIf="!authenticated()" class="btn btn-secondary ms-5" routerLink="/users/login">Log In</button>
-    </div>
-
-    <div class="d-flex justify-content-end align-items-center">
-        <div class="dropdown">
-            <a href="#" class="text-mron d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="/assets/images/default-profile-avatar.png" alt="Avatar" width="32" height="32" class="rounded-circle">
-                <span class="d-none d-sm-inline mx-2">Ron Bodnar</span>
-            </a>
-            <ul class="dropdown-menu text-small shadow">
-                <li>
-                    <a class="dropdown-item d-flex justify-content-between">
-                        <label class="form-check-label d-inline-block" for="darkModeSwitch">Dark Mode</label>
-                        <div class="form-check form-switch d-inline-block">
-                            <input class="form-check-input" type="checkbox" id="darkModeSwitch" onclick="toggleDarkMode()">
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="" id="signOut">Sign out</a></li>
-            </ul>
-        </div>
-    </div>
-</header>-->

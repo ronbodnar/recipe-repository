@@ -45,6 +45,11 @@
   margin-bottom: 0.5em;
 }
 
+.dropdown-menu-dark {
+  border-color: transparent;
+  background-color: var(--dark-bg);
+}
+
 .navbar-nav .nav-link.active {
   color: var(--green);
 }
@@ -75,31 +80,36 @@
   transition: 2s all ease-in-out;
 }
 
-.slideDown {
-  animation-duration: 0.2s;
-  -webkit-animation-duration: 0.2s;
-  animation-fill-mode: both;
-  -webkit-animation-fill-mode: both;
-  animation-name: slideDown;
-  -webkit-animation-name: slideDown;
+.navbar-toggler {
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
-@keyframes slideDown {
-  from {
-    transform: translateY(-3%);
-  }
-  to {
-    transform: translateY(0%);
-  }
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
-@-webkit-keyframes slideDown {
-  from {
-    transform: translateY(-3%);
-  }
-  to {
-    transform: translateY(0%);
-  }
+.navbar-toggler:focus {
+  text-decoration: none;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem;
+  border: none;
+}
+
+#userDetails .full-name {
+  padding: 0.5rem 1rem 0;
+  font-size: 1.1em;
+  color: var(--dark-bg);
+  font-weight: 800;
+}
+
+#userDetails .username {
+  padding: 0 1rem;
+  font-size: 0.8em;
+}
+
+#userDetails .username:before {
+  content: "@";
 }
 
 @media screen and (min-width: 1024px) {
@@ -126,6 +136,11 @@
     max-height: var(--header-height);
   }
 
+  
+.dropdown-menu-dark {
+  border-color: rgba(0,0,0,.15);
+}
+
   .bi-chevron-right {
     position: absolute;
     font-size: 1rem;
@@ -145,29 +160,12 @@
     top: calc(var(--header-height) + 0.25rem);
   }
 
-  .dropdown-menu-end {
+  .user-dropdown {
     right: 0.5rem;
+    width: 250px;
   }
 
-  @keyframes slideDown {
-    from {
-      transform: translateY(-3%);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0%);
-      opacity: 1;
-    }
-  }
-
-  @-webkit-keyframes slideDown {
-    from {
-      transform: translateY(-3%);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0%);
-      opacity: 1;
-    }
+  .dropdown-item {
+    cursor: pointer;
   }
 }
