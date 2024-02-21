@@ -7,9 +7,13 @@
   --green: #43b581;
   --green-rgb: 67, 181, 129;
   --white: #eaeaea;
+
   --radio-outline-color: #c4c6c2;
+
   --nunito-font: "Nunito", sans-serif;
+
   --light-text-color: #7f7f7f;
+  
   --nav-width: 0px;
 
   --background-color: var(--dark-bg);
@@ -90,6 +94,28 @@ input:-webkit-autofill:focus {
 /* Remove the eye that pops up with IE/Edge */
 ::-ms-reveal {
   display: none;
+}
+
+/* Overlay loading style */
+.loader {
+  margin: 50px auto 0;
+  border: 12px solid #eee;
+  border-top: 12px solid var(--green);
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  animation: spin 1.25s linear infinite;
+  display: flex;
+  align-items: center;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /*
