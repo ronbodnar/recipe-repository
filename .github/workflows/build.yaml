@@ -30,7 +30,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Install Maven dependencies
-        run: mvn install
+        run: cd backend && mvn install
 
       - name: Run tests
-        run: mvn --batch-mode --update-snapshots verify
+        run: cd backend && mvn --batch-mode --update-snapshots verify
