@@ -41,7 +41,6 @@ export class AuthenticationService {
     // Perform an authentication check with the server.
     return this.http.get(`${this.authUrl}/user`).pipe(
       map((res: any) => {
-        console.log(res);
         if (res !== null) {
           // If the user is authenticated, a Principal is received and the authenticated user is set for the session.
           if (res.principal) {
@@ -51,11 +50,6 @@ export class AuthenticationService {
             this.storageService.setUser(this.authenticatedUser);
           }
         }
-      }),
-      catchError((error) => {
-        console.log('checkAuthentication() error:');
-        console.log(error);
-        return EMPTY;
       })
     );
   }
@@ -74,14 +68,7 @@ export class AuthenticationService {
           this.authenticatedUser = user;
           this.storageService.setUser(user);
         }),
-        catchError((error) => {
-          if (error && error.error) {
-            this.loginComponent.handleError(error.error);
-          }
-          console.log('AUTH ERROR:');
-          console.log(error);
-          return EMPTY;
-        })
+        catchError((error) => this.loginComponent.handleError(error.error))
       );
   }
 

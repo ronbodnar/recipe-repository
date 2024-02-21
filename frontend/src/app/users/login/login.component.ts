@@ -5,6 +5,7 @@ import { User } from '../user';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { AuthenticationService } from '../../authentication.service';
+import { EMPTY, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -70,7 +71,7 @@ export class LoginComponent {
     passwordField.type = this.showPassword ? 'text' : 'password'
   }
 
-  handleError(error: any) {
+  handleError(error: any): Observable<any> {
     let passwordField = document.querySelector('#password');
     let errorDiv = document.getElementById('error')
     if (errorDiv) {
@@ -87,6 +88,8 @@ export class LoginComponent {
     // Enable the Log In button and display the loading spinner
     loginButton?.removeAttribute('disabled')
     loadingSpinner?.setAttribute('hidden', '')
+
+    return EMPTY
   }
 
   formatErrorMessage(error: any): string {

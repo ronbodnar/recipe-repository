@@ -3,7 +3,7 @@ import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HTTP_INTERCEPTORS
 import { Observable } from 'rxjs';
 
 /*
- * This interceptor is used to append the withCredentials option to all requests.
+ * This interceptor is used to append the withCredentials option to all requests, necessary for JWT HttpOnly authentication.
  */
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
