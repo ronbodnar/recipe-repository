@@ -50,7 +50,7 @@ export class AuthenticationService {
             this.storageService.setUser(this.authenticatedUser);
           }
         }
-      })
+      }), catchError(() => EMPTY)
     );
   }
 
@@ -68,7 +68,7 @@ export class AuthenticationService {
           this.authenticatedUser = user;
           this.storageService.setUser(user);
         }),
-        catchError((error) => this.loginComponent.handleError(error.error))
+        catchError(error => this.loginComponent.handleError(error.error))
       );
   }
 
@@ -79,7 +79,7 @@ export class AuthenticationService {
         // Remove the user data from the session
         this.authenticatedUser = null;
         this.storageService.clear();
-      })
+      }), catchError(() => EMPTY)
     );
   }
 
