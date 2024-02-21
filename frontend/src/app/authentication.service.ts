@@ -50,11 +50,7 @@ export class AuthenticationService {
             this.storageService.setUser(this.authenticatedUser);
           }
         }
-<<<<<<< HEAD
-      })
-=======
       }), catchError(() => EMPTY)
->>>>>>> temp-branch
     );
   }
 
@@ -71,12 +67,7 @@ export class AuthenticationService {
           // Remove the user data from the session
           this.authenticatedUser = user;
           this.storageService.setUser(user);
-        }),
-<<<<<<< HEAD
-        catchError((error) => this.loginComponent.handleError(error.error))
-=======
-        catchError(error => this.loginComponent.handleError(error.error))
->>>>>>> temp-branch
+        }), catchError(error => this.loginComponent.handleError(error.error))
       );
   }
 

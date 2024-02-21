@@ -6,6 +6,9 @@ on:
 jobs:
   project-build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
 
     steps:
       - name: Check out Github repository
@@ -20,6 +23,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
+          distribution: 'temurin'
 
       - name: Set up Maven dependency caching
         uses: actions/cache@v3
@@ -29,7 +33,13 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Install Maven dependencies
-        run: mvn install
+        run: ls -la
+        
+      - name: Install Maven dependencies2
+        run: cd backend
+        
+      - name: Install Maven dependencies3
+        run: ls -la
 
       - name: Run tests
-        run: mvn --batch-mode --update-snapshots verify
+        run: cd backend && mvn --batch-mode --update-snapshots verify

@@ -83,7 +83,6 @@ backend/.vscode/
 ### Database ###
 backend/recipe_repository.*.db
 
-backend/src/main/resources/application.properties
-backend/*.pem
+backend/*.properties
 
 .vscode/
