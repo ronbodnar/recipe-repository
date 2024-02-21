@@ -67,7 +67,7 @@ export class TopNavbarComponent {
 
         // Get the Collapse instance from the element and hide it
         var bsCollapse = bootstrap.Collapse.getInstance(collapse);
-        if (bsCollapse) bsCollapse.hide();
+        bsCollapse?.hide();
       });
     });
   }

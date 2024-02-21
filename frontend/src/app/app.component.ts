@@ -15,6 +15,8 @@ import { FooterComponent } from './navigation/footer/footer.component';
 import { TopNavbarComponent } from './navigation/top-navbar/top-navbar.component';
 import { SideNavbarComponent } from './navigation/side-navbar/side-navbar.component';
 
+declare var bootstrap: any;
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -40,10 +42,15 @@ export class AppComponent {
     });
   }
 
-  // intercepting navigation routing events to toggle a loading overlay
+  // intercepting navigation routing events
   interceptNavigation(event: RouterEvent): void {
     if (event instanceof NavigationStart) {
       this.showOverlay = true;
+
+      // Collapse the top navbar on smaller screens
+      let navbar = document.querySelector('#navbarCollapse')
+      let collapse = bootstrap.Collapse.getInstance(navbar)
+      collapse?.hide()
     } else if (
       event instanceof NavigationEnd ||
       event instanceof NavigationCancel ||
