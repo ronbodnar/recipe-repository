@@ -1,5 +1,6 @@
 .git/
 .idea/
+.vscode/
 
 ### FRONT-END ###
 # Compiled output
@@ -83,7 +84,5 @@ backend/.vscode/
 ### Database ###
 backend/recipe_repository.*.db
 
-backend/src/main/resources/application.properties
-backend/*.pem
-
-.vscode/
+### Environment Properties ###
+backend/*.properties

@@ -92,7 +92,8 @@
             ],
             "scripts": [
               "src/assets/js/bootstrap.bundle.min.js"
-            ]
+            ],
+            "karmaConfig": "karma.conf.js"
           }
         }
       }

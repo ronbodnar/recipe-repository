@@ -1,11 +1,14 @@
 name: Recipe Repository backend workflow EC2
 on:
   push:
-    branches: [ master ]
+    branches: [ master, main ]
 
 jobs:
   project-build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
 
     steps:
       - name: Check out Github repository
@@ -28,9 +31,6 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-
-      - name: Install Maven dependencies
-        run: cd backend && mvn install
 
       - name: Run tests
         run: cd backend && mvn --batch-mode --update-snapshots verify

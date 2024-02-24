@@ -18,8 +18,8 @@ export class AuthenticationService {
 
   private authenticatedUser!: User | null;
 
-  //private readonly authUrl: string = 'https://ec2.ronbodnar.com:8443/auth'
-  private readonly authUrl: string = 'http://localhost:8080/auth';
+  private readonly authUrl: string = 'https://ec2.ronbodnar.com:8443/auth'
+  //private readonly authUrl: string = 'http://localhost:8080/auth';
 
   constructor(
     private http: HttpClient,

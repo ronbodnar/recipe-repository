@@ -1,0 +1,55 @@
+name: Recipe Repository backend workflow EC2
+on:
+  push:
+    branches: [ master, main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: Check out Github repository
+        uses: actions/checkout@v4
+          
+      - name: Create env.properties
+        env:
+            PROPERTIES: ${{ secrets.ENV_PROPERTIES }}
+        run: echo "$PROPERTIES" > env.properties
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Verify Maven project
+        run: mvn --batch-mode --update-snapshots verify
+
+      - name: Deliver snapshot
+        shell: bash
+        env:
+          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+          EC2_INSTANCE: ${{ secrets.EC2_INSTANCE }}
+        run: |
+            mkdir ~/.ssh/
+            echo "$SSH_KEY" > ~/.ssh/id_rsa
+            echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+            chmod 400 ~/.ssh/id_rsa
+            
+            eval $(ssh-agent)
+            ssh-add - <<< "$SSH_KEY"
+            
+            scp target/reciperepository-0.0.1-SNAPSHOT.jar env.properties "$EC2_INSTANCE":~/recipe-repository/
+        
+      - name: Deploy snapshot
+        shell: bash
+        env:
+          EC2_INSTANCE: ${{ secrets.EC2_INSTANCE }}
+        run: |
+          ssh "$EC2_INSTANCE" 'pidof java | xargs kill || true'
+          ssh "$EC2_INSTANCE" 'cd ~/recipe-repository/ && (nohup java -jar -XX:+UseSerialGC reciperepository-0.0.1-SNAPSHOT.jar > nohup.out 2> nohup.err < /dev/null &)'
