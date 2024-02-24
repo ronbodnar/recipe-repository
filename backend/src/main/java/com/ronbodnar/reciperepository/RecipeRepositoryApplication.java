@@ -4,7 +4,6 @@ import com.ronbodnar.reciperepository.model.Role;
 import com.ronbodnar.reciperepository.model.User;
 import com.ronbodnar.reciperepository.repository.RoleRepository;
 import com.ronbodnar.reciperepository.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

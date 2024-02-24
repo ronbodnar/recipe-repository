@@ -1,7 +1,7 @@
-name: Recipe Repository backend workflow EC2
+name: Backend Verify -> Deliver -> Deploy
 on:
   push:
-    branches: [ main ]
+    branches: [ main, test ]
 
 jobs:
   build-and-deploy:
@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Check out Github repository
         uses: actions/checkout@v4
+        with: 
+            sparse-checkout: backend
           
       - name: Create env.properties
         env:
