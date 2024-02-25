@@ -1,7 +1,8 @@
-name: Recipe Repository frontend workflow
+name: Front-end Pipeline
 on:
   push:
-    branches: [ master, main ]
+    branches:
+       - main
 
 jobs:
   build-and-deploy:
@@ -13,6 +14,8 @@ jobs:
     steps:
       - name: Check out Github repository
         uses: actions/checkout@v4
+        with: 
+            sparse-checkout: frontend
 
       - name: Set up Node 20
         uses: actions/setup-node@v4
@@ -27,7 +30,25 @@ jobs:
       - name: Run karma tests
         run: npm run test-ci
         
-      - name: Build for production
+      - name: Build
         run: npm run build-prod
         
-    #  - name: Copy output to remote server
+      - name: Deliver and Deploy
+        shell: bash
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY_DO_DROPLET }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS_DO_DROPLET }}
+          HOST: ${{ secrets.SSH_HOST_DO_DROPLET }}
+          PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
+        run: |
+            mkdir ~/.ssh/
+            echo "$SSH_KEY" > ~/.ssh/id_rsa
+            echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+            chmod 400 ~/.ssh/id_rsa
+            
+            eval $(ssh-agent)
+            ssh-add ~/.ssh/id_rsa <<< "$PASSPHRASE"
+            
+            sshpass -p "$PASSPHRASE" ssh "$HOST" 'cd /var/www/recipe-repository.ronbodnar.com/ && rm -rf *'
+            
+            sshpass -p "$PASSPHRASE" scp -r dist/browser/* "$HOST":/var/www/recipe-repository.ronbodnar.com/

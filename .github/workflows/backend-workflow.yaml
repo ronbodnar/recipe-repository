@@ -1,4 +1,4 @@
-name: Backend Verify -> Deliver -> Deploy
+name: Back-end Pipeline
 on:
   push:
     branches: [ main, test ]
@@ -18,7 +18,7 @@ jobs:
           
       - name: Create env.properties
         env:
-            PROPERTIES: ${{ secrets.ENV_PROPERTIES }}
+            PROPERTIES: ${{ secrets.BACKEND_PROPERTIES }}
         run: echo "$PROPERTIES" > env.properties
 
       - name: Set up Java 17
@@ -34,9 +34,9 @@ jobs:
       - name: Deliver snapshot
         shell: bash
         env:
-          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
-          EC2_INSTANCE: ${{ secrets.EC2_INSTANCE }}
+          SSH_KEY: ${{ secrets.SSH_KEY_AWS_EC2 }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS_AWS_EC2 }}
+          HOST: ${{ secrets.SSH_HOST_AWS_EC2 }}
         run: |
             mkdir ~/.ssh/
             echo "$SSH_KEY" > ~/.ssh/id_rsa
@@ -46,12 +46,13 @@ jobs:
             eval $(ssh-agent)
             ssh-add - <<< "$SSH_KEY"
             
-            scp target/reciperepository-0.0.1-SNAPSHOT.jar env.properties "$EC2_INSTANCE":~/recipe-repository/
+            scp target/reciperepository-0.0.1-SNAPSHOT.jar env.properties "$HOST":~/recipe-repository/
         
+      # This is very rudimentary and "just gets the job done" - I'll improve on it later.
       - name: Deploy snapshot
         shell: bash
         env:
-          EC2_INSTANCE: ${{ secrets.EC2_INSTANCE }}
+          HOST: ${{ secrets.SSH_HOST_AWS_EC2 }}
         run: |
-          ssh "$EC2_INSTANCE" 'pidof java | xargs kill || true'
-          ssh "$EC2_INSTANCE" 'cd ~/recipe-repository/ && (nohup java -jar -XX:+UseSerialGC reciperepository-0.0.1-SNAPSHOT.jar > nohup.out 2> nohup.err < /dev/null &)'
+          ssh "$HOST" 'pidof java | xargs kill || true'
+          ssh "$HOST" 'cd ~/recipe-repository/ && (nohup java -jar -XX:+UseSerialGC reciperepository-0.0.1-SNAPSHOT.jar > nohup.out 2> nohup.err < /dev/null &)'
