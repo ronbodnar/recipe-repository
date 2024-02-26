@@ -1,6 +1,5 @@
 package com.ronbodnar.reciperepository.model;
 
-import com.ronbodnar.reciperepository.enums.MeasurementType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,9 +13,10 @@ import java.util.Set;
 public class Ingredient {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @Column(name = "name")
     private String name;
 
     @OneToMany(mappedBy = "ingredient")

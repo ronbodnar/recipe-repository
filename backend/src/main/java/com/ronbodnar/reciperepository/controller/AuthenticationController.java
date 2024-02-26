@@ -32,7 +32,7 @@ import java.security.Principal;
 import java.util.*;
 
 @Getter
-@CrossOrigin(origins = {"http://localhost:4200", "https://ronbodnar.com", "https://ronbodnar.github.io"}, allowedHeaders = "*", allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:4200", "https://ronbodnar.com"}, allowedHeaders = "*", allowCredentials = "true")
 @RestController
 public class AuthenticationController {
 

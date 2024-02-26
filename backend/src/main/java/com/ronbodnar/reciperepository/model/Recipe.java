@@ -1,5 +1,6 @@
 package com.ronbodnar.reciperepository.model;
 
+import com.ronbodnar.reciperepository.enums.PreparationType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,8 +15,16 @@ import java.util.Set;
 public class Recipe {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    private String description;
+
+    private int prepTime;
+
+    private int cookTime;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
@@ -23,5 +32,8 @@ public class Recipe {
 
     @OneToMany(mappedBy = "recipe")
     private Set<RecipeIngredient> recipeIngredients = new HashSet<>();
+
+    @OneToMany(mappedBy = "recipe")
+    private Set<Instruction> instructions = new HashSet<>();
 
 }
