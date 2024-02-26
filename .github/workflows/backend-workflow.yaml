@@ -46,7 +46,9 @@ jobs:
             eval $(ssh-agent)
             ssh-add - <<< "$SSH_KEY"
             
-            scp target/reciperepository-0.0.1-SNAPSHOT.jar env.properties "$HOST":~/recipe-repository/
+            mv target/reciperepository-0.0.1-SNAPSHOT.jar target/recipe-repo.jar
+            
+            scp target/recipe-repo.jar env.properties "$HOST":~/recipe-repository/
         
       # This is very rudimentary and "just gets the job done" - I'll improve on it later.
       - name: Deploy snapshot
@@ -55,4 +57,4 @@ jobs:
           HOST: ${{ secrets.SSH_HOST_AWS_EC2 }}
         run: |
           ssh "$HOST" 'pidof java | xargs kill || true'
-          ssh "$HOST" 'cd ~/recipe-repository/ && (nohup java -jar -XX:+UseSerialGC reciperepository-0.0.1-SNAPSHOT.jar > nohup.out 2> nohup.err < /dev/null &)'
+          ssh "$HOST" 'cd ~/recipe-repository/ && (nohup java -jar -XX:+UseSerialGC recipe-repo.jar --spring.profiles.active=prod > nohup.out 2> nohup.err < /dev/null &)'
