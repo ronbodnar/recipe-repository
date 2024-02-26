@@ -7,12 +7,13 @@ import com.ronbodnar.reciperepository.payload.response.FieldError;
 import com.ronbodnar.reciperepository.repository.RoleRepository;
 import com.ronbodnar.reciperepository.security.service.JwtService;
 import com.ronbodnar.reciperepository.security.service.UserDetailsImpl;
-import com.ronbodnar.reciperepository.payload.response.MessageResponse;
 import com.ronbodnar.reciperepository.model.User;
 import com.ronbodnar.reciperepository.repository.UserRepository;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -45,6 +46,8 @@ public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
+
     public AuthenticationController(JwtService jwtService, RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.jwtService = jwtService;
         this.roleRepository = roleRepository;
@@ -68,7 +71,7 @@ public class AuthenticationController {
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) throws BadCredentialsException {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-        System.out.println(authentication);
+        logger.info("Authentication: " + authentication.toString());
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -86,7 +89,7 @@ public class AuthenticationController {
 
         List<FieldError> fieldErrorList = new ArrayList<FieldError>();
         if (userRepository.existsByUsername(registerRequest.getUsername()))
-            fieldErrorList.add(new FieldError("username", "Username already taken, please try another."));
+            fieldErrorList.add(new FieldError("username", "Username has already been registered."));
 
         if (userRepository.existsByEmail(registerRequest.getEmail()))
             fieldErrorList.add(new FieldError("email", "E-mail address has already been registered."));
@@ -116,7 +119,7 @@ public class AuthenticationController {
 
         userRepository.save(user);
 
-        return ResponseEntity.ok(new MessageResponse("user registered successfully"));
+        return ResponseEntity.ok().body("");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

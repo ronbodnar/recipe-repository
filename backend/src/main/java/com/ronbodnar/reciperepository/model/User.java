@@ -39,6 +39,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @OneToMany(mappedBy = "author")
+    private Set<Recipe> recipes = new HashSet<>();
+
     public User(String username, String firstName, String lastName, String email, String password) {
         this.username = username;
         this.firstName = firstName;

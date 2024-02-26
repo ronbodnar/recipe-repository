@@ -167,12 +167,13 @@
 
   .user-dropdown {
     right: 0.5rem;
-    width: 250px;
+    min-width: 175px;
   }
 
   .dropdown-item {
     cursor: pointer;
   }
+
   #userDetails .full-name {
     color: var(--dark-bg);
   }

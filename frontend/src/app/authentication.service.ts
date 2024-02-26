@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from './users/user';
-
+import { environment } from '../environments/environment.development';
 import { StorageService } from './storage.service';
 import { LoginComponent } from './users/login/login.component';
 import { RegisterComponent } from './users/register/register.component';
@@ -18,8 +18,7 @@ export class AuthenticationService {
 
   private authenticatedUser!: User | null;
 
-  private readonly authUrl: string = 'https://ec2.ronbodnar.com:8443/auth'
-  //private readonly authUrl: string = 'http://localhost:8080/auth';
+  private readonly authUrl: string = environment.apiUrl + 'auth'
 
   constructor(
     private http: HttpClient,
