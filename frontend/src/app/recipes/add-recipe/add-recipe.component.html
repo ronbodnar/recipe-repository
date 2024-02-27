@@ -1,6 +1,105 @@
 <h1 class="text-center">Add Recipe</h1>
 <div class="bar mb-5"></div>
 
+<form
+  [formGroup]="addRecipeForm"
+  (ngSubmit)="onSubmit()"
+  class="form-signin needs-validation row"
+  autocomplete="off"
+  novalidate
+>
+  <div class="form-group col-md-6">
+    <label for="title" class="form-label">Title</label>
+    <input
+      class="form-control"
+      id="title"
+      type="text"
+      formControlName="title"
+      placeholder="Recipe Title"
+      required
+      autofocus
+    />
+  </div>
+
+  <div class="form-group col-md-6">
+    <label for="description" class="form-label">Description</label>
+    <input
+      class="form-control"
+      id="description"
+      type="text"
+      formControlName="description"
+      placeholder="Enter a short description."
+      required
+    />
+  </div>
+
+  <div class="form-group col-md-6 pt-3">
+    <label for="prepTime" class="form-label">Prep Time</label>
+    <input
+      class="form-control"
+      id="prepTime"
+      type="text"
+      formControlName="prepTime"
+      placeholder="Prep time"
+      required
+    />
+  </div>
+  <div class="form-group col-md-6 pt-3">
+    <label for="cookTime" class="form-label">Cook Time</label>
+    <input
+      class="form-control"
+      id="cookTime"
+      type="text"
+      formControlName="cookTime"
+      placeholder="Cook time"
+      required
+    />
+  </div>
+
+  <div class="form-group col-md-6 pt-3">
+    <label for="ingredients" class="form-label">Ingredients</label>
+    <textarea
+      class="form-control"
+      id="ingredients"
+      formControlName="ingredients"
+      placeholder="Enter ingredients"
+      required
+      rows="7"
+    ></textarea>
+  </div>
+
+  <div class="form-group col-md-6 pt-3">
+    <label for="instructions" class="form-label">Instructions</label>
+    <textarea
+      class="form-control"
+      id="instructions"
+      formControlName="instructions"
+      placeholder="Enter instructions"
+      required
+      rows="7"
+    ></textarea>
+  </div>
+
+  <div id="error" class="error mt-2"></div>
+
+  <button
+    id="loginButton"
+    class="button dark mb-3 mt-3"
+    type="submit"
+    [disabled]="!this.addRecipeForm.valid"
+  >
+    <span
+      id="loadingSpinner"
+      class="spinner-border spinner-border-sm"
+      role="status"
+      aria-hidden="true"
+      hidden
+    ></span>
+    <span class="visually-hidden">Loading...</span>
+    Submit Recipe
+  </button>
+</form>
+
 <!--
 Ingredients (Ingredient Sets)
 

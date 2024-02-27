@@ -1,6 +1,6 @@
 package com.ronbodnar.reciperepository.repository;
 
-import com.ronbodnar.reciperepository.model.Instruction;
+import com.ronbodnar.reciperepository.model.recipe.Instruction;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

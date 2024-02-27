@@ -1,6 +1,6 @@
 package com.ronbodnar.reciperepository.security;
 
-import com.ronbodnar.reciperepository.model.User;
+import com.ronbodnar.reciperepository.model.user.User;
 import com.ronbodnar.reciperepository.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

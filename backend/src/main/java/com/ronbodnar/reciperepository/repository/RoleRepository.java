@@ -1,6 +1,6 @@
 package com.ronbodnar.reciperepository.repository;
 
-import com.ronbodnar.reciperepository.model.Role;
+import com.ronbodnar.reciperepository.model.user.Role;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

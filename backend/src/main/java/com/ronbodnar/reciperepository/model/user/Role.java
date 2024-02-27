@@ -1,4 +1,4 @@
-package com.ronbodnar.reciperepository.model;
+package com.ronbodnar.reciperepository.model.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

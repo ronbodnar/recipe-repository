@@ -1,26 +1,30 @@
 package com.ronbodnar.reciperepository.controller;
 
-import com.ronbodnar.reciperepository.model.Recipe;
-import com.ronbodnar.reciperepository.repository.RecipeRepository;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ronbodnar.reciperepository.model.recipe.Recipe;
+import com.ronbodnar.reciperepository.payload.request.RecipeRequest;
+import com.ronbodnar.reciperepository.service.RecipeService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:4200", "https://ronbodnar.com"}, allowedHeaders = "*", allowCredentials = "true")
 public class RecipeController {
 
-    private final RecipeRepository recipeRepository;
+    private final RecipeService recipeService;
 
-    public RecipeController(RecipeRepository recipeRepository) {
-        this.recipeRepository = recipeRepository;
+    public RecipeController(RecipeService recipeService) {
+        this.recipeService = recipeService;
     }
 
     @GetMapping("/recipes/")
     public List<Recipe> getAllRecipes() {
-        return (List<Recipe>) recipeRepository.findAll();
+        return recipeService.getAll();
+    }
+
+    @PostMapping("recipes/")
+    public ResponseEntity<?> addRecipe(@RequestBody RecipeRequest recipeRequest) {
+        return recipeService.add(recipeRequest);
     }
 }

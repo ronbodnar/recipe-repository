@@ -1,4 +1,4 @@
-package com.ronbodnar.reciperepository.model;
+package com.ronbodnar.reciperepository.model.recipe;
 
 import jakarta.persistence.*;
 import lombok.*;

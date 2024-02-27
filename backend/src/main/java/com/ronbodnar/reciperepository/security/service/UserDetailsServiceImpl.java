@@ -1,6 +1,6 @@
 package com.ronbodnar.reciperepository.security.service;
 
-import com.ronbodnar.reciperepository.model.User;
+import com.ronbodnar.reciperepository.model.user.User;
 import com.ronbodnar.reciperepository.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

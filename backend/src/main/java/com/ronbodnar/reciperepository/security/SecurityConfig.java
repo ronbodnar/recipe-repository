@@ -48,6 +48,9 @@ public class SecurityConfig {
     }
 
     @Bean
+    public BearerAuthenticationFilter devAuthenticationFilter() { return new BearerAuthenticationFilter(); }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(AbstractHttpConfigurer::disable) // disable cors
@@ -60,6 +63,7 @@ public class SecurityConfig {
                 );
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); // check for auth by JWT in cookies
+        http.addFilterAfter(devAuthenticationFilter(), JwtAuthenticationFilter.class); // used for postman authentication
 
         return http.build();
     }

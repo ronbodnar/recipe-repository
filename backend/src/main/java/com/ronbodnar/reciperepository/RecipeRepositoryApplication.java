@@ -1,7 +1,7 @@
 package com.ronbodnar.reciperepository;
 
-import com.ronbodnar.reciperepository.model.Role;
-import com.ronbodnar.reciperepository.model.User;
+import com.ronbodnar.reciperepository.model.user.Role;
+import com.ronbodnar.reciperepository.model.user.User;
 import com.ronbodnar.reciperepository.repository.RoleRepository;
 import com.ronbodnar.reciperepository.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;

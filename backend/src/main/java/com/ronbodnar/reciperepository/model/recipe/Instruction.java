@@ -1,30 +1,32 @@
-package com.ronbodnar.reciperepository.model;
+package com.ronbodnar.reciperepository.model.recipe;
 
 import com.ronbodnar.reciperepository.enums.PreparationType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
 @Entity
 @Data
 @NoArgsConstructor
+@Table(name = "instructions")
 public class Instruction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // The step number in the order of instructions
-    @Column(name = "step")
-    private int step;
+    @Column(name = "order")
+    private int order;
 
     @Column(name = "text")
     private String text;
 
     @Column(name = "preparation_type")
     private PreparationType preparationType;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "instruction_id", referencedColumnName = "id")
+    private InstructionImage image;
 
     @ManyToOne
     @JoinColumn(name = "recipe_id")

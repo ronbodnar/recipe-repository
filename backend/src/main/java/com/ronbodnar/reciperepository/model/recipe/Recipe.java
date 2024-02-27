@@ -1,6 +1,6 @@
-package com.ronbodnar.reciperepository.model;
+package com.ronbodnar.reciperepository.model.recipe;
 
-import com.ronbodnar.reciperepository.enums.PreparationType;
+import com.ronbodnar.reciperepository.model.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,7 +31,10 @@ public class Recipe {
     private User author;
 
     @OneToMany(mappedBy = "recipe")
-    private Set<RecipeIngredient> recipeIngredients = new HashSet<>();
+    private Set<RecipeImage> images = new HashSet<>();
+
+    @OneToMany(mappedBy = "recipe")
+    private Set<RecipeIngredient> ingredients = new HashSet<>();
 
     @OneToMany(mappedBy = "recipe")
     private Set<Instruction> instructions = new HashSet<>();

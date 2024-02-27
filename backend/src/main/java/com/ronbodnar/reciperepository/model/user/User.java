@@ -1,6 +1,7 @@
-package com.ronbodnar.reciperepository.model;
+package com.ronbodnar.reciperepository.model.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ronbodnar.reciperepository.model.recipe.Recipe;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.ronbodnar.reciperepository.model;
+package com.ronbodnar.reciperepository.model.recipe;
 
 import com.ronbodnar.reciperepository.enums.MeasurementType;
 import jakarta.persistence.*;
@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
+@Table(name = "recipe_ingredients")
 public class RecipeIngredient {
 
     @Id

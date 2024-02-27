@@ -1,58 +1,23 @@
 package com.ronbodnar.reciperepository.controller;
 
-import com.ronbodnar.reciperepository.model.User;
-import com.ronbodnar.reciperepository.repository.UserRepository;
+import com.ronbodnar.reciperepository.model.user.User;
+import com.ronbodnar.reciperepository.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
-@CrossOrigin(origins = {"http://localhost:4200", "https://ronbodnar.com"}, allowedHeaders = "*", allowCredentials = "true")
 @RestController
+@CrossOrigin(origins = {"http://localhost:4200", "https://ronbodnar.com"}, allowedHeaders = "*", allowCredentials = "true")
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/users")
     public List<User> getUsers() {
-        return (List<User>) userRepository.findAll();
-    }
-
-    @PostMapping("/users")
-    void addUser(@RequestBody User user) {
-        userRepository.save(user);
-    }
-
-    @DeleteMapping("/users/{id}")
-    void removeUser(@PathVariable long id) {
-        userRepository.deleteById(id);
-    }
-
-    @GetMapping("/users/{id}")
-    User getUser(@PathVariable long id) {
-        Optional<User> user = userRepository.findById(id);
-        return user.orElse(null);
-    }
-
-    @PutMapping("/users/{id}")
-    User updateUser(@PathVariable long id, @RequestBody User user) {
-        Optional<User> userToUpdate = userRepository.findById(id);
-        if (userToUpdate.isPresent()) {
-            userToUpdate.get().setUsername(user.getUsername());
-
-            userToUpdate.get().setEmail(user.getEmail());
-
-            userToUpdate.get().setFirstName(user.getFirstName());
-            userToUpdate.get().setLastName(user.getLastName());
-
-            userRepository.save(userToUpdate.get());
-
-            return userToUpdate.get();
-        }
-        return null;
+        return userService.getAll();
     }
 }
