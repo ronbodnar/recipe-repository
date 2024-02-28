@@ -18,13 +18,20 @@ public class Recipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "description")
     private String description;
 
+    @Column(name = "prep_time")
     private int prepTime;
 
+    @Column(name = "cook_time")
     private int cookTime;
+
+    @Column(name = "num_servings")
+    private int servings;
 
     @ManyToOne
     @JoinColumn(name = "author_id")

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { AuthenticationService } from '../../authentication.service';
+import { AuthenticationService } from '../../services/authentication.service';
 
 declare var bootstrap: any;
 

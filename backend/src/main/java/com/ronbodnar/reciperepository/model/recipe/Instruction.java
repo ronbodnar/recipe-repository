@@ -21,14 +21,14 @@ public class Instruction {
     @Column(name = "text")
     private String text;
 
-    @Column(name = "preparation_type")
-    private PreparationType preparationType;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "instruction_id", referencedColumnName = "id")
-    private InstructionImage image;
-
     @ManyToOne
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
+
+    @Column(name = "preparation_type")
+    private PreparationType preparationType;
+
+    @Column(name = "image_data")
+    private String imageData;
+    // Base64 representation of the image
 }

@@ -1,9 +1,9 @@
 import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { httpInterceptorProviders } from './http.interceptor';
+import { httpInterceptorProviders } from './core/interceptors/http.interceptor';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { AuthenticationService } from './authentication.service';
+import { AuthenticationService } from './core/services/authentication.service';
 
 import { routes } from './app.routes';
 

@@ -11,9 +11,9 @@ import {
   RouterOutlet,
 } from '@angular/router';
 
-import { FooterComponent } from './navigation/footer/footer.component';
-import { TopNavbarComponent } from './navigation/top-navbar/top-navbar.component';
-import { SideNavbarComponent } from './navigation/side-navbar/side-navbar.component';
+import { FooterComponent } from './core/components/footer/footer.component';
+import { TopNavbarComponent } from './core/components/top-navbar/top-navbar.component';
+import { SideNavbarComponent } from './core/components/side-navbar/side-navbar.component';
 
 declare var bootstrap: any;
 

@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from './users/user';
-import { environment } from '../environments/environment.development';
+import { User } from '../models/user';
+import { environment } from '../../../environments/environment.development';
 import { StorageService } from './storage.service';
-import { LoginComponent } from './users/login/login.component';
-import { RegisterComponent } from './users/register/register.component';
+import { LoginComponent } from '../../features/users/login/login.component';
+import { RegisterComponent } from '../../features/users/register/register.component';
 
 import { EMPTY, Observable, catchError, map, tap } from 'rxjs';
 

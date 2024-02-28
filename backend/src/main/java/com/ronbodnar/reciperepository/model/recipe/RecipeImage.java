@@ -18,6 +18,7 @@ public class RecipeImage {
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
-    @Column(name = "image_url")
-    private String imageUrl;
+    @Column(name = "image_data")
+    private String imageData;
+    // Base64 representation of the image
 }

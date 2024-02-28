@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './users/login/login.component';
-import { RegisterComponent } from './users/register/register.component';
-import { AddRecipeComponent } from './recipes/add-recipe/add-recipe.component';
-import { EditRecipeComponent } from './recipes/edit-recipe/edit-recipe.component';
-import { ViewRecipeComponent } from './recipes/view-recipe/view-recipe.component';
+import { HomeComponent } from './features/home/home.component';
+import { LoginComponent } from './features/users/login/login.component';
+import { RegisterComponent } from './features/users/register/register.component';
+import { AddRecipeComponent } from './features/recipes/add-recipe/add-recipe.component';
+import { EditRecipeComponent } from './features/recipes/edit-recipe/edit-recipe.component';
+import { ViewRecipeComponent } from './features/recipes/view-recipe/view-recipe.component';
 
 export const routes: Routes = [
   {
@@ -34,7 +34,7 @@ export const routes: Routes = [
   },
   {
     path: 'recipes/view',
-    title: 'View Recipe | Recipe Repository', // TODO: add recipe name to title
+    title: 'View Recipe | Recipe Repository',
     component: ViewRecipeComponent,
   },
 ];

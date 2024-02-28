@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
-import { User } from '../user';
+import { User } from '../../../core/models/user';
 import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
-import { AuthenticationService } from '../../authentication.service';
+import { AuthenticationService } from '../../../core/services/authentication.service';
 import { EMPTY, Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
