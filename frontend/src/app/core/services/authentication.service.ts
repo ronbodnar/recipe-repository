@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { User } from '../models/user';
 import { environment } from '../../../environments/environment.development';
 import { StorageService } from './storage.service';
-import { LoginComponent } from '../../features/users/login/login.component';
-import { RegisterComponent } from '../../features/users/register/register.component';
+import { LoginComponent } from '../../features/users/components/login/login.component';
+import { RegisterComponent } from '../../features/users/components/register/register.component';
 
 import { EMPTY, Observable, catchError, map, tap } from 'rxjs';
 

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthenticationService } from '../../core/services/authentication.service';
+import { AuthenticationService } from '../../../../core/services/authentication.service';
 
 @Component({
   selector: 'app-home',
