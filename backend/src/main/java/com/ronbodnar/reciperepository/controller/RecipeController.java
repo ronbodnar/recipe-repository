@@ -1,11 +1,14 @@
 package com.ronbodnar.reciperepository.controller;
 
 import com.ronbodnar.reciperepository.model.recipe.Recipe;
+import com.ronbodnar.reciperepository.model.user.User;
 import com.ronbodnar.reciperepository.payload.request.RecipeRequest;
 import com.ronbodnar.reciperepository.service.RecipeService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController

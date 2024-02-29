@@ -2,14 +2,15 @@ package com.ronbodnar.reciperepository.model.recipe;
 
 import com.ronbodnar.reciperepository.model.user.User;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "recipes")
 public class Recipe {
@@ -18,8 +19,8 @@ public class Recipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "title")
+    private String title;
 
     @Column(name = "description")
     private String description;
@@ -38,12 +39,12 @@ public class Recipe {
     private User author;
 
     @OneToMany(mappedBy = "recipe")
-    private Set<RecipeImage> images = new HashSet<>();
+    private Set<RecipeImage> images;
 
     @OneToMany(mappedBy = "recipe")
-    private Set<RecipeIngredient> ingredients = new HashSet<>();
+    private Set<Instruction> instructions;
 
     @OneToMany(mappedBy = "recipe")
-    private Set<Instruction> instructions = new HashSet<>();
+    private Set<RecipeIngredient> ingredients;
 
 }

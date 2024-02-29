@@ -3,10 +3,13 @@ package com.ronbodnar.reciperepository.model.recipe;
 import com.ronbodnar.reciperepository.enums.PreparationType;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "instructions")
 public class Instruction {
@@ -15,20 +18,27 @@ public class Instruction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "order")
-    private int order;
+    @Column(name = "step_number")
+    private int stepNumber;
 
-    @Column(name = "text")
-    private String text;
-
-    @ManyToOne
-    @JoinColumn(name = "recipe_id")
-    private Recipe recipe;
+    @Column(name = "content")
+    private String content;
 
     @Column(name = "preparation_type")
     private PreparationType preparationType;
 
     @Column(name = "image_data")
     private String imageData;
-    // Base64 representation of the image
+
+    @ManyToOne
+    @JoinColumn(name = "recipe_id", nullable = false)
+    private Recipe recipe;
+
+    public Instruction(Recipe recipe, int stepNumber, String content, PreparationType preparationType, String imageData) {
+        this.recipe = recipe;
+        this.stepNumber = stepNumber;
+        this.content = content;
+        this.preparationType = preparationType;
+        this.imageData = imageData;
+    }
 }

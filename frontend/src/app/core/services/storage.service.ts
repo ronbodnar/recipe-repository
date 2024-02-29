@@ -8,7 +8,7 @@ export class StorageService {
 
   constructor() { }
 
-  public setUser(user: User) {
+  public setUser(user: User): void{
     window.sessionStorage.setItem('user', JSON.stringify(user));
   }
 

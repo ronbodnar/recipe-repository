@@ -2,10 +2,13 @@ package com.ronbodnar.reciperepository.model.recipe;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "recipe_images")
 public class RecipeImage {
@@ -14,11 +17,15 @@ public class RecipeImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipe_id")
+    @ManyToOne
+    @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
 
     @Column(name = "image_data")
     private String imageData;
-    // Base64 representation of the image
+
+    public RecipeImage(Recipe recipe, String imageData) {
+        this.recipe = recipe;
+        this.imageData = imageData;
+    }
 }

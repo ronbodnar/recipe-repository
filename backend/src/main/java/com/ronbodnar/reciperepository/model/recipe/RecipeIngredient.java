@@ -3,10 +3,13 @@ package com.ronbodnar.reciperepository.model.recipe;
 import com.ronbodnar.reciperepository.enums.MeasurementType;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "recipe_ingredients")
 public class RecipeIngredient {
@@ -15,12 +18,12 @@ public class RecipeIngredient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipe_id")
+    @ManyToOne
+    @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ingredient_id")
+    @ManyToOne
+    @JoinColumn(name = "ingredient_id", nullable = false)
     private Ingredient ingredient;
 
     @Column(name = "quantity")
@@ -28,5 +31,10 @@ public class RecipeIngredient {
 
     @Column(name = "measurement_type")
     private MeasurementType measurementType;
+
+    public RecipeIngredient(double quantity, MeasurementType measurementType) {
+        this.quantity = quantity;
+        this.measurementType = measurementType;
+    }
 
 }
