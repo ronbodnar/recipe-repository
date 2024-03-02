@@ -1,5 +1,9 @@
 package com.ronbodnar.reciperepository.model.recipe;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -18,6 +22,7 @@ public class RecipeImage {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
 

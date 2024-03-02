@@ -2,9 +2,9 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './features/dashboard/components/home/home.component';
 import { LoginComponent } from './features/users/components/login/login.component';
 import { RegisterComponent } from './features/users/components/register/register.component';
-import { AddRecipeComponent } from './features/recipes/add-recipe/add-recipe.component';
-import { EditRecipeComponent } from './features/recipes/edit-recipe/edit-recipe.component';
-import { ViewRecipeComponent } from './features/recipes/view-recipe/view-recipe.component';
+import { AddRecipeComponent } from './features/recipes/components/add-recipe/add-recipe.component';
+import { EditRecipeComponent } from './features/recipes/components/edit-recipe/edit-recipe.component';
+import { ViewRecipeComponent } from './features/recipes/components/view-recipe/view-recipe.component';
 
 export const routes: Routes = [
   {

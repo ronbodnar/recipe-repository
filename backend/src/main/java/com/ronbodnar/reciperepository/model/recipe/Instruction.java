@@ -1,5 +1,6 @@
 package com.ronbodnar.reciperepository.model.recipe;
 
+import com.fasterxml.jackson.annotation.*;
 import com.ronbodnar.reciperepository.enums.PreparationType;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -31,6 +32,7 @@ public class Instruction {
     private String imageData;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
 

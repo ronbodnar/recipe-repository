@@ -23,11 +23,12 @@ import java.util.Set;
 public class RecipeService {
 
     private final UserService userService;
+
     private final RecipeRepository recipeRepository;
 
-    private final IngredientRepository ingredientRepository;
-
     private final InstructionRepository instructionRepository;
+
+    private final IngredientRepository ingredientRepository;
 
     private final RecipeImageRepository recipeImageRepository;
 
@@ -50,7 +51,7 @@ public class RecipeService {
         recipeRepository.save(recipe);
     }
 
-    public ResponseEntity<?> add(RecipeRequest recipeRequest) {
+    public ResponseEntity<?> create(RecipeRequest recipeRequest) {
         String authUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> author = userService.getByUsername(authUsername);
 
@@ -96,63 +97,11 @@ public class RecipeService {
             double quantity = ingredientData.getQuantity();
             MeasurementType measurementType = ingredientData.getMeasurementType();
 
-            RecipeIngredient recipeIngredient = new RecipeIngredient(quantity, measurementType);
+            RecipeIngredient recipeIngredient = new RecipeIngredient(recipe, quantity, measurementType);
+            recipeIngredient.setIngredient(ingredientRepository.findById(1).orElse(null));
             //TODO: add base/core ingredient
             ingredients.add(recipeIngredient);
         });
-
-        /*RecipeImage image1 = new RecipeImage();
-        RecipeImage image2 = new RecipeImage();
-
-        image1.setImageData("Base64:1");
-        image1.setRecipe(recipe);
-
-        image2.setImageData("Base64:2");
-        image2.setRecipe(recipe);
-
-        images.add(image1);
-        images.add(image2);*/
-
-        // INSTRUCTIONS
-        /*Instruction instruction1 = new Instruction();
-        instruction1.setStepNumber(0);
-        instruction1.setRecipe(recipe);
-        instruction1.setContent("This is the first step.");
-        instruction1.setPreparationType(PreparationType.AIR_FRYER);
-
-        Instruction instruction2 = new Instruction();
-        instruction2.setStepNumber(1);
-        instruction2.setRecipe(recipe);
-        instruction2.setContent("This is the second step.");
-        instruction2.setPreparationType(PreparationType.AIR_FRYER);
-
-        Instruction instruction3 = new Instruction();
-        instruction3.setStepNumber(0);
-        instruction3.setRecipe(recipe);
-        instruction3.setContent("This is the first step.");
-        instruction3.setPreparationType(PreparationType.OVEN);
-
-        instructions.add(instruction1);
-        instructions.add(instruction2);
-        instructions.add(instruction3);*/
-
-        // INGREDIENTS
-        /*Optional<Ingredient> chickenBreast = ingredientRepository.findById(1);
-
-        Optional<Ingredient> tomatoSauce = ingredientRepository.findById(2);
-
-        RecipeIngredient ingredient1 = new RecipeIngredient();
-        ingredient1.setIngredient(chickenBreast.orElse(null));
-        ingredient1.setQuantity(1);
-        ingredient1.setMeasurementType(MeasurementType.POUND);
-
-        RecipeIngredient ingredient2 = new RecipeIngredient();
-        ingredient2.setIngredient(tomatoSauce.orElse(null));
-        ingredient2.setQuantity(10);
-        ingredient2.setMeasurementType(MeasurementType.OUNCE);
-
-        ingredients.add(ingredient1);
-        ingredients.add(ingredient2);*/
 
         // Save the Recipe to the repository
         add(recipe);
@@ -167,5 +116,9 @@ public class RecipeService {
         recipeIngredientRepository.saveAll(ingredients);
 
         return ResponseEntity.ok().body(recipeRequest);
+    }
+
+    public ResponseEntity<?> findById(int id) {
+        return ResponseEntity.ok().body("");
     }
 }

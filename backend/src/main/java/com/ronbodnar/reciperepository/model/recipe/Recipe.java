@@ -1,5 +1,6 @@
 package com.ronbodnar.reciperepository.model.recipe;
 
+import com.fasterxml.jackson.annotation.*;
 import com.ronbodnar.reciperepository.model.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,6 +14,10 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Table(name = "recipes")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
+@JsonPropertyOrder({ "id", "title", "description", "author_id" })
 public class Recipe {
 
     @Id
@@ -34,16 +39,21 @@ public class Recipe {
     @Column(name = "num_servings")
     private int servings;
 
+    @JsonProperty("author_id")
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "recipe")
     private Set<RecipeImage> images;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "recipe")
     private Set<Instruction> instructions;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "recipe")
     private Set<RecipeIngredient> ingredients;
 

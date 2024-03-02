@@ -93,6 +93,7 @@ export class LoginComponent {
   }
 
   formatErrorMessage(error: any): string {
+    console.log(error);
     let errorMessages: any = {
       'Bad credentials': 'Invalid username or password.',
     }

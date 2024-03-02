@@ -53,7 +53,7 @@ public class AuthenticationService {
 
         ResponseCookie jwtCookie = jwtService.generateCookie(userDetails);
 
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body("authentication success");
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(userDetails);
     }
 
     public ResponseEntity<?> register(RegisterRequest registerRequest, Errors errors) {
@@ -92,7 +92,7 @@ public class AuthenticationService {
 
         userRepository.save(user);
 
-        return ResponseEntity.ok("registration success");
+        return ResponseEntity.ok(user);
     }
 
     public ResponseEntity<?> revoke() {

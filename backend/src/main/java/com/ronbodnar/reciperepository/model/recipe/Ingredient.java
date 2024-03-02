@@ -1,5 +1,6 @@
 package com.ronbodnar.reciperepository.model.recipe;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class Ingredient {
     @Column(name = "name")
     private String name;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "ingredient")
-    private Set<RecipeIngredient> recipeIngredients = new HashSet<>();
+    private Set<RecipeIngredient> recipeIngredients;
 }

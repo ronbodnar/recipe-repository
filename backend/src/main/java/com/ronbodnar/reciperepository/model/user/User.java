@@ -1,6 +1,6 @@
 package com.ronbodnar.reciperepository.model.user;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.ronbodnar.reciperepository.model.recipe.Recipe;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -17,6 +17,7 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email")
         })
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User {
 
     @Id
@@ -40,6 +41,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "author")
     private Set<Recipe> recipes = new HashSet<>();
 

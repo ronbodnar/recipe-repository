@@ -1,5 +1,9 @@
 package com.ronbodnar.reciperepository.model.recipe;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.ronbodnar.reciperepository.enums.MeasurementType;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -19,10 +23,12 @@ public class RecipeIngredient {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "ingredient_id", nullable = false)
     private Ingredient ingredient;
 
@@ -32,7 +38,8 @@ public class RecipeIngredient {
     @Column(name = "measurement_type")
     private MeasurementType measurementType;
 
-    public RecipeIngredient(double quantity, MeasurementType measurementType) {
+    public RecipeIngredient(Recipe recipe, double quantity, MeasurementType measurementType) {
+        this.recipe = recipe;
         this.quantity = quantity;
         this.measurementType = measurementType;
     }

@@ -22,12 +22,12 @@ public class RecipeController {
     }
 
     @GetMapping("/recipes/")
-    public List<Recipe> getAllRecipes() {
+    public List<Recipe> getAll() {
         return recipeService.getAll();
     }
 
-    @PostMapping("recipes/")
-    public ResponseEntity<?> addRecipe(@RequestBody RecipeRequest recipeRequest) {
-        return recipeService.add(recipeRequest);
+    @PostMapping("/recipes/")
+    public ResponseEntity<?> create(@RequestBody RecipeRequest recipeRequest) {
+        return recipeService.create(recipeRequest);
     }
 }
