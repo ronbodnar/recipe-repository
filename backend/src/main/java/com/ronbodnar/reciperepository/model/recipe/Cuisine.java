@@ -1,4 +1,4 @@
-package com.ronbodnar.reciperepository.model.user;
+package com.ronbodnar.reciperepository.model.recipe;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "roles")
-public class Role {
+@Table(name = "cuisines")
+public class Cuisine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,13 +18,13 @@ public class Role {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private RoleType roleType;
+    private CuisineType cuisineType;
 
-    public Role(RoleType roleType) {
-        this.roleType = roleType;
+    public Cuisine(CuisineType cuisineType) {
+        this.cuisineType = cuisineType;
     }
 
-    public static enum RoleType {
-        STANDARD, PREMIUM, MODERATOR, ADMINISTRATOR;
+    public static enum CuisineType {
+        AMERICAN, ITALIAN, MEXICAN, JAPANESE, INDIAN;
     }
 }

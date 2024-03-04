@@ -1,19 +1,16 @@
 package com.ronbodnar.reciperepository.service;
 
-import com.ronbodnar.reciperepository.enums.MeasurementType;
-import com.ronbodnar.reciperepository.enums.PreparationType;
+import com.ronbodnar.reciperepository.enums.*;
+import com.ronbodnar.reciperepository.model.recipe.ImageData;
 import com.ronbodnar.reciperepository.model.recipe.*;
 import com.ronbodnar.reciperepository.model.user.User;
 import com.ronbodnar.reciperepository.payload.request.RecipeRequest;
 import com.ronbodnar.reciperepository.repository.*;
 
-import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -60,9 +57,12 @@ public class RecipeService {
         }
 
         Recipe recipe = new Recipe();
-        Set<RecipeImage> images = new HashSet<>();
+        Set<Course> courses = new HashSet<>();
+        Set<Cuisine> cuisines = new HashSet<>();
+        Set<Attribute> attributes = new HashSet<>();
         Set<Instruction> instructions = new HashSet<>();
         Set<RecipeIngredient> ingredients = new HashSet<>();
+        Set<ImageData> images = new HashSet<>();
 
         // Populate the recipe's details
         recipe.setAuthor(author.get());
@@ -71,37 +71,41 @@ public class RecipeService {
         recipe.setCookTime(recipeRequest.getCookTime());
         recipe.setPrepTime(recipeRequest.getPrepTime());
         recipe.setServings(recipeRequest.getServings());
+        recipe.setPreparationType(PreparationType.AIR_FRYER);
         recipe.setImages(images);
         recipe.setInstructions(instructions);
         recipe.setIngredients(ingredients);
+        recipe.setCourses(courses);
+        recipe.setCuisines(cuisines);
+        recipe.setAttributes(attributes);
 
         // Create RecipeImages from the image data and add it to the Recipe's image set.
         recipeRequest.getImageData().forEach(image -> {
-            RecipeImage recipeImage = new RecipeImage(recipe, image.getImageData());
-            images.add(recipeImage);
+            ImageData imageData = new ImageData(image.getUri(), image.getWidth(), image.getHeight());
+            images.add(imageData);
         });
 
         // Create Instructions from the instruction fields and add them to the Recipe's instruction set.
         recipeRequest.getInstructions().forEach(instructionData -> {
-            int stepNumber = instructionData.getStepNumber();
-            String content = instructionData.getContent();
-            String imageData = instructionData.getImageData();
-            PreparationType preparationType = instructionData.getPreparationType();
+            String text = instructionData.getText();
+            String imageUri = instructionData.getImageUri();
 
-            Instruction instruction = new Instruction(recipe, stepNumber, content, preparationType, imageData);
+            Instruction instruction = new Instruction(text, imageUri);
             instructions.add(instruction);
         });
 
         // Create RecipeIngredients from the ingredient fields and add them to the Recipe's ingredient set.
         recipeRequest.getIngredients().forEach(ingredientData -> {
-            double quantity = ingredientData.getQuantity();
+            double measurement = ingredientData.getMeasurement();
             MeasurementType measurementType = ingredientData.getMeasurementType();
 
-            RecipeIngredient recipeIngredient = new RecipeIngredient(recipe, quantity, measurementType);
+            RecipeIngredient recipeIngredient = new RecipeIngredient(measurement, measurementType);
             recipeIngredient.setIngredient(ingredientRepository.findById(1).orElse(null));
             //TODO: add base/core ingredient
             ingredients.add(recipeIngredient);
         });
+
+        // Courses
 
         // Save the Recipe to the repository
         add(recipe);

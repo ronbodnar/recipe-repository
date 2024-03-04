@@ -1,12 +1,14 @@
 package com.ronbodnar.reciperepository.model.recipe;
 
 import com.fasterxml.jackson.annotation.*;
+import com.ronbodnar.reciperepository.enums.PreparationType;
 import com.ronbodnar.reciperepository.model.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -39,22 +41,47 @@ public class Recipe {
     @Column(name = "num_servings")
     private int servings;
 
-    @JsonProperty("author_id")
-    @JsonIdentityReference(alwaysAsId = true)
+    //@JsonProperty("author_id")
+    //@JsonIdentityReference(alwaysAsId = true)
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "recipe")
-    private Set<RecipeImage> images;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "preparation_type")
+    private PreparationType preparationType;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "recipe")
-    private Set<Instruction> instructions;
+    @ManyToMany
+    @JoinTable(
+            name = "recipe_courses",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id"))
+    private Set<Course> courses = new HashSet<>();
 
-    @JsonManagedReference
+    @ManyToMany
+    @JoinTable(
+            name = "recipe_cuisines",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "cuisine_id"))
+    private Set<Cuisine> cuisines = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "recipe_attributes",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "attribute_id"))
+    private Set<Attribute> attributes = new HashSet<>();
+
+    @OrderColumn
     @OneToMany(mappedBy = "recipe")
-    private Set<RecipeIngredient> ingredients;
+    private Set<RecipeIngredient> ingredients = new HashSet<>();
+
+    @OrderColumn
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Instruction> instructions = new HashSet<>();
+
+    @OrderColumn
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ImageData> images = new HashSet<>();
 
 }

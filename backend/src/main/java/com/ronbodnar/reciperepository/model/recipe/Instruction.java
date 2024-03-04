@@ -1,9 +1,6 @@
 package com.ronbodnar.reciperepository.model.recipe;
 
-import com.fasterxml.jackson.annotation.*;
-import com.ronbodnar.reciperepository.enums.PreparationType;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,28 +16,14 @@ public class Instruction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "step_number")
-    private int stepNumber;
+    @Column(name = "`text`")
+    private String text;
 
-    @Column(name = "content")
-    private String content;
+    @Column(name = "image_uri")
+    private String imageUri;
 
-    @Column(name = "preparation_type")
-    private PreparationType preparationType;
-
-    @Column(name = "image_data")
-    private String imageData;
-
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "recipe_id", nullable = false)
-    private Recipe recipe;
-
-    public Instruction(Recipe recipe, int stepNumber, String content, PreparationType preparationType, String imageData) {
-        this.recipe = recipe;
-        this.stepNumber = stepNumber;
-        this.content = content;
-        this.preparationType = preparationType;
-        this.imageData = imageData;
+    public Instruction(String text, String imageUri) {
+        this.text = text;
+        this.imageUri = imageUri;
     }
 }

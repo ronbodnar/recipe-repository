@@ -1,15 +1,13 @@
 package com.ronbodnar.reciperepository.model.recipe;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.ronbodnar.reciperepository.enums.MeasurementType;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Entity
 @Getter
@@ -18,29 +16,30 @@ import lombok.Setter;
 @Table(name = "recipe_ingredients")
 public class RecipeIngredient {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private RecipeIngredientKey id;
 
+    @JsonIgnore
     @ManyToOne
-    @JsonBackReference
+    @MapsId("recipeId")
     @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
 
+    @JsonIgnore
     @ManyToOne
-    @JsonBackReference
+    @MapsId("ingredientId")
     @JoinColumn(name = "ingredient_id", nullable = false)
     private Ingredient ingredient;
 
-    @Column(name = "quantity")
-    private double quantity;
+    @Column(name = "measurement")
+    private double measurement;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "measurement_type")
     private MeasurementType measurementType;
 
-    public RecipeIngredient(Recipe recipe, double quantity, MeasurementType measurementType) {
-        this.recipe = recipe;
-        this.quantity = quantity;
+    public RecipeIngredient(double measurement, MeasurementType measurementType) {
+        this.measurement = measurement;
         this.measurementType = measurementType;
     }
 

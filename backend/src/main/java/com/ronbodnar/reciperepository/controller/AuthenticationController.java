@@ -17,6 +17,7 @@ import java.util.*;
 
 @Getter
 @RestController
+@RequestMapping("/auth")
 @CrossOrigin(origins = {"http://localhost:4200", "https://ronbodnar.com"}, allowedHeaders = "*", allowCredentials = "true")
 public class AuthenticationController {
 
@@ -26,22 +27,22 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
-    @GetMapping("/auth/user")
+    @GetMapping("/user")
     public Principal user(Principal user) {
         return user;
     }
 
-    @PostMapping("/auth/revoke")
-    public ResponseEntity<?> revoke() {
-        return authenticationService.revoke();
+    @PostMapping("/signout")
+    public ResponseEntity<?> deauthenticate() {
+        return authenticationService.deauthenticate();
     }
 
-    @PostMapping("/auth/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) throws BadCredentialsException {
         return authenticationService.authenticate(loginRequest);
     }
 
-    @PostMapping("/auth/register")
+    @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterRequest registerRequest, Errors errors) {
         return authenticationService.register(registerRequest, errors);
     }

@@ -76,7 +76,7 @@ public class AuthenticationService {
             return ResponseEntity.badRequest().body(fieldErrorList);
 
         Set<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findByName("ROLE_USER").orElse(null);
+        Role userRole = roleRepository.findByRoleType(Role.RoleType.STANDARD).orElse(null);
 
         roles.add(userRole);
 
@@ -95,7 +95,7 @@ public class AuthenticationService {
         return ResponseEntity.ok(user);
     }
 
-    public ResponseEntity<?> revoke() {
+    public ResponseEntity<?> deauthenticate() {
         ResponseCookie cookie = jwtService.generateDefaultCookie();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body("");
     }

@@ -1,10 +1,9 @@
 package com.ronbodnar.reciperepository.model.recipe;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -21,7 +20,7 @@ public class Ingredient {
     @Column(name = "name")
     private String name;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "ingredient")
-    private Set<RecipeIngredient> recipeIngredients;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<NutritionFact> nutritionFacts;
+
 }

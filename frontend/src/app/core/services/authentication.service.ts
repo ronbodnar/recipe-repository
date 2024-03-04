@@ -72,7 +72,7 @@ export class AuthenticationService {
 
   // Deauthenticate and clear session storage.
   deauthenticate() {
-    return this.http.post(`${this.authUrl}/revoke`, {}).pipe(
+    return this.http.post(`${this.authUrl}/signout`, {}).pipe(
       map(() => {
         // Remove the user data from the session
         this.authenticatedUser = null;

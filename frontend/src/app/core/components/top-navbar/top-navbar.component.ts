@@ -81,7 +81,7 @@ export class TopNavbarComponent {
   }
 
   deauthenticate() {
-    this.authenticationService.deauthenticate().subscribe();
+    this.authenticationService.deauthenticate().subscribe(() => this.router.navigateByUrl('/'))
   }
 
   getRouter(): Router {

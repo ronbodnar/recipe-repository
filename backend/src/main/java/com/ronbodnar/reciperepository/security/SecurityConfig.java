@@ -1,5 +1,7 @@
 package com.ronbodnar.reciperepository.security;
 
+import com.ronbodnar.reciperepository.security.filter.BearerAuthenticationFilter;
+import com.ronbodnar.reciperepository.security.filter.JwtAuthenticationFilter;
 import com.ronbodnar.reciperepository.security.service.UserDetailsServiceImpl;
 
 import org.springframework.context.annotation.Bean;

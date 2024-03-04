@@ -1,8 +1,6 @@
 package com.ronbodnar.reciperepository.payload.request;
 
-import com.ronbodnar.reciperepository.model.recipe.Instruction;
-import com.ronbodnar.reciperepository.model.recipe.RecipeImage;
-import com.ronbodnar.reciperepository.model.recipe.RecipeIngredient;
+import com.ronbodnar.reciperepository.model.recipe.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,9 +20,15 @@ public class RecipeRequest {
 
     private int servings;
 
-    private List<RecipeImage> imageData;
+    private List<ImageData> imageData;
 
     private List<RecipeIngredient> ingredients;
 
     private List<Instruction> instructions;
+
+    private List<Course> courses;
+
+    private List<Cuisine> cuisines;
+
+    private List<Attribute> attributes;
 }
