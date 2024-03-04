@@ -26,7 +26,7 @@ public class RecipeRequest {
 
     private List<Instruction> instructions;
 
-    private List<Course> courses;
+    private List<MealType> mealTypes;
 
     private List<Cuisine> cuisines;
 

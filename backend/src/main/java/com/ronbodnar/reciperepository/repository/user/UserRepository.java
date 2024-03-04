@@ -1,4 +1,4 @@
-package com.ronbodnar.reciperepository.repository;
+package com.ronbodnar.reciperepository.repository.user;
 
 import com.ronbodnar.reciperepository.model.user.User;
 import org.springframework.data.repository.CrudRepository;

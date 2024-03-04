@@ -13,8 +13,8 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "cuisines")
-public class Cuisine {
+@Table(name = "meal_types")
+public class MealType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,16 +25,15 @@ public class Cuisine {
     private Kind kind;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "cuisines")
+    @ManyToMany(mappedBy = "mealTypes")
     private Set<Recipe> recipes = new HashSet<>();
 
-    public Cuisine(Kind kind) {
+    public MealType(Kind kind) {
         this.kind = kind;
     }
 
     public static enum Kind {
-        AFRICAN, AMERICAN, ARAB, AUSTRALIAN, BRAZILIAN, CARIBBEAN, CHINESE, FRENCH, GERMAN,
-        GREEK, INDIAN, ITALIAN, JAPANESE, JEWISH, KOREAN, LEBANESE, MEXICAN, SPANISH, THAI,
-        TURKISH, VIETNAMESE
+        BREAKFAST, LUNCH, BRUNCH, DINNER_SUPPER, SNACK
+
     }
 }

@@ -1,4 +1,4 @@
-package com.ronbodnar.reciperepository.repository;
+package com.ronbodnar.reciperepository.repository.recipe;
 
 import com.ronbodnar.reciperepository.model.recipe.RecipeIngredient;
 import org.springframework.data.repository.CrudRepository;

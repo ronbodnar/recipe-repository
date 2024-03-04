@@ -25,6 +25,12 @@ public class ImageData {
     @Column(name = "height")
     private int height;
 
+    /**
+     * The raw binary data for the image created in front-end recipe creation.
+     */
+    @Transient
+    private byte[] data;
+
     public ImageData(String uri, int width, int height) {
         this.uri = uri;
         this.width = width;

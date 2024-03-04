@@ -1,7 +1,7 @@
 package com.ronbodnar.reciperepository.controller;
 
 import com.ronbodnar.reciperepository.model.user.User;
-import com.ronbodnar.reciperepository.service.UserService;
+import com.ronbodnar.reciperepository.service.user.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

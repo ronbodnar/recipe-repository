@@ -2,19 +2,19 @@ package com.ronbodnar.reciperepository.model.recipe;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "cuisines")
-public class Cuisine {
+@Table(name = "preparation_types")
+public class PreparationType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,16 +25,11 @@ public class Cuisine {
     private Kind kind;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "cuisines")
+    @ManyToMany(mappedBy = "preparationTypes")
     private Set<Recipe> recipes = new HashSet<>();
 
-    public Cuisine(Kind kind) {
-        this.kind = kind;
+    public static enum Kind {
+        AIR_FRYER, OVEN, CROCK_POT, INSTANT_POT, STOVE_TOP, BARBECUE;
     }
 
-    public static enum Kind {
-        AFRICAN, AMERICAN, ARAB, AUSTRALIAN, BRAZILIAN, CARIBBEAN, CHINESE, FRENCH, GERMAN,
-        GREEK, INDIAN, ITALIAN, JAPANESE, JEWISH, KOREAN, LEBANESE, MEXICAN, SPANISH, THAI,
-        TURKISH, VIETNAMESE
-    }
 }

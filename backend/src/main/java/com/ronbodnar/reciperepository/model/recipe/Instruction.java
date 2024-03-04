@@ -22,8 +22,15 @@ public class Instruction {
     @Column(name = "image_uri")
     private String imageUri;
 
-    public Instruction(String text, String imageUri) {
+    @ManyToOne
+    @JoinColumn(name = "recipe_id")
+    private Recipe recipe;
+
+    @Transient
+    public byte[] imageData;
+
+    public Instruction(String text, byte[] imageData) {
         this.text = text;
-        this.imageUri = imageUri;
+        this.imageData = imageData;
     }
 }

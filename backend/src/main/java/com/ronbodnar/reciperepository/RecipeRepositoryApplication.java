@@ -1,13 +1,13 @@
 package com.ronbodnar.reciperepository;
 
 import com.ronbodnar.reciperepository.model.recipe.Attribute;
-import com.ronbodnar.reciperepository.model.recipe.Course;
+import com.ronbodnar.reciperepository.model.recipe.MealType;
 import com.ronbodnar.reciperepository.model.recipe.Cuisine;
 import com.ronbodnar.reciperepository.model.user.Role;
-import com.ronbodnar.reciperepository.repository.AttributeRepository;
-import com.ronbodnar.reciperepository.repository.CourseRepository;
-import com.ronbodnar.reciperepository.repository.CuisineRepository;
-import com.ronbodnar.reciperepository.repository.RoleRepository;
+import com.ronbodnar.reciperepository.repository.recipe.AttributeRepository;
+import com.ronbodnar.reciperepository.repository.recipe.MealTypeRepository;
+import com.ronbodnar.reciperepository.repository.recipe.CuisineRepository;
+import com.ronbodnar.reciperepository.repository.user.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,7 +23,7 @@ public class RecipeRepositoryApplication {
     }
 
     @Bean
-    CommandLineRunner init(RoleRepository roleRepository, CourseRepository courseRepository, CuisineRepository cuisineRepository, AttributeRepository attributeRepository) {
+    CommandLineRunner init(RoleRepository roleRepository, MealTypeRepository mealTypeRepository, CuisineRepository cuisineRepository, AttributeRepository attributeRepository) {
         return args -> {
             boolean addData = false;
 
@@ -32,16 +32,16 @@ public class RecipeRepositoryApplication {
                 List<Role.RoleType> roles = List.of(Role.RoleType.values());
                 roles.forEach(role -> roleRepository.save(new Role(role)));
 
-                // Add Courses
-                List<Course.CourseType> courses = List.of(Course.CourseType.values());
-                courses.forEach(course -> courseRepository.save(new Course(course)));
+                // Add Meals
+                List<MealType.Kind> meals = List.of(MealType.Kind.values());
+                meals.forEach(meal -> mealTypeRepository.save(new MealType(meal)));
 
                 // Add Cuisines
-                List<Cuisine.CuisineType> cuisines = List.of(Cuisine.CuisineType.values());
+                List<Cuisine.Kind> cuisines = List.of(Cuisine.Kind.values());
                 cuisines.forEach(cuisine -> cuisineRepository.save(new Cuisine(cuisine)));
 
                 // Add Attributes
-                List<Attribute.AttributeType> attributes = List.of(Attribute.AttributeType.values());
+                List<Attribute.Kind> attributes = List.of(Attribute.Kind.values());
                 attributes.forEach(attribute -> attributeRepository.save(new Attribute(attribute)));
             }
         };

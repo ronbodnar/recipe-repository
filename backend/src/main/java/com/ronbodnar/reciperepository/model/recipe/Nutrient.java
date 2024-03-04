@@ -1,6 +1,5 @@
 package com.ronbodnar.reciperepository.model.recipe;
 
-import com.ronbodnar.reciperepository.enums.MeasurementType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,7 @@ public class Nutrient {
     @Column(name = "daily_value")
     private double dailyValue;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "measurement_type")
+    @ManyToOne
+    @JoinColumn(name = "measurement_type_id")
     private MeasurementType measurementType;
 }

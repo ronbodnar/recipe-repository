@@ -1,9 +1,8 @@
-package com.ronbodnar.reciperepository.service;
+package com.ronbodnar.reciperepository.service.user;
 
 import com.ronbodnar.reciperepository.model.user.User;
-import com.ronbodnar.reciperepository.repository.UserRepository;
+import com.ronbodnar.reciperepository.repository.user.UserRepository;
 
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

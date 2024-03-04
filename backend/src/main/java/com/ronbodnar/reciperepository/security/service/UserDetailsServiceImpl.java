@@ -1,7 +1,7 @@
 package com.ronbodnar.reciperepository.security.service;
 
 import com.ronbodnar.reciperepository.model.user.User;
-import com.ronbodnar.reciperepository.repository.UserRepository;
+import com.ronbodnar.reciperepository.repository.user.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
