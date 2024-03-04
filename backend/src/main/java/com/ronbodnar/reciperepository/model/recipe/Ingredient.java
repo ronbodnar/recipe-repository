@@ -33,4 +33,9 @@ public class Ingredient {
     @OneToMany(mappedBy = "ingredient")
     private Set<RecipeIngredient> ingredients = new HashSet<>();
 
+    public Ingredient(String name, Set<NutritionFact> nutritionFacts) {
+        this.name = name;
+        this.nutritionFacts = nutritionFacts;
+    }
+
 }

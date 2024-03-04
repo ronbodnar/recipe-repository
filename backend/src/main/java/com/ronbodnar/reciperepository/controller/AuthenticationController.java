@@ -36,7 +36,7 @@ public class AuthenticationController {
 
     /**
      * Used to determine user details for the authenticated user, if authenticated.
-     * @param user
+     * @param user The injected Principal from the session security context.
      * @return the authenticated Principal (user) or null.
      */
     @GetMapping("/user")

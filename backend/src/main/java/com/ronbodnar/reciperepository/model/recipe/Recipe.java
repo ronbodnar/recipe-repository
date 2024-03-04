@@ -76,7 +76,7 @@ public class Recipe {
     private Set<Attribute> attributes = new HashSet<>();
 
     @OrderColumn
-    @OneToMany(mappedBy = "recipe")
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<RecipeIngredient> ingredients = new ArrayList<>();
 
     @OrderColumn

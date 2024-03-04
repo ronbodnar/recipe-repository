@@ -24,6 +24,10 @@ public class MeasurementType {
         this.kind = Kind.valueOf(kind);
     }
 
+    public MeasurementType(Kind kind) {
+        this.kind = kind;
+    }
+
     public static enum Kind {
         DASH,
         TEASPOON,

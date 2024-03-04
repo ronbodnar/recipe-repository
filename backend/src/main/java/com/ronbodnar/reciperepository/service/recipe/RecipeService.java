@@ -113,7 +113,8 @@ public class RecipeService {
          * Create RecipeIngredients from the ingredient fields and add them to the Recipe's ingredient set.
          */
         List<RecipeIngredient> ingredientData = recipeIngredientService.createAll(recipe, recipeRequest.getIngredients());
-        ingredients.addAll(ingredientData);
+        if (ingredientData.size() == recipeRequest.getIngredients().size()) // TODO: exception handling
+            ingredients.addAll(ingredientData);
 
         // Meal Types
        /* recipeRequest.getMealTypes().forEach(mealTypeData -> {

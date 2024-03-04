@@ -28,6 +28,10 @@ public class PreparationType {
     @ManyToMany(mappedBy = "preparationTypes")
     private Set<Recipe> recipes = new HashSet<>();
 
+    public PreparationType(Kind kind) {
+        this.kind = kind;
+    }
+
     public static enum Kind {
         AIR_FRYER, OVEN, CROCK_POT, INSTANT_POT, STOVE_TOP, BARBECUE;
     }
