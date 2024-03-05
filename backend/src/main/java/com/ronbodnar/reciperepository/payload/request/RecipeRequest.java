@@ -1,11 +1,18 @@
 package com.ronbodnar.reciperepository.payload.request;
 
-import com.ronbodnar.reciperepository.model.recipe.*;
+import com.ronbodnar.reciperepository.attribute.Attribute;
+import com.ronbodnar.reciperepository.cuisine.Cuisine;
+import com.ronbodnar.reciperepository.imagedata.ImageData;
+import com.ronbodnar.reciperepository.ingredient.Ingredient;
+import com.ronbodnar.reciperepository.instruction.Instruction;
+import com.ronbodnar.reciperepository.mealtype.MealType;
+import com.ronbodnar.reciperepository.preparationtype.PreparationType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -22,13 +29,17 @@ public class RecipeRequest {
 
     private List<ImageData> imageData;
 
-    private List<RecipeIngredient> ingredients;
+    private List<Ingredient> ingredients;
 
     private List<Instruction> instructions;
 
-    private List<MealType> mealTypes;
+    private Set<MealType> mealTypes;
 
-    private List<Cuisine> cuisines;
+    private Set<Cuisine> cuisines;
 
-    private List<Attribute> attributes;
+    private Set<Attribute> attributes;
+
+    private Set<PreparationType> preparationTypes;
+
+    private Set<String> tags;
 }

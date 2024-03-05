@@ -1,9 +1,20 @@
 package com.ronbodnar.reciperepository;
 
-import com.ronbodnar.reciperepository.model.recipe.*;
-import com.ronbodnar.reciperepository.model.user.Role;
-import com.ronbodnar.reciperepository.repository.recipe.*;
-import com.ronbodnar.reciperepository.repository.user.RoleRepository;
+import com.ronbodnar.reciperepository.attribute.Attribute;
+import com.ronbodnar.reciperepository.attribute.AttributeRepository;
+import com.ronbodnar.reciperepository.cuisine.Cuisine;
+import com.ronbodnar.reciperepository.cuisine.CuisineRepository;
+import com.ronbodnar.reciperepository.fooditem.FoodItem;
+import com.ronbodnar.reciperepository.fooditem.FoodItemRepository;
+import com.ronbodnar.reciperepository.mealtype.MealType;
+import com.ronbodnar.reciperepository.mealtype.MealTypeRepository;
+import com.ronbodnar.reciperepository.measurementtype.MeasurementType;
+import com.ronbodnar.reciperepository.measurementtype.MeasurementTypeRepository;
+import com.ronbodnar.reciperepository.preparationtype.PreparationType;
+import com.ronbodnar.reciperepository.preparationtype.PreparationTypeRepository;
+import com.ronbodnar.reciperepository.role.Role;
+import com.ronbodnar.reciperepository.role.RoleRepository;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,7 +31,7 @@ public class RecipeRepositoryApplication {
     }
 
     @Bean
-    CommandLineRunner init(IngredientRepository ingredientRepository, MeasurementTypeRepository measurementTypeRepository, PreparationTypeRepository preparationTypeRepository, RoleRepository roleRepository, MealTypeRepository mealTypeRepository, CuisineRepository cuisineRepository, AttributeRepository attributeRepository) {
+    CommandLineRunner init(FoodItemRepository foodItemRepository, MeasurementTypeRepository measurementTypeRepository, PreparationTypeRepository preparationTypeRepository, RoleRepository roleRepository, MealTypeRepository mealTypeRepository, CuisineRepository cuisineRepository, AttributeRepository attributeRepository) {
         return args -> {
             boolean addData = true;
 
@@ -50,8 +61,8 @@ public class RecipeRepositoryApplication {
                 preparationTypes.forEach(preparationType -> preparationTypeRepository.save(new PreparationType(preparationType)));
 
                 // Add temp ingredients
-                ingredientRepository.save(new Ingredient("Chicken breast", new HashSet<>()));
-                ingredientRepository.save(new Ingredient("Tomato sauce", new HashSet<>()));
+                foodItemRepository.save(new FoodItem("Chicken breast", new HashSet<>()));
+                foodItemRepository.save(new FoodItem("Tomato sauce", new HashSet<>()));
             }
         };
     }

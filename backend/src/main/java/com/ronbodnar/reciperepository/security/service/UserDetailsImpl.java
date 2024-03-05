@@ -11,7 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.ronbodnar.reciperepository.model.user.User;
+import com.ronbodnar.reciperepository.user.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
