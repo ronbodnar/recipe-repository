@@ -1,0 +1,13 @@
+package com.ronbodnar.recipes.image;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+import java.util.UUID;
+
+public interface ImageRepository extends JpaRepository<Image, Integer> {
+
+    List<Image> findAllByIdIn(List<UUID> ids);
+
+    List<Image> findAllByFileHashIn(List<String> fileHashes);
+}

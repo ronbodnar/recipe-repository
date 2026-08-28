@@ -1,0 +1,52 @@
+server:
+  port: 8082
+  forward-headers-strategy: native
+
+spring:
+  config:
+    import: file:./secrets/app-env.properties
+
+  application:
+    name: Recipe Repository
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        show_sql: false
+        format_sql: true
+        use_sql_comments: true
+        generate_statistics: false
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${APP_KEYCLOAK_ISSUER_URI}
+          jwk-set-uri: ${APP_KEYCLOAK_JWK_SET_URI}
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: TRACE
+    org.hibernate.orm.connections.pooling: ERROR
+    org.springframework.jdbc.core: INFO
+    org.springframework.jdbc.core.namedparam: INFO
+    org.hibernate.SQL: INFO
+    org.hibernate.type.descriptor.sql.BasicBindeR: INFO
+    com.fasterxml.jackson.databind: INFO
+    org.springframework.http.converter: INFO
+    org.springframework.web.servlet.mvc.method.annotation: INFO

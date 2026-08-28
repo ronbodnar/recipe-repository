@@ -1,0 +1,70 @@
+<div class="flex flex-col gap-4">
+  <div class="flex items-center gap-4">
+    @if (headerIcon()) {
+      <mat-icon class="size-8! text-3xl! leading-none! text-primary!">{{ headerIcon() }}</mat-icon>
+    }
+    <h3 class="m-0 text-lg font-medium">
+      {{ headerText() | translate }}
+    </h3>
+  </div>
+
+  <div class="flex flex-col gap-6">
+    @if (listItems().length === 0) {
+      <p class="text-sm text-muted">
+        {{ emptyListText() || 'recipes.details.noItems' | translate }}
+      </p>
+    } @else {
+      @for (ingredientGroup of listGroups(); track ingredientGroup.name) {
+        <div>
+          @if (ingredientGroup.name !== 'base') {
+            <h4 class="m-0 text-base font-medium uppercase tracking-wide">
+              {{ ingredientGroup.name }}
+            </h4>
+          }
+
+          @if (ordered()) {
+            <ol
+              class="my-0 space-y-3 text-base"
+              [ngClass]="{
+                'pl-0': useCheckboxes(),
+                'pl-6': !useCheckboxes(),
+              }"
+            >
+              <ng-container
+                [ngTemplateOutlet]="listContents"
+                [ngTemplateOutletContext]="{ ingredientGroup: ingredientGroup.items }"
+              ></ng-container>
+            </ol>
+          } @else {
+            <ul
+              class="my-0 text-base"
+              [ngClass]="{
+                'pl-0': useCheckboxes(),
+                'pl-6': !useCheckboxes(),
+              }"
+            >
+              <ng-container
+                [ngTemplateOutlet]="listContents"
+                [ngTemplateOutletContext]="{ ingredientGroup: ingredientGroup.items }"
+              ></ng-container>
+            </ul>
+          }
+        </div>
+      }
+    }
+  </div>
+</div>
+
+<ng-template #listContents let-ingredientGroup="ingredientGroup">
+  @for (ingredient of ingredientGroup; track ingredient; let index = $index) {
+    @if (useCheckboxes()) {
+      <li class="flex items-center gap-2">
+        <mat-checkbox [checked]="false">
+          <span [innerHTML]="parseText(ingredient)"></span>
+        </mat-checkbox>
+      </li>
+    } @else {
+      <li [innerHTML]="parseText(ingredient)"></li>
+    }
+  }
+</ng-template>

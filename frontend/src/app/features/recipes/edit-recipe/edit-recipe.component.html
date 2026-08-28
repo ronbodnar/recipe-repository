@@ -1,0 +1,266 @@
+@if (loading()) {
+  <app-full-page-loader message="recipes.edit.loading" />
+} @else {
+  <app-fluid-container
+    size="lg"
+    [title]="loadedRecipeId() ? 'recipes.edit.title.existing' : 'recipes.edit.title.new'"
+    [backRoute]="
+      loadedRecipeId() ? '/app/recipes/details/' + loadedRecipeId() : '/app/recipes/list'
+    "
+  >
+    <p subtitle class="text-sm text-muted mt-0">
+      {{
+        (loadedRecipeId() ? 'recipes.edit.subtitle.existing' : 'recipes.edit.subtitle.new')
+          | translate
+      }}
+    </p>
+
+    <ng-container *ngTemplateOutlet="formTemplate"></ng-container>
+  </app-fluid-container>
+}
+
+<ng-template #formTemplate>
+  <form [formGroup]="form()" (ngSubmit)="submit()">
+    <!-- Recipe Details -->
+    <div class="col-span-3 flex flex-col min-w-0 gap-4">
+      <nmf-text
+        formControlName="title"
+        label="recipes.labels.title"
+        placeholder="recipes.edit.placeholders.title"
+      />
+
+      <nmf-textarea
+        formControlName="description"
+        label="recipes.labels.description"
+        placeholder="recipes.edit.placeholders.description"
+        [rows]="4"
+      />
+
+      <div class="flex flex-col gap-4">
+        <nmf-file-selector
+          formControlName="images"
+          label="recipes.edit.fields.images"
+          selectionMode="append"
+          [multiple]="true"
+          [accept]="'image/*'"
+        />
+
+        <!-- Existing Image urls -->
+        @if (form().controls.existingImages.value.length) {
+          <div class="flex flex-col gap-4">
+            <h3>{{ 'recipes.edit.fields.existingImages' | translate }}</h3>
+
+            @for (image of form().controls.existingImages.value; track image; let i = $index) {
+              <div class="flex items-center gap-4">
+                <app-button
+                  type="button"
+                  color="danger"
+                  size="sm"
+                  icon="delete"
+                  (click)="removeExistingImage(i)"
+                />
+
+                <img
+                  [src]="imageService.getImageUrl(image)"
+                  alt="Recipe Image {{ i + 1 }}"
+                  class="h-30 w-30 rounded-md object-cover"
+                />
+              </div>
+            }
+          </div>
+        }
+
+        <!-- New image files -->
+        @if (form().controls.images.value?.length) {
+          <div class="flex flex-col gap-4">
+            <h3>{{ 'recipes.edit.fields.newImages' | translate }}</h3>
+
+            @for (image of form().controls.images.value; track image; let i = $index) {
+              <div class="flex items-center gap-4">
+                <app-button type="button" color="danger" icon="delete" (click)="removeImage(i)" />
+
+                <img [src]="image | fileUrl" class="h-30 w-30 rounded-md object-cover" />
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <h3>{{ 'recipes.labels.variants' | translate }}</h3>
+
+      <div class="flex flex-col xl:flex-row gap-4">
+        <div class="flex flex-col gap-4 basis-1/4 border border-border/40 rounded-md p-4">
+          @for (variant of variants.controls; track variant; let index = $index) {
+            <div
+              class="relative flex items-center justify-between rounded-md px-4 py-2 gap-4 cursor-pointer"
+              [ngClass]="{
+                'bg-background-alt': activeVariantIndex() === index,
+                'font-semibold': activeVariantIndex() === index,
+              }"
+              (click)="activeVariantIndex.set(index)"
+            >
+              @if (validated() && variants.at(index).invalid) {
+                <mat-icon class="text-danger! absolute -left-3">error</mat-icon>
+              }
+
+              <span>
+                {{ variant.get('name')?.value ?? (getVariantLabel(index) | translate) }}
+              </span>
+
+              <app-button color="danger" size="xs" icon="delete" (click)="removeVariant(index)" />
+            </div>
+          }
+
+          @if (variants.length < MAX_VARIANTS) {
+            <app-button
+              color="background"
+              size="md"
+              icon="add"
+              label="recipes.edit.addVariantButton"
+              [classList]="'w-full border-border/40!'"
+              [iconClassList]="'text-primary!'"
+              (click)="addVariant()"
+            />
+          }
+        </div>
+
+        @if (variants.length > 0) {
+          <div
+            class="flex-1 grid grid-cols-1 xl:grid-cols-2 gap-4 min-w-0 border border-border/40 rounded-md p-4"
+            [formGroup]="variants.at(activeVariantIndex())"
+          >
+            <nmf-text
+              class="col-span-full"
+              formControlName="name"
+              label="recipes.edit.fields.variantName"
+              placeholder="recipes.edit.placeholders.variantName"
+            />
+            <nmf-select
+              formControlName="cookingMethod"
+              label="recipes.labels.cookingMethod"
+              [options]="cookingMethodOptions"
+            />
+
+            <nmf-number
+              formControlName="servings"
+              label="recipes.labels.servings"
+              placeholder="recipes.edit.placeholders.servings"
+              [min]="0"
+            />
+
+            <nmf-number
+              formControlName="prepTime"
+              label="recipes.labels.prepTime"
+              placeholder="recipes.edit.placeholders.prepTime"
+              [min]="0"
+            />
+
+            <nmf-number
+              formControlName="cookTime"
+              label="recipes.labels.cookTime"
+              placeholder="recipes.edit.placeholders.cookTime"
+              [min]="0"
+            />
+
+            <nmf-textarea
+              class="col-span-full"
+              formControlName="ingredients"
+              label="recipes.labels.ingredients"
+              placeholder="recipes.edit.placeholders.ingredients"
+            />
+
+            <nmf-textarea
+              class="col-span-full"
+              formControlName="instructions"
+              label="recipes.labels.instructions"
+              placeholder="recipes.edit.placeholders.instructions"
+            />
+
+            <nmf-textarea
+              class="col-span-full"
+              formControlName="notes"
+              label="recipes.labels.notes"
+              placeholder="recipes.edit.placeholders.notes"
+            />
+          </div>
+        } @else {
+          <div class="flex items-center">
+            <p>{{ 'recipes.edit.noVariantsMessage' | translate }}</p>
+          </div>
+        }
+      </div>
+
+      <mat-accordion>
+        <mat-expansion-panel class="bg-background-alt!">
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{ 'recipes.labels.categories' | translate }}</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <h3 class="text-sm">{{ 'recipes.labels.courses' | translate }}</h3>
+          <app-checkbox-group
+            [label]="'recipes.labels.courses' | translate"
+            [options]="courseOptions"
+            [control]="form().controls.courses"
+          />
+
+          <h3 class="text-sm">{{ 'recipes.labels.cuisines' | translate }}</h3>
+          <app-checkbox-group
+            [label]="'recipes.labels.cuisines' | translate"
+            [options]="cuisineOptions"
+            [control]="form().controls.cuisines"
+          />
+
+          <h3 class="text-sm">{{ 'recipes.labels.dietTypes' | translate }}</h3>
+          <app-checkbox-group
+            [label]="'recipes.labels.dietTypes' | translate"
+            [options]="dietTypeOptions"
+            [control]="form().controls.dietTypes"
+          />
+
+          <h3 class="text-sm">{{ 'recipes.labels.mealTypes' | translate }}</h3>
+          <app-checkbox-group
+            [label]="'recipes.labels.mealTypes' | translate"
+            [options]="mealTypeOptions"
+            [control]="form().controls.mealTypes"
+          />
+        </mat-expansion-panel>
+      </mat-accordion>
+
+      <div class="flex justify-between items-center">
+        <p class="text-sm text-danger">
+          @if (form().hasError('server')) {
+            {{ form().getError('server') | translate }}
+          } @else if (form().invalid && validated()) {
+            {{ 'forms.hasErrors' | translate }}
+          } @else if (status() === 'error') {
+            {{ 'recipes.edit.errorMessage' | translate }}
+          }
+        </p>
+
+        <div class="flex gap-4">
+          <app-button
+            color="secondary"
+            size="md"
+            type="button"
+            label="forms.cancel"
+            [routerLink]="
+              loadedRecipeId() ? '/app/recipes/details/' + loadedRecipeId() : '/app/recipes/list'
+            "
+          />
+
+          <app-button
+            color="primary"
+            size="md"
+            type="submit"
+            [label]="
+              loadedRecipeId()
+                ? 'recipes.edit.submitButton.existing'
+                : 'recipes.edit.submitButton.new'
+            "
+            [loading]="status() === 'submitting'"
+          />
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-template>

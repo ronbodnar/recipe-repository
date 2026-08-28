@@ -1,0 +1,16 @@
+<mat-toolbar class="bg-primary/20! px-4!">
+  <app-button
+    icon="menu"
+    size="xl"
+    [color]="'transparent'"
+    [iconClassList]="['text-text!']"
+    (click)="snav.toggle()"
+  ></app-button>
+
+  <div
+    class="flex min-w-0 cursor-pointer items-center gap-2 select-none text-lg tracking-wide sm:gap-4"
+    routerLink="/"
+  >
+    {{ 'app.name' | translate }}
+  </div>
+</mat-toolbar>

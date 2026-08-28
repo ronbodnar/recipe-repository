@@ -1,0 +1,45 @@
+<div
+  class="min-h-screen xl:h-screen bg-background flex items-center justify-center p-6 select-none"
+>
+  <main class="h-full flex flex-col gap-20 text-center max-w-4xl">
+    <div class="flex flex-col items-center gap-2 xl:mt-30">
+      <mat-icon class="text-primary! text-5xl! size-12!">restaurant_menu</mat-icon>
+
+      <h1 class="text-4xl font-bold my-2">{{ 'app.name' | translate }}</h1>
+
+      <p class="text-muted text-lg my-2">
+        {{ 'landing.subtitle' | translate }}
+      </p>
+    </div>
+
+    <div class="flex justify-center gap-3">
+      <app-button color="primary" size="lg" label="landing.primaryCtaButton" (click)="register()" />
+
+      <app-button
+        color="secondary"
+        size="lg"
+        label="landing.secondaryCtaButton"
+        (click)="login()"
+      />
+    </div>
+
+    <div class="grid xl:grid-cols-3 gap-8">
+      @for (card of cards; track card.title) {
+        <div
+          class="bg-background-alt p-8 rounded border border-border/40 hover:border-primary transition-colors"
+        >
+          <span class="material-icons text-primary">{{ card.icon }}</span>
+
+          <h2 class="font-semibold mt-2">{{ card.title | translate }}</h2>
+
+          <p class="text-muted text-sm mt-2">{{ card.subtitle | translate }}</p>
+        </div>
+      }
+    </div>
+
+    <p class="mt-auto text-muted text-xs uppercase tracking-widest">
+      © 2026 {{ 'app.name' | translate }} &mdash; Built and maintained by
+      <a href="https://ronbodnar.com" target="_blank">Ron Bodnar</a>
+    </p>
+  </main>
+</div>

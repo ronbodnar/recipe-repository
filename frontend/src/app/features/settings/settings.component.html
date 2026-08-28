@@ -1,0 +1,24 @@
+<app-fluid-container title="Settings">
+  <div class="flex flex-col md:flex-row gap-6">
+    <nav class="md:w-64 bg-background-alt rounded-lg shadow-sm p-2">
+      <ul class="space-y-2 p-0">
+        @for (item of settingsNav; track item.route) {
+          <li class="list-none">
+            <a
+              [routerLink]="item.route"
+              routerLinkActive="font-bold"
+              class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-primary/20 transition-colors"
+            >
+              <mat-icon class="text-text!">{{ item.icon }}</mat-icon>
+              <span>{{ item.label }}</span>
+            </a>
+          </li>
+        }
+      </ul>
+    </nav>
+
+    <div class="grow bg-background-alt p-6 rounded-lg shadow-sm min-h-100">
+      <router-outlet />
+    </div>
+  </div>
+</app-fluid-container>

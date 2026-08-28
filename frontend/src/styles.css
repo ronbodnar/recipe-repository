@@ -1,0 +1,190 @@
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@theme {
+  --color-primary: var(--primary-color);
+  --color-secondary: var(--secondary-color);
+  --color-text: var(--text-color);
+  --color-muted: var(--muted-color);
+  --color-background: var(--background-color);
+  --color-background-alt: var(--background-secondary-color);
+  --color-success: var(--success-color);
+  --color-danger: var(--danger-color);
+  --color-warning: var(--warning-color);
+  --color-info: var(--info-color);
+  --color-link: var(--link-color);
+  --color-border: var(--border-color);
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  a {
+    @apply text-primary no-underline transition-colors duration-200 ease-in-out;
+  }
+
+  a:hover {
+    @apply text-secondary underline;
+  }
+}
+
+:root {
+  --z-fixed: 100;
+
+  --text-color: #212529;
+  --text-color-rgb: 33, 37, 41;
+
+  --muted-color: #6c757d;
+  --muted-color-rgb: 108, 117, 125;
+
+  --background-color: #f9f6ee;
+  --background-color-rgb: 249, 246, 238;
+
+  --background-secondary-color: #f0ede4;
+  --background-secondary-color-rgb: 240, 237, 228;
+
+  --dark-bg: #212529;
+  --dark-bg-rgb: 13, 17, 23;
+
+  --primary-color: #009e60;
+  --primary-color-rgb: 22, 102, 175;
+
+  --secondary-color: #00a36c;
+  --secondary-color-rgb: 0, 58, 123;
+
+  --success-color: #198754;
+  --success-color-rgb: 25, 135, 84;
+
+  --danger-color: #dc3545;
+  --danger-color-rgb: 220, 53, 69;
+
+  --warning-color: #ed6c02;
+  --warning-color-rgb: 237, 108, 2;
+
+  --info-color: #00aadd;
+  --info-color-rgb: 0, 170, 221;
+
+  --link-color: #0b5ed7;
+  --link-color-hover: #084298;
+
+  --white-color: #f4f3f2;
+
+  --border-color: #d0d7de;
+
+  --mat-sys-surface-container: var(--color-background-alt) !important;
+  --mat-sys-on-surface: var(--color-text) !important;
+  --mat-sys-on-surface-variant: var(--color-text) !important;
+  --mat-sys-outline: var(--color-border) !important;
+  --mat-sys-on-background: var(--color-border) !important;
+
+  --mat-toolbar-standard-height: 75px;
+  --mat-stepper-header-height: 60px;
+}
+
+html.dark {
+  --text-color: #c4c3c3;
+  --text-color-rgb: 196, 195, 194;
+
+  --muted-color: #6c757d;
+  --muted-color-rgb: 108, 117, 125;
+
+  --background-color: #121212;
+  --background-color-rgb: 18, 18, 18;
+
+  --background-secondary-color: #1d1d1d;
+  --background-secondary-color-rgb: 29, 29, 29;
+
+  --dark-bg: #f0f6fc;
+  --dark-bg-rgb: 250, 250, 250;
+
+  --primary-color: #009e60;
+  --primary-color-rgb: 22, 102, 175;
+
+  --secondary-color: #00a36c;
+  --secondary-color-rgb: 0, 58, 123;
+
+  --success-color: #4caf50;
+  --success-color-rgb: 76, 175, 80;
+
+  --danger-color: #dc3545;
+  --danger-color-rgb: 244, 67, 54;
+
+  --warning-color: #ff9800;
+  --warning-color-rgb: 255, 152, 0;
+
+  --info-color: #2196f3;
+  --info-color-rgb: 33, 150, 243;
+
+  --link-color: #90caf9;
+  --link-color-hover: #64b5f6;
+
+  --border-color: rgba(var(--dark-bg-rgb), 0.3);
+}
+
+/** Fix for auto-fill input styles **/
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition:
+    background-color 0s 600000s,
+    color 0s 600000s !important;
+}
+
+/** Remove the eye that pops up with IE/Edge **/
+::-ms-reveal {
+  display: none;
+}
+
+/** APP LOADER **/
+#app-loader {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-color);
+  z-index: 9999;
+}
+
+#app-loader .spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #ccc;
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@media (prefers-color-scheme: light) {
+  #app-loader {
+    --background-color: #f4f3f2;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  #app-loader {
+    --background-color: #121212;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.nmf-options-list {
+  z-index: 1000 !important;
+}

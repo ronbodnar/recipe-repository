@@ -1,0 +1,79 @@
+<div class="nav-container" [class.is-mobile]="isMobile()">
+  @if (isAuthenticated()) {
+    <app-header [snav]="snav"></app-header>
+  }
+
+  <!-- Sidenav and Content -->
+  <mat-sidenav-container class="flex-1 min-h-0">
+    <!-- Sidebar -->
+    <mat-sidenav
+      class="rounded-none!"
+      #snav
+      [mode]="isMobile() ? 'over' : 'side'"
+      [opened]="false"
+      (openedChange)="onSidenavOpenedChange($event)"
+      [fixedInViewport]="isMobile()"
+      [style.width]="isMobile() ? '100vw' : '250px'"
+      [fixedTopGap]="isMobile() ? 55 : 0"
+    >
+      <div
+        class="flex h-full max-h-full min-h-0 min-w-0 flex-col overflow-y-auto bg-background-alt text-text select-none"
+      >
+        <mat-nav-list>
+          @for (navItem of NAV_ITEMS; track navItem.sectionName) {
+            @if (hasRole(navItem.requiredRole)) {
+              <mat-list-item (click)="onNavigationClick(navItem)" class="rounded-none!">
+                <div class="flex items-center justify-between w-full font-medium text-text">
+                  <div class="flex items-center gap-3">
+                    <mat-icon>{{ navItem.icon }}</mat-icon>
+                    <span>{{ navItem.label | translate }}</span>
+                  </div>
+                  @if (navItem.children?.length) {
+                    <mat-icon
+                      class="transition-transform duration-200"
+                      [class.rotate-180]="isOpen(navItem.sectionName)"
+                    >
+                      expand_more
+                    </mat-icon>
+                  }
+                </div>
+              </mat-list-item>
+
+              <!-- CHILDREN -->
+              @if (isOpen(navItem.sectionName) && navItem.children?.length) {
+                @for (child of navItem.children; track child.label; let i = $index) {
+                  @if (hasRole(child.requiredRole)) {
+                    <mat-list-item class="h-10! pl-12!" (click)="onNavigationClick(navItem, i)">
+                      <div class="font-medium text-text flex items-center gap-2">
+                        {{ child.label | translate }}
+                      </div>
+                    </mat-list-item>
+                  }
+                }
+              }
+            }
+          }
+        </mat-nav-list>
+
+        <!-- Bottom Sticky Section -->
+        <div class="flex flex-col mt-auto text-center">
+          <p class="text-xs my-0 pb-2">
+            {{ 'app.version' | translate: { version: currentVersion } }}
+          </p>
+
+          <p class="border-t border-border/40 pt-2 mt-0 text-sm">
+            © 2026
+            <a href="https://ronbodnar.com" target="_blank">Ron Bodnar</a>
+            <br />
+            {{ 'app.copyright' | translate }}
+          </p>
+        </div>
+      </div>
+    </mat-sidenav>
+
+    <!-- Main Content -->
+    <mat-sidenav-content class="min-h-0">
+      <ng-content></ng-content>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

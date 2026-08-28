@@ -1,0 +1,50 @@
+@if (wrapperClassList) {
+  <div [ngClass]="normalizedClassList(wrapperClassList)">
+    <ng-container *ngTemplateOutlet="buttonContent"></ng-container>
+  </div>
+} @else {
+  <ng-container *ngTemplateOutlet="buttonContent"></ng-container>
+}
+
+<ng-template #buttonContent>
+  <button
+    [id]="id"
+    [type]="type"
+    [disabled]="disabled || loading"
+    [style]="{
+      cursor: disabled ? 'not-allowed' : cursor,
+    }"
+    [ngClass]="[
+      'border border-transparent font-normal inline-flex items-center justify-center gap-2 transition-opacity h-auto w-auto disabled:opacity-50 rounded-md',
+      colorClass,
+      wrapperSizeClass,
+      normalizedClassList(classList),
+      iconPosition === 'right' ? 'flex-row-reverse' : 'flex-row',
+    ]"
+    [matTooltip]="tooltip"
+    [matTooltipPosition]="'above'"
+    matTooltipClass="custom-tooltip"
+    (click)="handleClick($event)"
+  >
+    @if (loading) {
+      <mat-spinner
+        diameter="50"
+        strokeWidth="5"
+        class="inline-block! w-3! h-3! mr-2!"
+        [ngClass]="{ 'white-spinner': color !== 'light' }"
+      />
+    }
+
+    @if (icon && !loading) {
+      <mat-icon [ngClass]="[iconSizeClass, normalizedClassList(iconClassList.concat(''))]">
+        {{ icon }}
+      </mat-icon>
+    }
+
+    @if (label) {
+      <span [ngClass]="normalizedClassList(labelClassList)">{{ label | translate }}</span>
+    } @else {
+      <ng-content />
+    }
+  </button>
+</ng-template>

@@ -1,0 +1,253 @@
+{
+  "app": {
+    "name": "Recipe Repository",
+    "version": "Version {{version}}",
+    "copyright": "All rights reserved.",
+    "loadingMessage": "Almost there..."
+  },
+  "navigation": {
+    "myRecipes": "My Recipes",
+    "addRecipe": "Add Recipe",
+    "settings": "Settings"
+  },
+  "dialogs": {
+    "confirm": {
+      "title": "Confirm Action",
+      "message": "Are you sure you want to proceed?"
+    }
+  },
+  "forms": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "hasErrors": "There are errors in the form. Please correct them and try again."
+  },
+  "auth": {
+    "shared": {
+      "usernameLabel": "Username",
+      "passwordLabel": "Password",
+      "emailLabel": "Email"
+    },
+    "login": {
+      "title": "Account Login",
+      "submitButton": "Log in",
+      "noAccount": "Need to create an account?",
+      "registerLinkText": "Register"
+    },
+    "register": {
+      "title": "Create an Account",
+      "submitButton": "Register",
+      "firstNameLabel": "First Name",
+      "firstNamePlaceholder": "First name (optional)",
+      "lastNameLabel": "Last Name",
+      "lastNamePlaceholder": "Last name (optional)",
+      "confirmPasswordLabel": "Confirm Password",
+      "haveAccount": "Already have an account?",
+      "loginLinkText": "Log in",
+      "successMessage": "Registration successful! You can now log in."
+    }
+  },
+  "landing": {
+    "subtitle": "Organize your private recipes for on-the-go cooking.",
+    "comingSoon": "Coming soon to your kitchen...",
+    "privateRecipeTitle": "Private Recipes",
+    "privateRecipeSubtitle": "Keep your personal recipes private and organized.",
+    "ingredientsTitle": "Find Ingredients",
+    "ingredientsSubtitle": "Easily search for recipes based on the ingredients you have.",
+    "scaleTitle": "Scale Recipes",
+    "scaleSubtitle": "Adjust serving sizes without doing the math yourself.",
+    "primaryCtaButton": "Create Account",
+    "secondaryCtaButton": "Log In"
+  },
+  "recipes": {
+    "categories": {
+      "courses": {
+        "appetizer": "Appetizer",
+        "main-course": "Main Course",
+        "dessert": "Dessert",
+        "side-dish": "Side Dish",
+        "salad": "Salad",
+        "soup": "Soup",
+        "beverage": "Beverage",
+        "snack": "Snack"
+      },
+      "cuisines": {
+        "american": "American",
+        "chinese": "Chinese",
+        "french": "French",
+        "german": "German",
+        "greek": "Greek",
+        "indian": "Indian",
+        "italian": "Italian",
+        "japanese": "Japanese",
+        "korean": "Korean",
+        "mediterranean": "Mediterranean",
+        "mexican": "Mexican",
+        "salvadoran": "Salvadoran",
+        "spanish": "Spanish"
+      },
+      "dietTypes": {
+        "dairy-free": "Dairy-Free",
+        "gluten-free": "Gluten-Free",
+        "keto": "Keto",
+        "low-carb": "Low-Carb",
+        "vegan": "Vegan",
+        "vegetarian": "Vegetarian"
+      },
+      "mealTypes": {
+        "breakfast": "Breakfast",
+        "brunch": "Brunch",
+        "lunch": "Lunch",
+        "dinner": "Dinner",
+        "snack": "Snack",
+        "dessert": "Dessert"
+      }
+    },
+    "labels": {
+      "title": "Title",
+      "description": "Description",
+      "variants": "Variants",
+      "cookingMethod": "Cooking Method",
+      "servings": "Servings",
+      "prepTime": "Preparation Time",
+      "cookTime": "Cooking Time",
+      "ingredients": "Ingredients",
+      "instructions": "Instructions",
+      "notes": "Notes",
+      "categories": "Categories",
+      "courses": "Courses",
+      "cuisines": "Cuisines",
+      "dietTypes": "Diet Types",
+      "mealTypes": "Meal Types",
+      "cookingMethods": {
+        "air-fryer": "Air Fryer",
+        "barbecue": "Barbecue",
+        "grill": "Grill",
+        "microwave": "Microwave",
+        "no-cook": "No-Cook",
+        "oven": "Oven",
+        "pressure-cooker": "Pressure Cooker",
+        "slow-cooker": "Slow Cooker",
+        "smoker": "Smoker",
+        "stovetop": "Stovetop"
+      }
+    },
+    "list": {
+      "title": "My Recipes",
+      "viewRecipeButton": "View Recipe",
+      "loading": "Loading your recipes...",
+      "noRecipes": {
+        "title": "Welcome to {{appName}}!",
+        "empty": "You haven't added any recipes yet.",
+        "clickToAdd": "Click on the \"+ Add New Recipe\" button in the top right corner to create your first recipe."
+      }
+    },
+    "details": {
+      "noDescription": "No description provided.",
+      "noVariants": "No variants found. Edit the recipe to add variants and see ingredients, instructions, and notes.",
+      "noIngredients": "No ingredients provided.",
+      "noInstructions": "No instructions provided.",
+      "loading": "Loading recipe details...",
+      "deleting": "Deleting recipe...",
+      "deleteError": "Failed to delete recipe. Please try again later.",
+      "deleteButton": "Delete Recipe",
+      "editButton": "Edit Recipe",
+      "deleteConfirmation": {
+        "title": "Delete Recipe",
+        "message": "Are you sure you want to delete this recipe?<br /><br /><strong>This action is permanent and cannot be undone.</strong>"
+      }
+    },
+    "edit": {
+      "fields": {
+        "images": "Images",
+        "newImages": "New Images",
+        "existingImages": "Existing Images",
+        "variantName": "Variant Name"
+      },
+      "placeholders": {
+        "title": "Enter recipe title",
+        "description": "Enter recipe description",
+        "variantName": "Enter variant name. If no name is entered, the cooking method will be used as the name.",
+        "cookingMethod": "Enter cooking method",
+        "servings": "Enter number of servings",
+        "prepTime": "Enter preparation time in minutes",
+        "cookTime": "Enter cooking time in minutes",
+        "ingredients": "Enter ingredients, one per line",
+        "instructions": "Enter instructions, one per line",
+        "notes": "Enter notes or tips for the recipe"
+      },
+      "title": {
+        "new": "Add Recipe",
+        "existing": "Edit Recipe"
+      },
+      "subtitle": {
+        "new": "Fill out the form below to create a new recipe.",
+        "existing": "Update the recipe details below."
+      },
+      "submitButton": {
+        "new": "Add Recipe",
+        "existing": "Update Recipe"
+      },
+      "addButton": "Add Recipe",
+      "addVariantButton": "Add Variant",
+      "noVariantsMessage": "No variants added. Click the \"+ Add Variant\" button to get started.",
+      "noCookingMethodSelected": "No Type Selected",
+      "loading": "Loading recipe details...",
+      "error": "An error occurred while loading the recipe. Please try again later."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "general": {
+      "title": "General Settings",
+      "themeLabel": "Theme mode",
+      "themeOptions": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      }
+    },
+    "profile": {
+      "title": "Profile Settings"
+    },
+    "security": {
+      "title": "Security Settings"
+    }
+  },
+  "errors": {
+    "unknown": "An error occurred. Please try again later.",
+    "serverUnavailable": "The server is unavailable. Please try again later.",
+    "networkTimeout": "The request timed out. Please try again later.",
+    "internalError": "An internal server error occurred.",
+    "messageNotReadable": "The request message could not be read.",
+    "messageNotWritable": "The response could not be written.",
+    "validationFailed": "Validation failed. Please check your input.",
+    "notAuthorized": "You are not authorized to access this resource.",
+    "invalidAccessToken": "Your session has expired. Please log in again.",
+    "invalidRefreshToken": "Your session has expired. Please log in again.",
+    "invalidCredentials": "Username or password is invalid.",
+    "authUserBlocked": "Your account has been blocked.",
+    "authUserLocked": "Your account is locked.",
+    "authUserNotFound": "User not found.",
+    "missingParameters": "Required parameters are missing.",
+    "invalidDateFormat": "The date format is invalid.",
+    "userNotFound": "User not found.",
+    "duplicateEmail": "This email is already in use.",
+    "duplicateUsername": "This username is already in use.",
+    "passwordMismatch": "Passwords do not match.",
+    "incorrectPassword": "The password is incorrect.",
+    "incorrectNewPassword": "The new password is invalid.",
+    "invalidEmail": "The email address is invalid.",
+    "fieldMessage": "There exists errors in one or more fields. Please correct them and try again.",
+    "fields": {
+      "required": "This field is required.",
+      "minLength": "Must be at least {{requiredLength}} characters.",
+      "maxLength": "Must be less than {{requiredLength}} characters.",
+      "min": "Must be at least {{min}}.",
+      "max": "Must be no more than {{max}}.",
+      "pattern": "Invalid format.",
+      "email": "Invalid email address format.",
+      "invalid": "Invalid value.",
+      "duplicateRecipe": "A recipe with this name already exists."
+    }
+  }
+}

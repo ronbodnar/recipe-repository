@@ -1,0 +1,10 @@
+<div class="{{ wrapperClass }}">
+  @for (option of options; track option.value) {
+    <mat-checkbox
+      [checked]="isValueSelected(control, option.value)"
+      (change)="toggleValue(control, option.value, $event.checked)"
+    >
+      {{ option.label }}
+    </mat-checkbox>
+  }
+</div>

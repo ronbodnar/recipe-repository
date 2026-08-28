@@ -1,0 +1,44 @@
+<h2 mat-dialog-title class="bg-background-alt mb-0!">
+  {{ data.title | translate }}
+</h2>
+
+@if (hasCloseButton !== false) {
+  <div class="absolute top-0 right-0 p-2">
+    <app-button
+      (click)="close()"
+      icon="close"
+      iconClassList="text-text!"
+      class="cursor-pointer"
+      color="transparent"
+      size="lg"
+    />
+  </div>
+}
+
+<mat-dialog-content class="bg-background-alt">
+  @if (data.message) {
+    <span [innerHTML]="data.message | translate"></span>
+  }
+  @if (data.component) {
+    <app-component-wrapper
+      [component]="data.component"
+      [inputs]="data.componentInputs || {}"
+      [outputs]="data.componentOutputs || {}"
+    />
+  }
+</mat-dialog-content>
+
+@if (data.actions?.length) {
+  <mat-dialog-actions class="flex flex-col md:flex-row gap-4 bg-background-alt">
+    @for (action of data.actions; track action) {
+      <app-button
+        (click)="handleActionClick(action)"
+        [disabled]="action.disabledFn?.() || false"
+        [loading]="action.loadingFn?.() || false"
+        [label]="action.label"
+        [color]="action.color || 'light'"
+        [size]="action.size || 'md'"
+      />
+    }
+  </mat-dialog-actions>
+}

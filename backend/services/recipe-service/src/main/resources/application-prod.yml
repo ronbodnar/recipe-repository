@@ -1,0 +1,6 @@
+server:
+  port: 8444
+
+spring:
+  jpa:
+    show-sql: false

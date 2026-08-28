@@ -1,0 +1,35 @@
+<div
+  class="mx-auto box-border min-h-full w-full flex flex-col px-4 py-0 pb-4 xl:py-6"
+  [class]="widthClass"
+>
+  @if (backRoute(); as route) {
+    <app-button
+      color="background"
+      size="xl"
+      [routerLink]="route"
+      icon="arrow_back"
+      [classList]="'p-0! -ml-2 mt-4 lg:mt-0'"
+      [iconClassList]="'text-primary!'"
+    />
+  }
+
+  <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div class="flex flex-1 flex-col gap-1">
+      @if (title()) {
+        <h1 class="text-2xl font-normal tracking-tight text-text">
+          {{ title() | translate }}
+        </h1>
+      }
+
+      <ng-content select="[subtitle]"></ng-content>
+    </div>
+
+    <div class="flex gap-2">
+      <ng-content select="[actions]"></ng-content>
+    </div>
+  </div>
+
+  <main class="flex flex-1 flex-col min-h-0">
+    <ng-content></ng-content>
+  </main>
+</div>

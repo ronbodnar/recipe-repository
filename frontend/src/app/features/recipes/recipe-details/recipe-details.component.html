@@ -1,0 +1,108 @@
+@if (loading() || deleting()) {
+  <app-full-page-loader
+    [message]="loading() ? 'recipes.details.loading' : 'recipes.details.deleting'"
+  />
+} @else if (recipe(); as recipe) {
+  <app-fluid-container size="xl" [title]="recipe.title" [backRoute]="'/app/recipes/list'">
+    @if (recipe.description) {
+      <p subtitle class="mt-0 max-w-2xl text-sm text-muted">
+        {{ recipe.description }}
+      </p>
+    }
+
+    <div actions class="flex gap-2">
+      <app-button
+        color="background"
+        size="sm"
+        classList="border-border/40!"
+        [routerLink]="'/app/recipes/edit/' + recipe.id"
+        icon="edit"
+        label="recipes.details.editButton"
+      />
+
+      <app-button
+        color="background"
+        size="sm"
+        classList="border-border/40!"
+        icon="delete"
+        label="recipes.details.deleteButton"
+        (click)="promptDeleteRecipe()"
+      />
+    </div>
+
+    <section class="mb-6 grid gap-8 md:grid-cols-[minmax(280px,400px)_1fr] md:items-center">
+      <!-- Recipe Image -->
+      @if (recipe.images[0]; as image) {
+        <div class="overflow-hidden rounded-md border border-border/40 bg-background-alt">
+          <img
+            [src]="imageService.getImageUrl(image)"
+            [alt]="recipe.title + ' image'"
+            class="block h-full w-full rounded-md object-contain"
+          />
+        </div>
+      }
+
+      <!-- Variant Selections -->
+      @if (recipe.variants.length) {
+        <div class="flex flex-col rounded-md border border-border/40 bg-background-alt p-5 gap-5">
+          <h2 class="m-0 text-lg font-medium">
+            {{ 'recipes.labels.variants' | translate }}
+          </h2>
+
+          <div class="flex flex-wrap gap-2">
+            @for (item of recipe.variants; track item.id; let index = $index) {
+              <app-button
+                [color]="'background'"
+                size="sm"
+                [classList]="
+                  'px-4 ' +
+                  (selectedVariantIndex() === index ? 'border-primary!' : 'border-border/40!')
+                "
+                [labelClassList]="selectedVariantIndex() === index ? 'font-semibold' : ''"
+                [label]="item.name || getVariantLabel(index) | translate"
+                (click)="selectVariant(index)"
+              />
+            }
+          </div>
+        </div>
+      }
+    </section>
+
+    @if (selectedVariant(); as variant) {
+      <section
+        class="grid gap-10 md:grid-cols-2 rounded-xl border border-border/40 bg-background-alt p-6"
+      >
+        <app-rich-text-list
+          headerText="recipes.labels.ingredients"
+          headerIcon="menu_book"
+          emptyListText="recipes.details.noIngredients"
+          [listItems]="variant.ingredients"
+          [useCheckboxes]="true"
+        />
+
+        <app-rich-text-list
+          headerText="recipes.labels.instructions"
+          headerIcon="list"
+          emptyListText="recipes.details.noInstructions"
+          [listItems]="variant.instructions"
+          [ordered]="true"
+        />
+      </section>
+
+      @if (variant.notes.length) {
+        <section class="mt-10 flex flex-col gap-4">
+          <app-rich-text-list
+            headerText="recipes.labels.notes"
+            headerIcon="article"
+            [listItems]="variant.notes"
+            [ordered]="true"
+          />
+        </section>
+      }
+    } @else {
+      <p class="text-sm text-muted">
+        {{ 'recipes.details.noVariants' | translate }}
+      </p>
+    }
+  </app-fluid-container>
+}

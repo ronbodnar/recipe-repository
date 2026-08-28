@@ -1,0 +1,66 @@
+.nav-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.is-mobile .nav-toolbar {
+  position: fixed;
+  z-index: 2;
+}
+
+.sidenav-container {
+  /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+  flex: 1;
+}
+
+.is-mobile .sidenav-container {
+  /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
+     `<body>` to be our scrolling element for mobile layouts. */
+  flex: 1 0 auto;
+}
+
+/* ANGULAR MATERIAL OVERRIDES */
+.mat-drawer {
+  background-color: var(--background-secondary-color);
+  border-color: var(--border-color);
+}
+
+.mdc-list {
+  padding: 0;
+}
+
+.mdc-list-item {
+  padding: 0;
+}
+
+.mdc-list-item.mdc-list-item--with-one-line {
+  height: 50px;
+  padding: 0 16px;
+}
+
+.mdc-list-item__primary-text {
+  color: var(--dark-bg) !important;
+}
+
+.child-item.mdc-list-item.mdc-list-item--with-one-line {
+  height: 30px;
+  background-color: var(--background-secondary-color);
+  border-radius: 0;
+}
+
+.mat-drawer-container {
+  color: var(--text-color) !important;
+  background-color: var(--background-color) !important;
+}
+
+body.mobile-sidenav-open {
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+}
