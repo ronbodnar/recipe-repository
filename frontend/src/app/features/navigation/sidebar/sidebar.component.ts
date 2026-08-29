@@ -19,7 +19,7 @@ import { NavItem } from '../nav-item.interface';
 import { AppVersionService } from '@core/services/app-version.service';
 import { AuthenticationService } from '@core/services/authentication.service';
 import { MediaService } from '@core/services/media.service';
-import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
 import { getNavItems } from '../nav-menu.config';
 
 @Component({

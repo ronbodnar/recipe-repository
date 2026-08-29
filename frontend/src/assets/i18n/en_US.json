@@ -8,7 +8,8 @@
   "navigation": {
     "myRecipes": "My Recipes",
     "addRecipe": "Add Recipe",
-    "settings": "Settings"
+    "settings": "Settings",
+    "logout": "Log Out"
   },
   "dialogs": {
     "confirm": {
@@ -138,7 +139,7 @@
       "noRecipes": {
         "title": "Welcome to {{appName}}!",
         "empty": "You haven't added any recipes yet.",
-        "clickToAdd": "Click on the \"+ Add New Recipe\" button in the top right corner to create your first recipe."
+        "clickToAdd": "Click on the \"+ Add Recipe\" button in the top right corner to create your first recipe."
       }
     },
     "details": {
@@ -166,7 +167,7 @@
       "placeholders": {
         "title": "Enter recipe title",
         "description": "Enter recipe description",
-        "variantName": "Enter variant name. If no name is entered, the cooking method will be used as the name.",
+        "variantName": "Enter variant name (cooking method will be used as a fallback)",
         "cookingMethod": "Enter cooking method",
         "servings": "Enter number of servings",
         "prepTime": "Enter preparation time in minutes",
@@ -192,25 +193,34 @@
       "noVariantsMessage": "No variants added. Click the \"+ Add Variant\" button to get started.",
       "noCookingMethodSelected": "No Type Selected",
       "loading": "Loading recipe details...",
-      "error": "An error occurred while loading the recipe. Please try again later."
+      "errorLoading": "An error occurred while loading the recipe. Please try again later.",
+      "errorSubmitting": "An error occurred while submitting the recipe. Please try again later."
     }
   },
   "settings": {
     "title": "Settings",
     "general": {
       "title": "General Settings",
+      "label": "General",
       "themeLabel": "Theme mode",
       "themeOptions": {
         "light": "Light",
         "dark": "Dark",
         "system": "System"
+      },
+      "languageLabel": "Language",
+      "languageOptions": {
+        "en_US": "English",
+        "es_MX": "Spanish (Español)"
       }
     },
     "profile": {
-      "title": "Profile Settings"
+      "title": "Profile Settings",
+      "label": "Profile"
     },
     "security": {
-      "title": "Security Settings"
+      "title": "Security Settings",
+      "label": "Security"
     }
   },
   "errors": {

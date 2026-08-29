@@ -5,8 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FluidContainerComponent } from '@shared/ui/fluid-container/fluid-container.component';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 import { RecipeSummary } from '../recipe.types';
-import { TranslatePipe } from '@shared/pipes/translate.pipe';
-import { TranslateService } from '@core/services/translate.service';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FullPageLoaderComponent } from '@shared/ui/full-page-loader.component';
 import { RecipeService } from '../recipe.service';
 import { ImageService } from '@core/services/image.service';
@@ -39,7 +38,7 @@ export class RecipeListComponent {
   readonly isLoading = this._isLoading.asReadonly();
   readonly hasError = this._hasError.asReadonly();
 
-  readonly appName = this.translate.get('app.name');
+  readonly appName = this.translate.instant('app.name');
 
   readonly hasRecipes = computed(() => this.loadedRecipes().length > 0);
 

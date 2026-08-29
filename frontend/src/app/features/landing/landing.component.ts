@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthenticationService } from '@core/services/authentication.service';
-import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 
 @Component({

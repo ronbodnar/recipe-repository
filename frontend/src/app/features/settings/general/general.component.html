@@ -8,5 +8,12 @@
       formControlName="theme"
       [options]="themeOptions()"
     />
+
+    <nmf-select
+      [label]="'settings.general.languageLabel' | translate"
+      type="text"
+      formControlName="language"
+      [options]="languageOptions()"
+    />
   </div>
 </div>

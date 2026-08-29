@@ -1,6 +1,6 @@
 import { Component, inject, input } from '@angular/core';
 import { MediaService } from '@core/services/media.service';
-import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '../button/button.component';
 
 @Component({

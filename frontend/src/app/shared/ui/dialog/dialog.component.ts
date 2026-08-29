@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ComponentType } from '@angular/cdk/portal';
 import { ButtonColor, ButtonComponent, ButtonSize } from '../button/button.component';
 import { ComponentWrapperComponent } from './components/component-wrapper.component';
-import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface DialogAction {
   label: string;

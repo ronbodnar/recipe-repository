@@ -13,7 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ButtonColor, ButtonComponent } from './button/button.component';
-import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export enum SnackbarType {
   SUCCESS = 'success',

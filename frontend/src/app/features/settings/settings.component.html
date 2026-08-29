@@ -1,4 +1,4 @@
-<app-fluid-container title="Settings">
+<app-fluid-container title="settings.title">
   <div class="flex flex-col md:flex-row gap-6">
     <nav class="md:w-64 bg-background-alt rounded-lg shadow-sm p-2">
       <ul class="space-y-2 p-0">
@@ -10,7 +10,7 @@
               class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-primary/20 transition-colors"
             >
               <mat-icon class="text-text!">{{ item.icon }}</mat-icon>
-              <span>{{ item.label }}</span>
+              <span>{{ item.label | translate }}</span>
             </a>
           </li>
         }

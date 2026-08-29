@@ -10,7 +10,7 @@ import { ButtonComponent } from '@shared/ui/button/button.component';
 import { RecipeForm, RecipeVariantForm } from './edit-recipe.types';
 import { RecipeService } from '../recipe.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { RecipeFormFactory } from '@features/recipes/edit-recipe/edit-recipe.factory';
 import {
   COOKING_METHODS,
@@ -35,7 +35,6 @@ import {
 import { FileUrlPipe } from '@shared/pipes/file-url.pipe';
 import { ApiError } from '@core/models/api-error.model';
 import { FullPageLoaderComponent } from '@shared/ui/full-page-loader.component';
-import { TranslateService } from '@core/services/translate.service';
 import { ImageService } from '@core/services/image.service';
 
 @Component({
@@ -96,35 +95,35 @@ export class EditRecipeComponent {
 
   cookingMethodOptions = COOKING_METHODS.map((method) => ({
     value: toBackendEnum(method),
-    label: this.translate.get(
+    label: this.translate.instant(
       `recipes.labels.cookingMethods.${method.toLowerCase().replaceAll(' ', '-')}`,
     ),
   })).sort((a, b) => a.label.localeCompare(b.label));
 
   courseOptions = COURSE_TYPES.map((course) => ({
     value: toBackendEnum(course),
-    label: this.translate.get(
+    label: this.translate.instant(
       `recipes.categories.courses.${course.toLowerCase().replaceAll(' ', '-')}`,
     ),
   })).sort((a, b) => a.label.localeCompare(b.label));
 
   cuisineOptions = CUISINE_TYPES.map((cuisine) => ({
     value: toBackendEnum(cuisine),
-    label: this.translate.get(
+    label: this.translate.instant(
       `recipes.categories.cuisines.${cuisine.toLowerCase().replaceAll(' ', '-')}`,
     ),
   })).sort((a, b) => a.label.localeCompare(b.label));
 
   dietTypeOptions = DIET_TYPES.map((dietType) => ({
     value: toBackendEnum(dietType),
-    label: this.translate.get(
+    label: this.translate.instant(
       `recipes.categories.dietTypes.${dietType.toLowerCase().replaceAll(' ', '-')}`,
     ),
   })).sort((a, b) => a.label.localeCompare(b.label));
 
   mealTypeOptions = MEAL_TYPES.map((mealType) => ({
     value: toBackendEnum(mealType),
-    label: this.translate.get(
+    label: this.translate.instant(
       `recipes.categories.mealTypes.${mealType.toLowerCase().replaceAll(' ', '-')}`,
     ),
   })).sort((a, b) => a.label.localeCompare(b.label));

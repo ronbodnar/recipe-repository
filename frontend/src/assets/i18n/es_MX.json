@@ -8,7 +8,8 @@
   "navigation": {
     "myRecipes": "Mis recetas",
     "addRecipe": "Agregar receta",
-    "settings": "Configuración"
+    "settings": "Configuración",
+    "logout": "Cerrar sesión"
   },
   "dialogs": {
     "confirm": {
@@ -138,7 +139,7 @@
       "noRecipes": {
         "title": "¡Bienvenido a {{appName}}!",
         "empty": "Aún no has agregado ninguna receta.",
-        "clickToAdd": "Haz clic en el botón \"+ Agregar nueva receta\" en la esquina superior derecha para crear tu primera receta."
+        "clickToAdd": "Haz clic en el botón \"+ Agregar receta\" en la esquina superior derecha para crear tu primera receta."
       }
     },
     "details": {
@@ -166,7 +167,7 @@
       "placeholders": {
         "title": "Ingresa el título de la receta",
         "description": "Ingresa la descripción de la receta",
-        "variantName": "Ingresa el nombre de la variante. Si no ingresas un nombre, se utilizará el método de cocción como nombre.",
+        "variantName": "Ingresa el nombre de la variante (el método de cocción se usará como nombre predeterminado)",
         "cookingMethod": "Ingresa el método de cocción",
         "servings": "Ingresa el número de porciones",
         "prepTime": "Ingresa el tiempo de preparación en minutos",
@@ -199,18 +200,26 @@
     "title": "Configuración",
     "general": {
       "title": "Configuración general",
+      "label": "General",
       "themeLabel": "Tema",
       "themeOptions": {
         "light": "Claro",
         "dark": "Oscuro",
         "system": "Sistema"
+      },
+      "languageLabel": "Idioma",
+      "languageOptions": {
+        "en_US": "Inglés (English)",
+        "es_MX": "Español"
       }
     },
     "profile": {
-      "title": "Configuración del perfil"
+      "title": "Configuración del perfil",
+      "label": "Perfil"
     },
     "security": {
-      "title": "Configuración de seguridad"
+      "title": "Configuración de seguridad",
+      "label": "Seguridad"
     }
   },
   "errors": {

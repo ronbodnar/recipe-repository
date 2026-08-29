@@ -1,18 +1,27 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Theme, ThemeService } from '@core/services/theme.service';
+import { ThemeService } from '@core/services/theme.service';
 import { FormOrchestrator, SelectOption, InputSelectComponent } from '@ng-modular-forms/core';
-import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
+import { GeneralSettingsHandler } from './general.handler';
+import { TranslateService } from '@ngx-translate/core';
+
+const VALID_LANGUAGES: Record<string, string> = {
+  en_US: 'settings.general.languageOptions.en_US',
+  es_MX: 'settings.general.languageOptions.es_MX',
+};
 
 @Component({
   selector: 'app-settings-general',
   imports: [ReactiveFormsModule, InputSelectComponent, TranslatePipe],
+  providers: [GeneralSettingsHandler],
   templateUrl: './general.component.html',
   styleUrl: './general.component.css',
 })
 export class SettingsGeneralComponent extends FormOrchestrator implements OnInit {
   private formBuilder = inject(FormBuilder);
   private themeService = inject(ThemeService);
+  private translate = inject(TranslateService);
 
   themeOptions = signal<SelectOption[]>([
     { value: 'light', label: 'settings.general.themeOptions.light' },
@@ -20,32 +29,22 @@ export class SettingsGeneralComponent extends FormOrchestrator implements OnInit
     { value: 'auto', label: 'settings.general.themeOptions.system' },
   ]);
 
+  languageOptions = signal<SelectOption[]>(
+    Object.keys(VALID_LANGUAGES).map((lang) => ({
+      value: lang,
+      label: VALID_LANGUAGES[lang],
+    })),
+  );
+
+  private readonly handler = inject(GeneralSettingsHandler);
+
   ngOnInit(): void {
-    console.log('Theme:', this.themeService.theme());
     this.orchestrate({
       form: this.formBuilder.group({
         theme: [this.themeService.theme()],
+        language: [this.translate.currentLang()],
       }),
-      handlerRegistry: [],
-      mapperRegistry: {},
+      handlerRegistry: [this.handler],
     });
-    const ctrl = this.form().get('theme');
-
-    console.log('INIT FORM VALUE:', ctrl?.value);
-
-    ctrl?.valueChanges.subscribe((v) => {
-      console.log('THEME CHANGED:', v);
-    });
-
-    this.form()
-      .get('theme')
-      ?.valueChanges.subscribe((theme) => {
-        this.onThemeChange(theme);
-      });
-  }
-
-  onThemeChange(theme: string | number | null) {
-    if (theme === null) return;
-    this.themeService.setTheme(theme as Theme);
   }
 }

@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MediaService } from '@core/services/media.service';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 import { MatSidenav } from '@angular/material/sidenav';

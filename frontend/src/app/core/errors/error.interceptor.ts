@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   HttpEvent,
   HttpInterceptor,
@@ -7,11 +7,9 @@ import {
   HTTP_INTERCEPTORS,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { catchError, Observable, ReplaySubject, throwError } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { ApiError } from '../models/api-error.model';
 import { ErrorService } from './error.service';
-import { Router } from '@angular/router';
-import { AuthenticationService } from '../services/authentication.service';
 import { ErrorCode } from '../interfaces/error-code.interface';
 
 /*
@@ -21,13 +19,7 @@ import { ErrorCode } from '../interfaces/error-code.interface';
  */
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  private router = inject(Router);
-  private authService = inject(AuthenticationService);
   private errorHandler = inject(ErrorService);
-
-  private refreshInProgress = signal<boolean>(false);
-
-  private refreshTokenQueue = new ReplaySubject<boolean>(1);
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(req).pipe(

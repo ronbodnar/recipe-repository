@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Recipe } from '../recipe.types';
 import { FullPageLoaderComponent } from '@shared/ui/full-page-loader.component';
 import { FluidContainerComponent } from '@shared/ui/fluid-container/fluid-container.component';
-import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 import { MatIconModule } from '@angular/material/icon';
 import { RichTextListComponent } from '../components/rich-text-list/rich-text-list.component';
