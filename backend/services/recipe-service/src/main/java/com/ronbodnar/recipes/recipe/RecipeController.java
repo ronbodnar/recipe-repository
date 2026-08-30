@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,26 +34,27 @@ public class RecipeController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('VIEW-RECIPE')")
     public Page<RecipeSummaryDTO> getAll(@RequestParam(name = "paginationStart", defaultValue = "0") Integer paginationStart,
                                          @RequestParam(name = "paginationLength", defaultValue = "10") Integer paginationLength,
-                                         @RequestParam(name = "paginationSortOrder", defaultValue = "id=asc") String paginationSortOrder) {
-        return recipeService.getAllSummaries(paginationStart, paginationLength, paginationSortOrder);
+                                         @RequestParam(name = "paginationSortOrder", defaultValue = "id=asc") String paginationSortOrder,
+                                         @AuthenticationPrincipal Jwt jwt) {
+        UUID authorId = UUID.fromString(
+                Objects.requireNonNull(jwt.getSubject(), "JWT subject is missing")
+        );
+        return recipeService.getAllSummaries(authorId, paginationStart, paginationLength, paginationSortOrder);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ROLE_CREATE-RECIPE')")
+    @PreAuthorize("hasRole('CREATE-RECIPE')")
     public RecipeDetailsDTO create(@RequestPart(name = "recipe") @Valid RecipeRequest recipeRequest,
                                    @RequestPart(name = "images", required = false) Optional<List<MultipartFile>> images,
                                    @AuthenticationPrincipal Jwt jwt
     ) {
-        UUID authorId = jwt == null || jwt.getSubject() == null
-                ? null
-                : UUID.fromString(jwt.getSubject());
-
-        if (authorId == null) {
-            throw new BusinessException(ErrorCode.AUTH_USER_NOT_FOUND, "A request to create a recipe without an author was detected.");
-        }
+        UUID authorId = UUID.fromString(
+                Objects.requireNonNull(jwt.getSubject(), "JWT subject is missing")
+        );
 
         return recipeService.handleCreateRequest(recipeRequest, images, authorId);
     }

@@ -1,8 +1,9 @@
 package com.ronbodnar.recipes.recipe;
 
-import com.ronbodnar.recipes.recipe.dto.RecipeSummaryDTO;
+import com.ronbodnar.recipes.common.exception.BusinessException;
+import com.ronbodnar.recipes.common.exception.ErrorCode;
 import com.ronbodnar.recipes.recipe.dto.RecipeDetailsDTO;
-import com.ronbodnar.recipes.recipe.domain.CookingMethod;
+import com.ronbodnar.recipes.recipe.dto.RecipeSummaryDTO;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,23 +11,35 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.ConfigurableSmartRequestBuilder;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.BDDMockito.then;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ActiveProfiles("test")
 @WebMvcTest(RecipeController.class)
-public class RecipeControllerTests {
+class RecipeControllerTests {
+
+    private final String RECIPE_API_URL = "/api/v1/recipes";
 
     @Autowired
     private MockMvc mockMvc;
@@ -36,84 +49,130 @@ public class RecipeControllerTests {
 
     private Recipe recipe;
 
+    private static UUID authorId;
+
     private static UUID recipeId;
 
     @BeforeAll
-    public static void setUpAll() {
+    static void setUpAll() {
         recipeId = UUID.randomUUID();
+        authorId = UUID.randomUUID();
     }
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         recipe = new Recipe();
         recipe.setId(recipeId);
-        recipe.setTitle("Test Recipe");
+        recipe.setTitle("Test Recipe A");
+        recipe.setAuthorId(authorId);
+    }
 
-        RecipeVariant ovenVariant = new RecipeVariant();
-        ovenVariant.setId(UUID.randomUUID());
-        ovenVariant.setCookingMethod(CookingMethod.OVEN);
-
-        recipe.addVariant(ovenVariant);
+    private ResultActions performAuthenticatedRequest(
+            ConfigurableSmartRequestBuilder<?> builder,
+            UUID userId,
+            String... authorities
+    ) throws Exception {
+        return mockMvc.perform(builder
+                .with(jwt()
+                        .jwt(jwt -> jwt.subject(userId.toString()))
+                        .authorities(
+                                Arrays.stream(authorities)
+                                        .map(SimpleGrantedAuthority::new)
+                                        .toArray(SimpleGrantedAuthority[]::new)
+                        )
+                ));
     }
 
     @Test
-    public void getAllRecipes() throws Exception {
-        given(recipeService.getAllSummaries(0, 10, "id=asc"))
-                .willReturn(new PageImpl<>(List.of(RecipeSummaryDTO.fromEntity(recipe, List.of()))));
+    void getAllRecipes_returnsRecipeByAuthorId() throws Exception {
+        given(recipeService.getAllSummaries(
+                eq(recipe.getAuthorId()),
+                eq(0),
+                eq(10),
+                eq("id=asc")
+        )).willReturn(new PageImpl<>(
+                List.of(RecipeSummaryDTO.fromEntity(recipe, List.of()))
+        ));
 
-        mockMvc.perform(get("/recipes")
-                .param("paginationStart", "0")
-                .param("paginationLength", "10")
-                .param("paginationSortOrder", "id=asc"))
+        performAuthenticatedRequest(
+                get(RECIPE_API_URL)
+                        .param("paginationStart", "0")
+                        .param("paginationLength", "10")
+                        .param("paginationSortOrder", "id=asc"),
+                recipe.getAuthorId(),
+                "ROLE_VIEW-RECIPE"
+        )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json("""
-                  {
-                      "content": [
-                        {
-                          "id": "%s"
-                        }
-                      ]
-                   }
-                """.formatted(recipeId.toString())));
+                    {
+                        "content": [
+                            {
+                                "id": "%s"
+                            }
+                        ]
+                    }
+                    """.formatted(recipeId)));
+
+        then(recipeService).should().getAllSummaries(
+                recipe.getAuthorId(),
+                0,
+                10,
+                "id=asc"
+        );
     }
 
     @Test
-    public void testGetById() throws Exception {
-        given(recipeService.getById(any())).willReturn(RecipeDetailsDTO.fromRecipe(recipe, List.of(UUID.randomUUID())));
-        mockMvc.perform(get("/recipes/" + recipeId))
+    void getById_returnsRecipeDetails_whenAuthenticated() throws Exception {
+        given(recipeService.getById(recipe.getId()))
+                .willReturn(RecipeDetailsDTO.fromRecipe(recipe, List.of()));
+
+        performAuthenticatedRequest(
+                get(RECIPE_API_URL + "/{id}", recipe.getId()),
+                recipe.getAuthorId(),
+                "ROLE_VIEW-RECIPE"
+        )
                 .andExpect(status().isOk())
-                .andExpect(content().string(
-                        Matchers.containsString("Test Recipe")
-                ))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json("""
-                  {
-                    "title": "Test Recipe"
-                  }
-                """));
+                {
+                    "id": "%s",
+                    "title": "Test Recipe A"
+                }
+                """.formatted(recipe.getId())));
+
+        then(recipeService).should().getById(recipe.getId());
     }
 
     @Test
-    public void getById_NotFound() throws Exception {
-        given(recipeService.getById(any())).willReturn(null);
+    void getById_whenRecipeDoesNotExist_returnsNotFound() throws Exception {
+        UUID requestedRecipeId = UUID.randomUUID();
 
-        mockMvc.perform(get("/recipes/" + UUID.randomUUID()))
+        given(recipeService.getById(requestedRecipeId))
+                .willThrow(new BusinessException(ErrorCode.RECIPE_NOT_FOUND));
+
+        performAuthenticatedRequest(
+                get(RECIPE_API_URL + "/{id}", requestedRecipeId),
+                UUID.randomUUID(),
+                "ROLE_VIEW-RECIPE"
+        )
                 .andExpect(status().isNotFound());
+
+        then(recipeService).should().getById(requestedRecipeId);
     }
 
     @Test
-    public void create_returnsCreatedRecipe() throws Exception {
+    void create_returnsCreatedRecipe() throws Exception {
         Recipe recipe = new Recipe();
         recipe.setId(recipeId);
         recipe.setTitle("Test Recipe");
         recipe.setDescription("Test Recipe description");
-        RecipeDetailsDTO recipeResponse = RecipeDetailsDTO.fromRecipe(recipe, List.of());
 
         given(recipeService.handleCreateRequest(any(), any(), any()))
-                .willReturn(recipeResponse);
+                .willReturn(RecipeDetailsDTO.fromRecipe(recipe, List.of()));
 
         MockMultipartFile multipartFile = new MockMultipartFile(
-                "metadata",
+                "recipe",
                 "",
                 "application/json",
                 """
@@ -131,8 +190,11 @@ public class RecipeControllerTests {
                 new byte[] { 1, 2, 3 }
         );
 
-        mockMvc.perform(multipart("/recipes").file(multipartFile).file(images))
-                .andExpect(status().isOk())
+        performAuthenticatedRequest(
+                multipart(RECIPE_API_URL).file(multipartFile).file(images),
+                UUID.randomUUID()
+        )
+                .andExpect(status().isCreated())
                 .andExpect(content().string(Matchers.containsString("Test Recipe")));
     }
 }

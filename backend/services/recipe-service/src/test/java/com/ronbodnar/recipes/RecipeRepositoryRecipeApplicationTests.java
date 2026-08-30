@@ -2,19 +2,17 @@ package com.ronbodnar.recipes;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@ActiveProfiles("test")
 @Disabled("Requires a test db")
 class RecipeRepositoryRecipeApplicationTests {
 
-	@Value("${DB_HOST:NOT_FOUND}")
-	String host;
-
 	@Test
 	void contextLoads() {
-		System.out.println("host is " + host);
 	}
 
 }

@@ -1,12 +1,15 @@
 package com.ronbodnar.recipes.recipe;
 
 import com.ronbodnar.recipes.common.exception.BusinessException;
+import com.ronbodnar.recipes.common.exception.ErrorCode;
 import com.ronbodnar.recipes.recipe.dto.RecipeRequest;
 import com.ronbodnar.recipes.recipe.dto.RecipeSummaryDTO;
 import com.ronbodnar.recipes.recipe.dto.RecipeDetailsDTO;
 import com.ronbodnar.recipes.recipe.dto.RecipeVariantRequest;
 import com.ronbodnar.recipes.recipe.domain.CookingMethod;
 
+import com.ronbodnar.recipes.recipe.image.RecipeImageService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -27,33 +30,53 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class RecipeServiceTests {
+class RecipeServiceTests {
 
     @Mock
     private RecipeRepository recipeRepository;
+
+    @Mock
+    private RecipeImageService recipeImageService;
 
     @InjectMocks
     private RecipeService recipeService;
 
     @Test
-    public void returnsAllRecipes() {
-        given(recipeService.getAllSummaries(0, 10, null))
-                .willReturn(new PageImpl<>(List.of(RecipeSummaryDTO.fromEntity(new Recipe(), List.of()))));
+    void getAllSummaries_returnsRecipeSummaries() {
+        UUID authorId = UUID.randomUUID();
 
-        Page<RecipeSummaryDTO> allRecipes = recipeService.getAllSummaries(0, 10, null);
+        Recipe recipe = new Recipe();
+        recipe.setId(UUID.randomUUID());
+        recipe.setAuthorId(authorId);
+
+        given(recipeRepository.findAllByAuthorId(
+                eq(authorId),
+                any(Pageable.class)
+        )).willReturn(new PageImpl<>(List.of(recipe)));
+
+        given(recipeImageService.findByRecipeIdIn(
+                List.of(recipe.getId())
+        )).willReturn(List.of());
+
+        Page<RecipeSummaryDTO> allRecipes =
+                recipeService.getAllSummaries(authorId, 0, 10, null);
 
         assertEquals(1, allRecipes.getContent().size());
     }
 
     @Test
-    public void returnsPaginatedRecipes() {
+    void getAllSummaries_returnsPaginatedRecipes() {
+        UUID authorId = UUID.randomUUID();
+
         List<Recipe> recipes = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Recipe recipe = new Recipe();
             recipe.setId(UUID.randomUUID());
+            recipe.setAuthorId(authorId);
 
             recipes.add(recipe);
         }
@@ -64,47 +87,45 @@ public class RecipeServiceTests {
                 11
         );
 
-        given(recipeRepository.findAll(any(Pageable.class))).willReturn(page);
+        given(recipeRepository.findAllByAuthorId(
+                eq(authorId),
+                any(Pageable.class)
+        )).willReturn(page);
 
-        Page<RecipeSummaryDTO> result = recipeService.getAllSummaries(0, 10, null);
+        given(recipeImageService.findByRecipeIdIn(
+                anyList()
+        )).willReturn(List.of());
+
+        Page<RecipeSummaryDTO> result = recipeService.getAllSummaries(authorId, 0, 10, null);
 
         assertEquals(10, result.getContent().size());
         assertEquals(11, result.getTotalElements());
     }
 
     @Test
-    public void returnsRecipeById() {
+    void getById_returnsRecipeDetails() {
         UUID id = UUID.randomUUID();
+        UUID authorId = UUID.randomUUID();
 
         Recipe recipe = new Recipe();
         recipe.setId(id);
         recipe.setTitle("Test recipe");
-        recipe.setAuthorId(UUID.randomUUID());
+        recipe.setAuthorId(authorId);
 
         given(recipeRepository.findById(id)).willReturn(Optional.of(recipe));
 
-        assertEquals(RecipeDetailsDTO.fromRecipe(recipe, List.of()), recipeService.getById(id));
+        RecipeDetailsDTO detailsDTO = RecipeDetailsDTO.fromRecipe(recipe, List.of());
+
+        assertEquals(detailsDTO, recipeService.getById(id));
     }
 
     @Test
-    public void handleCreateRequest_returnsCreatedRecipe() {
-        // Arrange
-        RecipeVariantRequest variant = new RecipeVariantRequest(
-                "Oven",
-                0,
-                0,
-                0,
-                CookingMethod.OVEN,
-                List.of(),
-                List.of(),
-                List.of()
-        );
-
+    void handleCreateRequest_returnsCreatedRecipe() {
         RecipeRequest request = new RecipeRequest(
                 UUID.randomUUID(),
                 "Test recipe",
                 "Test description",
-                List.of(variant)
+                List.of()
         );
 
         UUID generatedId = UUID.randomUUID();
@@ -118,28 +139,22 @@ public class RecipeServiceTests {
                     }
                 );
 
-        // Act
         RecipeDetailsDTO createdRecipe = recipeService.handleCreateRequest(request, Optional.empty(), UUID.randomUUID());
 
-
-        // Assert
         ArgumentCaptor<Recipe> recipeCaptor = ArgumentCaptor.forClass(Recipe.class);
 
-        verify(recipeRepository).save(recipeCaptor.capture());
+        then(recipeRepository).should().save(recipeCaptor.capture());
 
         Recipe savedRecipe = recipeCaptor.getValue();
 
         assertEquals(generatedId, savedRecipe.getId());
         assertEquals(generatedId, createdRecipe.id());
-        assertEquals("Test title", createdRecipe.title());
+        assertEquals("Test recipe", createdRecipe.title());
         assertEquals("Test description", createdRecipe.description());
     }
 
     @Test
-    public void handleCreateRequest_whenImageExtractionFails_throwsImageExtractionException() throws IOException {
-        // Arrange
-        MultipartFile multipartFile = mock(MultipartFile.class);
-
+    void handleCreateRequest_whenImageCreationFails_propagatesException() {
         RecipeRequest request = new RecipeRequest(
                 UUID.randomUUID(),
                 "Test recipe",
@@ -147,9 +162,39 @@ public class RecipeServiceTests {
                 List.of()
         );
 
-        given(multipartFile.getBytes()).willThrow(new IOException("Failed to read image"));
+        UUID authorId = UUID.randomUUID();
+        UUID recipeId = UUID.randomUUID();
 
-        assertThrows(BusinessException.class, () -> recipeService.handleCreateRequest(request, Optional.of(List.of(multipartFile)), UUID.randomUUID()));
-        verify(recipeRepository, times(0)).save(any(Recipe.class));
+        MultipartFile image = mock(MultipartFile.class);
+
+        given(recipeRepository.existsByTitle(request.title()))
+                .willReturn(false);
+
+        given(recipeRepository.save(any(Recipe.class)))
+                .willAnswer(invocation -> {
+                    Recipe recipe = invocation.getArgument(0);
+                    recipe.setId(recipeId);
+                    return recipe;
+                });
+
+        BusinessException exception =
+                new BusinessException(ErrorCode.IMAGE_UPLOAD_FAILED);
+
+        given(recipeImageService.createImages(recipeId, List.of(image)))
+                .willThrow(exception);
+
+        assertThrows(
+                BusinessException.class,
+                () -> recipeService.handleCreateRequest(
+                        request,
+                        Optional.of(List.of(image)),
+                        authorId
+                )
+        );
+
+        then(recipeRepository).should().save(any(Recipe.class));
+
+        then(recipeImageService).should()
+                .createImages(recipeId, List.of(image));
     }
 }

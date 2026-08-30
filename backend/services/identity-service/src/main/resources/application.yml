@@ -4,7 +4,7 @@ server:
 
 spring:
   config:
-    import: file:./secrets/app-env.properties
+    import: optional:file:./secrets/app-env.properties
 
   application:
     name: Recipe Repository

@@ -2,11 +2,11 @@ server:
   port: 8080
 
 spring:
+  config:
+    import: optional:file:./secrets/app-env.properties
+
   application:
     name: 'gateway'
-
-  config:
-    import: file:./secrets/app-env.properties
 
   cloud:
     gateway:
@@ -29,8 +29,3 @@ spring:
         jwt:
           issuer-uri: ${APP_KEYCLOAK_ISSUER_URI}
           jwk-set-uri: ${APP_KEYCLOAK_JWK_SET_URI}
-
-logging:
-  level:
-    org.springframework.cloud.gateway: TRACE
-    org.springframework.security: TRACE

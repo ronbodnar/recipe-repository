@@ -17,6 +17,8 @@ import java.util.UUID;
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
 
+    Page<Recipe> findAllByAuthorId(UUID authorId, Pageable pageable);
+
     boolean existsByTitle(String title);
 
     boolean existsByTitleAndIdIsNot(String title, UUID id);

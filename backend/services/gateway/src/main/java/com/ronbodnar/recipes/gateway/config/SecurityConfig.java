@@ -29,8 +29,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        //.requestMatchers(HttpMethod.GET, "/api/v1/recipes/**").permitAll()
-                        .requestMatchers("/api/v1/**").permitAll() // Temporarily disable auth requirement
+                        .requestMatchers(HttpMethod.GET, "/api/v1/identity/me").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(BaseSecurityConfig.grantedAuthoritiesExtractor()))

@@ -1,0 +1,4 @@
+RECIPE_SERVICE_URL: http://localhost:8081
+IDENTITY_SERVICE_URL: http://localhost:8082
+APP_KEYCLOAK_ISSUER_URI: http://localhost:8080/realms/test
+APP_KEYCLOAK_JWK_SET_URI: http://localhost:8080/realms/test/protocol/openid-connect/certs

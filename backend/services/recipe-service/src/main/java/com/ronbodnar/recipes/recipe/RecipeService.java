@@ -32,8 +32,9 @@ public class RecipeService {
         this.recipeImageService = recipeImageService;
     }
 
-    public Page<RecipeSummaryDTO> getAllSummaries(int paginationStart, int paginationLength, String paginationSortOrder) {
-        Page<Recipe> recipes = recipeRepository.findAll(
+    public Page<RecipeSummaryDTO> getAllSummaries(UUID authorId, int paginationStart, int paginationLength, String paginationSortOrder) {
+        Page<Recipe> recipes = recipeRepository.findAllByAuthorId(
+                authorId,
                 PageRequest.of(paginationStart, paginationLength)
         );
 

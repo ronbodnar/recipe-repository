@@ -5,7 +5,6 @@ import com.ronbodnar.recipes.common.config.BaseSecurityConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,8 +26,6 @@ public class SecurityConfig extends BaseSecurityConfig {
         http
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        //.requestMatchers(HttpMethod.GET, "/api/v1/recipes/**").permitAll()
-                        .requestMatchers("/api/v1/**").permitAll() // Temporarily disable auth requirement
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 ->
