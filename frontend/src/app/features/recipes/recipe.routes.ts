@@ -1,3 +1,4 @@
+import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -6,6 +7,7 @@ export const routes: Routes = [
     title: 'recipes.list.title',
     loadComponent: () =>
       import('./recipe-list/recipe-list.component').then((m) => m.RecipeListComponent),
+    data: { requiredRole: 'permission:view-recipe' },
   },
   {
     path: 'edit/:id',
@@ -15,6 +17,13 @@ export const routes: Routes = [
     },
     loadComponent: () =>
       import('./edit-recipe/edit-recipe.component').then((m) => m.EditRecipeComponent),
+    data: () => {
+      const route = inject(ActivatedRouteSnapshot);
+      const recipeId = route.paramMap.get('id');
+      return {
+        requiredRole: recipeId === 'new' ? 'permission:create-recipe' : 'permission:edit-recipe',
+      };
+    },
   },
   {
     path: 'details/:id',

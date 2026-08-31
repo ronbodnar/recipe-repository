@@ -3,19 +3,12 @@ import { AuthenticationService } from '../services/authentication.service';
 import { inject } from '@angular/core';
 import { SnackbarService, SnackbarType } from '@shared/ui/snackbar.component';
 
-export const roleGuard: CanActivateFn = (route, _state) => {
+export const authGuard: CanActivateFn = (route, _state) => {
   const router = inject(Router);
   const snackBar = inject(SnackbarService);
   const authService = inject(AuthenticationService);
 
-  const user = authService.authUser();
-
-  if (user == null) {
-    return redirectWithSnackbar(router, snackBar);
-  }
-
   if (!authService.isAuthenticated()) {
-    //} || !user.authorities) {
     return redirectWithSnackbar(router, snackBar);
   }
 
@@ -23,11 +16,9 @@ export const roleGuard: CanActivateFn = (route, _state) => {
     return true;
   }
 
-  const hasRequiredRole = false; /*user.authorities.some(
-    (r) =>
-      r['authority'] === 'ADMINISTRATOR' ||
-      r['authority'].toLowerCase() === route.data['requiredRole']?.toLowerCase(),
-  );*/
+  const hasRequiredRole = authService
+    .authUser()
+    ?.roles.some((r) => r.toLowerCase() === route.data['requiredRole']?.toLowerCase());
 
   if (!hasRequiredRole) {
     return redirectWithSnackbar(router, snackBar);

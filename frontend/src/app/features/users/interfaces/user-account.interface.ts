@@ -1,5 +1,6 @@
 export interface UserAccount {
   id: string;
+  keycloakSubject: string;
   username: string;
   email: string;
   givenName: string;

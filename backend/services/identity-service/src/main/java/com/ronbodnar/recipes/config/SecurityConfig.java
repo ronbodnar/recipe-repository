@@ -27,8 +27,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/identity/**").permitAll() // Temporarily permit all requests
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 ->
-                        oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(BaseSecurityConfig.grantedAuthoritiesExtractor())
-        ));
+                        oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(BaseSecurityConfig.grantedAuthoritiesExtractor())));
         return http.build();
     }
 

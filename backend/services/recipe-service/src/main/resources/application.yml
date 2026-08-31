@@ -6,10 +6,10 @@ server:
 
 spring:
   config:
-    import: optional:file:./secrets/app-env.properties
+    import: optional:file:./secrets/recipe-service.properties
 
   application:
-    name: RR - Recipe Service
+    name: recipe-service
 
   datasource:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}

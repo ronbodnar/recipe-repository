@@ -73,6 +73,7 @@ public class RecipeController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('DELETE-RECIPE')")
     public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
         recipeService.deleteById(id);
         return ResponseEntity.noContent().build();

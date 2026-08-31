@@ -44,12 +44,9 @@ public enum ErrorCode {
     UNSUPPORTED_MEDIA_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, LogLevel.WARN),
 
     // Users
-    DUPLICATE_EMAIL(HttpStatus.CONFLICT, LogLevel.WARN),
-    DUPLICATE_USERNAME(HttpStatus.CONFLICT, LogLevel.WARN),
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, LogLevel.INFO),
-    PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, LogLevel.INFO),
-    INCORRECT_PASSWORD(HttpStatus.BAD_REQUEST, LogLevel.INFO),
-    INCORRECT_NEW_PASSWORD(HttpStatus.BAD_REQUEST, LogLevel.INFO);
+    USER_PROFILE_CONFLICT(HttpStatus.CONFLICT, LogLevel.WARN),
+    EMAIL_ALREADY_IN_USE(HttpStatus.CONFLICT, LogLevel.INFO),
+    USERNAME_ALREADY_IN_USE(HttpStatus.CONFLICT, LogLevel.INFO);
 
     private final HttpStatus httpStatus;
     private final LogLevel logLevel;

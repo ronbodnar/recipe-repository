@@ -1,25 +1,24 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { UserAccount } from '@features/users/interfaces/user-account.interface';
-import {
-  KEYCLOAK_EVENT_SIGNAL,
-  KeycloakEventType,
-  ReadyArgs,
-  typeEventArgs,
-} from 'keycloak-angular';
+import { KEYCLOAK_EVENT_SIGNAL, KeycloakEventType } from 'keycloak-angular';
 import Keycloak from 'keycloak-js';
+import { environment } from '@env';
+import { FetchApiService } from './fetch-api.service';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
+  private readonly fetchApi = inject(FetchApiService);
+  private readonly storageService = inject(StorageService);
+
   private readonly keycloak = inject(Keycloak);
   private readonly keycloakSignal = inject(KEYCLOAK_EVENT_SIGNAL);
 
   readonly isAuthenticated = signal(this.keycloak.authenticated ?? false);
 
-  readonly authUser = signal<UserAccount | null>(this.createUserAccount());
-
-  readonly assignedRoles = computed(() => this.authUser()?.roles ?? []);
+  readonly authUser = signal<UserAccount | null>(this.storageService.getUserAccount());
 
   constructor() {
     effect(() => {
@@ -27,19 +26,17 @@ export class AuthenticationService {
 
       switch (event.type) {
         case KeycloakEventType.Ready:
-          this.isAuthenticated.set(typeEventArgs<ReadyArgs>(event.args));
-          this.syncUser();
-          break;
-
         case KeycloakEventType.AuthSuccess:
         case KeycloakEventType.AuthRefreshSuccess:
+        case KeycloakEventType.AuthLogout:
+        case KeycloakEventType.AuthRefreshError:
           this.syncUser();
           break;
 
-        case KeycloakEventType.AuthLogout:
-        case KeycloakEventType.AuthRefreshError:
-          this.isAuthenticated.set(false);
-          this.authUser.set(null);
+        default:
+          if (!environment.production) {
+            console.log('Unhandled Keycloak event received:', event);
+          }
           break;
       }
     });
@@ -58,26 +55,52 @@ export class AuthenticationService {
   }
 
   private syncUser(): void {
-    this.isAuthenticated.set(this.keycloak.authenticated ?? false);
+    const authenticated = this.keycloak.authenticated ?? false;
 
-    this.authUser.set(this.createUserAccount());
+    this.isAuthenticated.set(authenticated);
+
+    if (!authenticated) {
+      this.authUser.set(null);
+      return;
+    }
+
+    this.fetchApi.getData<UserAccount>('identity/me').subscribe({
+      next: (user) => {
+        if (!user) {
+          console.error('Authenticated UserAccount data is null or undefined.');
+          this.authUser.set(null);
+          return;
+        }
+
+        const userAccount = this.createEnrichedUserAccount(user);
+
+        console.log('Received enriched authenticated user data:', userAccount);
+
+        this.authUser.set(userAccount);
+        this.storageService.setUserAccount(userAccount);
+      },
+      error: (error) => {
+        console.error('Error fetching authenticated user:', error);
+        this.authUser.set(null);
+      },
+    });
   }
 
-  private createUserAccount(): UserAccount | null {
+  private createEnrichedUserAccount(user: UserAccount): UserAccount {
     const token = this.keycloak.tokenParsed;
 
-    return token ? this.toUserAccount(token) : null;
-  }
+    const resourceRoles =
+      token?.['resource_access']?.[environment.keycloak.clientId]?.['roles'] ?? [];
 
-  private toUserAccount(token: Keycloak.KeycloakTokenParsed): UserAccount {
     return {
-      id: token['sub'] ?? '',
-      username: token['preferred_username'] ?? '',
-      email: token['email'] ?? '',
-      givenName: token['given_name'] ?? '',
-      familyName: token['family_name'] ?? '',
-      name: token['name'] ?? '',
-      roles: token['realm_access']?.['roles'] ?? [],
+      ...user,
+      keycloakSubject: token?.['sub'] ?? '',
+      username: token?.['preferred_username'],
+      email: token?.['email'],
+      givenName: token?.['given_name'],
+      familyName: token?.['family_name'],
+      name: token?.['name'],
+      roles: resourceRoles.map((role) => `permission:${role.toLowerCase()}`),
     };
   }
 }

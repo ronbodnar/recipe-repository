@@ -1,10 +1,10 @@
-package com.ronbodnar.recipes.service.user;
+package com.ronbodnar.recipes.user;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/identity/users")
 public class UserAccountController {
 
     private final UserAccountService userAccountService;

@@ -45,7 +45,8 @@ frontend/.DS_Store
 frontend/Thumbs.db
 
 frontend/TODO
-frontend/src/environments
+frontend/src/environments/environment*.ts
+!frontend/src/environments/example.*.environment.ts
 
 ### BACK-END ###
 backend/HELP.md
@@ -88,5 +89,5 @@ backend/recipe_repository.*.db
 
 ### Environment Properties ###
 backend/secrets/*.properties
-!backend/secrets/*.test.properties
+!backend/secrets/example.*.properties
 backend/*.properties

@@ -4,10 +4,10 @@ server:
 
 spring:
   config:
-    import: optional:file:./secrets/app-env.properties
+    import: optional:file:./secrets/identity-service.properties
 
   application:
-    name: Recipe Repository
+    name: identity-service
 
   datasource:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
@@ -17,11 +17,9 @@ spring:
 
   jpa:
     show-sql: true
-    generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     open-in-view: false
-    defer-datasource-initialization: true
     properties:
       hibernate:
         jdbc:
@@ -31,12 +29,31 @@ spring:
         use_sql_comments: true
         generate_statistics: false
 
+  sql:
+    init:
+      mode: always
+
+  flyway:
+    enabled: true
+
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: ${APP_KEYCLOAK_ISSUER_URI}
           jwk-set-uri: ${APP_KEYCLOAK_JWK_SET_URI}
+
+      client:
+        registration:
+          keycloak:
+            provider: keycloak
+            authorization-grant-type: client_credentials
+            client-id: ${APP_KEYCLOAK_SERVICE_CLIENT_ID}
+            client-secret: ${APP_KEYCLOAK_SERVICE_CLIENT_SECRET}
+
+        provider:
+          keycloak:
+            token-uri: ${APP_KEYCLOAK_URI}/realms/${APP_KEYCLOAK_REALM}/protocol/openid-connect/token
 
 logging:
   level:

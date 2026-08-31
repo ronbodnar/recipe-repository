@@ -2,12 +2,13 @@ services:
   mysql_recipe_repository:
     container_name: mysql_recipe_repository
     image: mysql:8.0.40
-    env_file: "../secrets/mysql-env.properties"
+    env_file: "../secrets/mysql.properties"
     ports:
       - "33306:3306"
     volumes:
       - recipe_repository_data:/var/lib/mysql
       - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/init/:/docker-entrypoint-initdb.d/
     networks:
       - backend
 
@@ -21,7 +22,7 @@ services:
   keycloak:
     container_name: keycloak
     image: quay.io/keycloak/keycloak:latest
-    env_file: "../secrets/keycloak-env.properties"
+    env_file: "../secrets/keycloak.properties"
     ports:
       - "9000:8080"
     command: [ "start-dev" ]
@@ -32,7 +33,7 @@ services:
   postgres_keycloak:
     container_name: postgres_keycloak
     image: postgres:18.4-alpine
-    env_file: "../secrets/postgres-keycloak-env.properties"
+    env_file: "../secrets/postgres-keycloak.properties"
     ports:
       - "5432:5432"
     volumes:

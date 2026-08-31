@@ -7,7 +7,7 @@ import { environment } from '@env';
 export interface FrontendError {
   timestamp: string;
   route: string;
-  userId: number;
+  userId: string;
   userAgent: string;
   message: string;
   stackTrace: string;
@@ -33,7 +33,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     const logPayload = {
       timestamp,
       route,
-      //userId: this.authService.authUser()?.id,
+      userId: this.authService.authUser()?.id,
       userAgent: navigator.userAgent,
       message,
       stackTrace: relevantStack.join('\n'),

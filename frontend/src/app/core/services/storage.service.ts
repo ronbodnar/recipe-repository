@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SecurityUser } from '../../features/users/interfaces/security-user.interface';
+import { UserAccount } from '@features/users/interfaces/user-account.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -7,11 +7,11 @@ import { SecurityUser } from '../../features/users/interfaces/security-user.inte
 export class StorageService {
   constructor() {}
 
-  public setUser(user: SecurityUser): void {
+  public setUserAccount(user: UserAccount): void {
     window.sessionStorage.setItem('user', JSON.stringify(user));
   }
 
-  public getUser(): SecurityUser | null {
+  public getUserAccount(): UserAccount | null {
     const userJson = window.sessionStorage.getItem('user');
 
     if (userJson) {

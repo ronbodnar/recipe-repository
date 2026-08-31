@@ -1,13 +1,12 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import Keycloak from 'keycloak-js';
+import { AuthenticationService } from '@core/services/authentication.service';
 
 export const landingGuard: CanActivateFn = () => {
   const router = inject(Router);
+  const authService = inject(AuthenticationService);
 
-  const keycloak = inject(Keycloak);
-
-  if (keycloak.authenticated) {
+  if (authService.isAuthenticated()) {
     return router.createUrlTree(['/app/recipes/list']);
   }
 

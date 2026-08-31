@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { LandingComponent } from './features/landing/landing.component';
 import { landingGuard } from '@core/guards/landing.guard';
+import { authGuard } from '@core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -10,17 +11,19 @@ export const routes: Routes = [
   },
   {
     path: 'app/users',
+    canActivate: [authGuard],
     loadChildren: () => import('./features/users/users.routes').then((m) => m.routes),
   },
   {
     path: 'app/recipes',
+    canActivate: [authGuard],
     loadChildren: () => import('./features/recipes/recipe.routes').then((m) => m.routes),
   },
   {
     path: 'app/settings',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/settings/settings.component').then((m) => m.SettingsComponent),
-    //canActivate: [roleGuard],
     loadChildren: () => import('./features/settings/settings.routes').then((m) => m.routes),
   },
 ];

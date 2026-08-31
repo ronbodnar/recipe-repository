@@ -124,7 +124,7 @@ export class SidebarComponent implements OnDestroy {
     if (!requiredRole) {
       return true;
     }
-    return this.authService.assignedRoles()?.includes(requiredRole) || false;
+    return this.authService.authUser()?.roles.includes(requiredRole) || false;
   }
 
   deauthenticate() {

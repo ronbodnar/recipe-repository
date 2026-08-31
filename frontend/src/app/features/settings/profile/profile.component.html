@@ -1,1 +1,23 @@
-<p>profile works!</p>
+<form [formGroup]="form()" (ngSubmit)="submit()">
+  <div>
+    <label for="username">Username:</label>
+    <input id="username" formControlName="username" />
+  </div>
+
+  <div>
+    <label for="email">Email:</label>
+    <input id="email" formControlName="email" />
+  </div>
+
+  <div>
+    <label for="givenName">Given Name:</label>
+    <input id="givenName" formControlName="givenName" />
+  </div>
+
+  <div>
+    <label for="familyName">Family Name:</label>
+    <input id="familyName" formControlName="familyName" />
+  </div>
+
+  <button type="submit">Save</button>
+</form>
