@@ -54,6 +54,14 @@ public class Recipe {
     @JoinColumn(name = "recipe_id")
     private List<RecipeVariant> variants = new ArrayList<>();
 
+    @ElementCollection
+    @CollectionTable(
+            name = "recipe_image",
+            joinColumns = @JoinColumn(name = "recipe_id")
+    )
+    @Column(name = "image_id")
+    private List<UUID> imageIds = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     @ElementCollection(targetClass = Course.class)
     @CollectionTable(
@@ -99,6 +107,7 @@ public class Recipe {
     public Recipe(RecipeRequest recipeRequest) {
         this.title = recipeRequest.title();
         this.description = recipeRequest.description();
+        this.imageIds = recipeRequest.imageIds();
         this.cuisines = recipeRequest.cuisines();
         this.mealTypes = recipeRequest.mealTypes();
         this.courses = recipeRequest.courses();
@@ -112,6 +121,11 @@ public class Recipe {
 
         if (patch.description() != null && !patch.description().isBlank()) {
             this.description = patch.description();
+        }
+
+        if (patch.imageIds() != null) {
+            this.imageIds.clear();
+            this.imageIds.addAll(patch.imageIds());
         }
 
         if (patchVariants != null && !patchVariants.isEmpty()) {

@@ -7,10 +7,7 @@ import com.ronbodnar.recipes.recipe.domain.DietType;
 import com.ronbodnar.recipes.recipe.domain.Course;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public record RecipeDetailsDTO(UUID id,
@@ -26,7 +23,7 @@ public record RecipeDetailsDTO(UUID id,
                                Set<Course> courses,
                                Set<DietType> dietTypes) {
 
-    public static RecipeDetailsDTO fromRecipe(Recipe recipe, List<UUID> imageIds) {
+    public static RecipeDetailsDTO fromRecipe(Recipe recipe) {
         return new RecipeDetailsDTO(
                 recipe.getId(),
                 recipe.getTitle(),
@@ -34,7 +31,7 @@ public record RecipeDetailsDTO(UUID id,
                 recipe.getAuthorId(),
                 recipe.getCreatedAt(),
                 recipe.getUpdatedAt(),
-                imageIds,
+                new ArrayList<>(recipe.getImageIds()),
                 recipe.getVariants().stream()
                         .map(RecipeVariantDTO::fromEntity)
                         .collect(Collectors.toSet()),

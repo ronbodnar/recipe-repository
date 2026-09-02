@@ -1,20 +1,20 @@
-package recipes.image;
+package com.ronbodnar.recipes.image;
 
 import com.ronbodnar.recipes.common.exception.BusinessException;
 import com.ronbodnar.recipes.common.exception.ErrorCode;
+import com.ronbodnar.recipes.image.storage.ImageStorage;
+import com.ronbodnar.recipes.image.storage.StorageKeyProvider;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.tika.Tika;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import recipes.image.storage.ImageStorage;
-import recipes.image.storage.StorageKeyProvider;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -31,42 +31,19 @@ public class ImageService {
         this.storageKeyProvider = storageKeyProvider;
     }
 
-    public List<UUID> processImages(List<MultipartFile> files) {
+    public List<UUID> processImages(List<MultipartFile> files, ImagePurpose purpose) {
         if (files == null || files.isEmpty()) {
             return List.of();
         }
 
-        List<Image> incomingImages = getProcessedImages(files);
+        List<Image> incomingImages = getProcessedImages(files, purpose);
 
         try {
-            Map<String, Image> existingByHash = imageRepository
-                    .findAllByFileHashIn(
-                            incomingImages.stream()
-                                    .map(Image::getFileHash)
-                                    .toList()
-                    )
-                    .stream()
-                    .collect(Collectors.toMap(
-                            Image::getFileHash,
-                            image -> image,
-                            (a, b) -> a
-                    ));
+            imageRepository.saveAll(incomingImages);
 
-            List<Image> newImages = incomingImages.stream()
-                    .filter(image -> !existingByHash.containsKey(image.getFileHash()))
-                    .toList();
+            uploadImages(incomingImages);
 
-            imageRepository.saveAll(newImages);
-
-            uploadImages(newImages);
-
-            return incomingImages.stream()
-                    .map(image -> {
-                        Image existing = existingByHash.get(image.getFileHash());
-                        return existing != null ? existing.getId() : image.getId();
-                    })
-                    .toList();
-
+            return incomingImages.stream().map(Image::getId).toList();
         } catch (Exception e) {
             // Clean up S3 objects (hopefully)
             deleteImages(incomingImages.stream().map(Image::getId).toList());
@@ -80,6 +57,12 @@ public class ImageService {
                 }
             });
         }
+    }
+
+    public void attachImages(List<UUID> imageIds) {
+        List<Image> images = imageRepository.findAllByIdIn(imageIds);
+        images.forEach(image -> image.setStatus(ImageStatus.ATTACHED));
+        imageRepository.saveAll(images);
     }
 
     public void deleteImages(List<UUID> imageIds) {
@@ -99,15 +82,17 @@ public class ImageService {
         }
     }
 
-    private List<Image> getProcessedImages(List<MultipartFile> imageFiles) {
+    private List<Image> getProcessedImages(List<MultipartFile> imageFiles, ImagePurpose purpose) {
         if (imageFiles == null || imageFiles.isEmpty()) {
             return Collections.emptyList();
         }
 
+        Tika tika = new Tika();
+
         List<Image> images = new ArrayList<>(imageFiles.size());
 
         for (MultipartFile imageFile : imageFiles) {
-            Image image = ImageFactory.createFromMultipartFile(imageFile);
+            Image image = ImageFactory.createFromMultipartFile(imageFile, purpose, tika);
 
             image.setStorageKey(storageKeyProvider.buildStorageKey(image.getId(), image.getContentType()));
 

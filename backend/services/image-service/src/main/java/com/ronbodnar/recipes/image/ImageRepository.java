@@ -1,4 +1,4 @@
-package recipes.image;
+package com.ronbodnar.recipes.image;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

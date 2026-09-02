@@ -1,4 +1,4 @@
-package recipes.image.storage;
+package com.ronbodnar.recipes.image.storage;
 
 import org.springframework.stereotype.Component;
 

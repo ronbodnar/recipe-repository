@@ -15,7 +15,7 @@ public record RecipeRequest(
         UUID id,
         @NotBlank String title,
         String description,
-        List<UUID> existingImages,
+        List<UUID> imageIds,
         List<RecipeVariantRequest> variants,
         Set<Course> courses,
         Set<Cuisine> cuisines,
@@ -24,7 +24,7 @@ public record RecipeRequest(
 ) {
 
     public RecipeRequest {
-        existingImages = existingImages == null ? List.of() : existingImages;
+        imageIds = imageIds == null ? List.of() : imageIds;
         variants = variants == null ? List.of() : variants;
         cuisines = cuisines == null ? Set.of() : cuisines;
         mealTypes = mealTypes == null ? Set.of() : mealTypes;

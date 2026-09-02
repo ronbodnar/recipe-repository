@@ -48,15 +48,14 @@ public class RecipeController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('CREATE-RECIPE')")
-    public RecipeDetailsDTO create(@RequestPart(name = "recipe") @Valid RecipeRequest recipeRequest,
-                                   @RequestPart(name = "images", required = false) Optional<List<MultipartFile>> images,
+    public RecipeDetailsDTO create(@RequestBody @Valid RecipeRequest recipeRequest,
                                    @AuthenticationPrincipal Jwt jwt
     ) {
         UUID authorId = UUID.fromString(
                 Objects.requireNonNull(jwt.getSubject(), "JWT subject is missing")
         );
 
-        return recipeService.handleCreateRequest(recipeRequest, images, authorId);
+        return recipeService.handleCreateRequest(recipeRequest, authorId);
     }
 
     @PutMapping("/{id}")

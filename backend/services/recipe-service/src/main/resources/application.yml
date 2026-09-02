@@ -1,8 +1,6 @@
 server:
   port: 8081
   forward-headers-strategy: native
-  tomcat:
-    max-swallow-size: 100MB
 
 spring:
   config:
@@ -45,18 +43,17 @@ spring:
           issuer-uri: ${APP_KEYCLOAK_ISSUER_URI}
           jwk-set-uri: ${APP_KEYCLOAK_JWK_SET_URI}
 
-  servlet:
-    multipart:
-      resolve-lazily: true
-      max-file-size: 5MB
-      max-request-size: 25MB
+      client:
+        registration:
+          keycloak:
+            provider: keycloak
+            authorization-grant-type: client_credentials
+            client-id: ${APP_KEYCLOAK_SERVICE_CLIENT_ID}
+            client-secret: ${APP_KEYCLOAK_SERVICE_CLIENT_SECRET}
 
-  kafka:
-    producer:
-      bootstrap-servers:
-        - localhost:9092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+        provider:
+          keycloak:
+            token-uri: ${APP_KEYCLOAK_URI}/realms/${APP_KEYCLOAK_REALM}/protocol/openid-connect/token
 
 logging:
   level:
@@ -70,8 +67,3 @@ logging:
     com.fasterxml.jackson.databind: INFO
     org.springframework.http.converter: INFO
     org.springframework.web.servlet.mvc.method.annotation: INFO
-
-app:
-  aws:
-    s3:
-      bucket-name: recipe-repository

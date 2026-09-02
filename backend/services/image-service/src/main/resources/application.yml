@@ -1,15 +1,15 @@
 server:
-  port: 8081
+  port: 8083
   forward-headers-strategy: native
   tomcat:
     max-swallow-size: 100MB
 
 spring:
   config:
-    import: optional:file:./secrets/recipe-service.properties
+    import: optional:file:./secrets/image-service.properties
 
   application:
-    name: recipe-service
+    name: image-service
 
   datasource:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
@@ -50,13 +50,6 @@ spring:
       resolve-lazily: true
       max-file-size: 5MB
       max-request-size: 25MB
-
-  kafka:
-    producer:
-      bootstrap-servers:
-        - localhost:9092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
 
 logging:
   level:

@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MediaService } from '@core/services/media.service';
 import { FluidContainerComponent } from '@shared/ui/fluid-container/fluid-container.component';
 import { ButtonComponent } from '@shared/ui/button/button.component';
-import { RecipeForm, RecipeVariantForm } from './edit-recipe.types';
+import { RecipeForm, RecipeFormModel, RecipeVariantForm } from './edit-recipe.types';
 import { RecipeService } from '../recipe.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -157,7 +157,7 @@ export class EditRecipeComponent {
   }
 
   removeExistingImage(index: number) {
-    const control = this.form().controls.existingImages;
+    const control = this.form().controls.imageIds;
     control.setValue(control.value.filter((_, i) => i !== index));
   }
 
@@ -167,7 +167,7 @@ export class EditRecipeComponent {
   }
 
   getExistingRecipeImages(): ImageSelectorExistingImage[] {
-    return this.form().controls.existingImages.value.map((id, index) => ({
+    return this.form().controls.imageIds.value.map((id, index) => ({
       id,
       src: this.imageService.getImageUrl(id),
       alt: `Recipe image ${index + 1}`,
@@ -188,7 +188,37 @@ export class EditRecipeComponent {
     this.removeImage(image.index);
   }
 
-  loadRecipe(recipeId: string) {
+  submit() {
+    this.validated.set(true);
+
+    if (this.form().invalid) {
+      this.form().markAllAsTouched();
+      return;
+    }
+
+    this.status.set('submitting');
+    this.form().disable();
+
+    const request = this.form().getRawValue();
+
+    if (request.images?.length) {
+      this.imageService.uploadImages(request.images).subscribe({
+        next: (uploadedImageIds) => {
+          request.imageIds = [...(request.imageIds ?? []), ...uploadedImageIds];
+          this.saveRecipe(request);
+        },
+        error: (error: ApiError) => {
+          console.error('Error uploading images:', error);
+          this.form().enable();
+          this.status.set('error');
+        },
+      });
+    } else {
+      this.saveRecipe(request);
+    }
+  }
+
+  private loadRecipe(recipeId: string) {
     this.loadedRecipeId.set(recipeId);
     this.recipeService.loadRecipe(recipeId!).subscribe({
       next: (recipe) => {
@@ -204,20 +234,8 @@ export class EditRecipeComponent {
     });
   }
 
-  submit() {
-    this.validated.set(true);
-
-    if (this.form().invalid) {
-      this.form().markAllAsTouched();
-      return;
-    }
-
-    this.status.set('submitting');
-    this.form().disable();
-
-    const request = this.form().getRawValue();
-
-    this.recipeService.saveRecipe(request, this.loadedRecipeId()).subscribe({
+  private saveRecipe(recipeData: RecipeFormModel) {
+    this.recipeService.saveRecipe(recipeData, this.loadedRecipeId()).subscribe({
       next: (recipe) => {
         console.log('Recipe saved successfully:', recipe);
         this.navigateToRecipe(recipe.id);
@@ -239,7 +257,7 @@ export class EditRecipeComponent {
     });
   }
 
-  navigateToRecipe(recipeId: string) {
+  private navigateToRecipe(recipeId: string) {
     const recipeUrl = `/app/recipes/details/${recipeId}`;
     this.router.navigate([recipeUrl]);
   }

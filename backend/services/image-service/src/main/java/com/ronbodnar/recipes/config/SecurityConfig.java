@@ -1,4 +1,4 @@
-package recipes.config;
+package com.ronbodnar.recipes.config;
 
 import com.ronbodnar.recipes.common.config.BaseSecurityConfig;
 

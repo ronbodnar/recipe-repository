@@ -7,7 +7,7 @@ export type RecipeForm = FormGroup<{
   id: FormControl<string | null>;
   title: FormControl<string>;
   description: FormControl<string>;
-  existingImages: FormControl<string[]>;
+  imageIds: FormControl<string[]>; // Images from the backend (existing images)
   images: FormControl<File[] | null>;
   cuisines: FormControl<Cuisine[]>;
   mealTypes: FormControl<MealType[]>;
@@ -32,7 +32,7 @@ export type RecipeFormModel = {
   id: string | null;
   title: string;
   description: string;
-  existingImages?: string[];
+  imageIds?: string[];
   images: File[] | null;
   cuisines: Cuisine[];
   mealTypes: MealType[];
@@ -57,7 +57,7 @@ export type RecipeFormRequest = {
   id: string | null;
   title: string;
   description: string;
-  existingImages?: string[];
+  imageIds?: string[];
   cuisines: string[];
   mealTypes: string[];
   courses: string[];

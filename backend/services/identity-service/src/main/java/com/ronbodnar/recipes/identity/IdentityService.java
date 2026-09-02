@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -32,7 +33,7 @@ public class IdentityService {
     }
 
     @Transactional(rollbackFor = BusinessException.class)
-    public void updateAuthenticatedUser(UserAccountChangeRequest request, Jwt jwt) {
+    public void updateAuthenticatedUser(UserAccountChangeRequest request, MultipartFile profileImage, Jwt jwt) {
         log.info("Received request to update authenticated user: {}", request);
 
         IdentityUser identityUser = identityProvider.fromToken(jwt);

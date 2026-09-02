@@ -1,15 +1,4 @@
 --
--- Table structure for table `image`
---
-CREATE TABLE `image` (
-    `id` binary(16) NOT NULL,
-    `content_type` varchar(255) DEFAULT NULL,
-    `file_hash` varchar(255) DEFAULT NULL,
-    `storage_key` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
 -- Table structure for table `recipe`
 --
 CREATE TABLE `recipe` (
@@ -70,8 +59,7 @@ CREATE TABLE `recipe_image` (
     `recipe_id` binary(16) NOT NULL,
     `image_id` binary(16) NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `fk_recipe_image_recipe` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`),
-    CONSTRAINT `fk_recipe_image_image` FOREIGN KEY (`image_id`) REFERENCES `image` (`id`)
+    CONSTRAINT `fk_recipe_image_recipe` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --

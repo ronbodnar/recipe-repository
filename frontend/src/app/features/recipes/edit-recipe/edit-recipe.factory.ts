@@ -20,7 +20,7 @@ export class RecipeFormFactory {
         nonNullable: true,
       }),
       description: new FormControl(v?.description ?? '', { nonNullable: true }),
-      existingImages: new FormControl<string[]>(v?.images ?? [], { nonNullable: true }),
+      imageIds: new FormControl<string[]>(v?.images ?? [], { nonNullable: true }),
       images: new FormControl<File[] | null>(null, {
         validators: [Validators.maxLength(2)],
         nonNullable: true,

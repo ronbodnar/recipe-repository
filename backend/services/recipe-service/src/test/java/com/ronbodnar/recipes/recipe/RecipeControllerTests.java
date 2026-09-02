@@ -125,7 +125,7 @@ class RecipeControllerTests {
     @Test
     void getById_returnsRecipeDetails_whenAuthenticated() throws Exception {
         given(recipeService.getById(recipe.getId()))
-                .willReturn(RecipeDetailsDTO.fromRecipe(recipe, List.of()));
+                .willReturn(RecipeDetailsDTO.fromRecipe(recipe));
 
         performAuthenticatedRequest(
                 get(RECIPE_API_URL + "/{id}", recipe.getId()),
@@ -168,8 +168,8 @@ class RecipeControllerTests {
         recipe.setTitle("Test Recipe");
         recipe.setDescription("Test Recipe description");
 
-        given(recipeService.handleCreateRequest(any(), any(), any()))
-                .willReturn(RecipeDetailsDTO.fromRecipe(recipe, List.of()));
+        given(recipeService.handleCreateRequest(any(), any()))
+                .willReturn(RecipeDetailsDTO.fromRecipe(recipe));
 
         MockMultipartFile multipartFile = new MockMultipartFile(
                 "recipe",

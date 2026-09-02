@@ -47,7 +47,7 @@ export class RecipeService {
           id: recipeData.id,
           title: recipeData.title,
           description: recipeData.description,
-          existingImages: recipeData.existingImages,
+          imageIds: recipeData.imageIds,
           cuisines: recipeData.cuisines.map((cuisine) => toBackendEnum(cuisine) ?? ''),
           courses: recipeData.courses.map((course) => toBackendEnum(course) ?? ''),
           mealTypes: recipeData.mealTypes.map((mealType) => toBackendEnum(mealType) ?? ''),

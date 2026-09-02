@@ -1,4 +1,4 @@
-package recipes.image.storage;
+package com.ronbodnar.recipes.image.storage;
 
 import java.util.UUID;
 
@@ -9,6 +9,7 @@ public abstract class StorageKeyProvider {
     // Assumes contentType to be "image/jpeg" or "image/png"
     protected String getExtensionFromContentType(String contentType) {
         String extension = contentType.split(";")[0].trim().toLowerCase();
+        System.out.println("Content type: " + contentType);
         return switch (extension) {
             case "image/jpeg" -> "jpg";
             case "image/png" -> "png";

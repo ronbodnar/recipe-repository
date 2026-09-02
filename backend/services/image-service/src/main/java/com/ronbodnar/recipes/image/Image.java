@@ -1,4 +1,4 @@
-package recipes.image;
+package com.ronbodnar.recipes.image;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -13,6 +13,14 @@ public class Image {
 
     @Id
     private UUID id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "purpose")
+    private ImagePurpose purpose;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private ImageStatus status;
 
     @Column(name = "content_type")
     private String contentType;
