@@ -1,19 +1,15 @@
-<div class="flex flex-col gap-6">
-  <h1 class="text-xl font-medium">{{ 'settings.general.title' | translate }}</h1>
+<form class="flex flex-col gap-6" [formGroup]="form()">
+  <nmf-select
+    [label]="'settings.general.themeLabel' | translate"
+    type="text"
+    formControlName="theme"
+    [options]="themeOptions()"
+  />
 
-  <div class="flex flex-col gap-6" [formGroup]="form()">
-    <nmf-select
-      [label]="'settings.general.themeLabel' | translate"
-      type="text"
-      formControlName="theme"
-      [options]="themeOptions()"
-    />
-
-    <nmf-select
-      [label]="'settings.general.languageLabel' | translate"
-      type="text"
-      formControlName="language"
-      [options]="languageOptions()"
-    />
-  </div>
-</div>
+  <nmf-select
+    [label]="'settings.general.languageLabel' | translate"
+    type="text"
+    formControlName="language"
+    [options]="languageOptions()"
+  />
+</form>

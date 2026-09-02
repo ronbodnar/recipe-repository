@@ -54,6 +54,11 @@ export class AuthenticationService {
     await this.keycloak.logout();
   }
 
+  update(user: UserAccount): void {
+    this.authUser.set(user);
+    this.storageService.setUserAccount(user);
+  }
+
   private syncUser(): void {
     const authenticated = this.keycloak.authenticated ?? false;
 
@@ -94,7 +99,7 @@ export class AuthenticationService {
 
     return {
       ...user,
-      keycloakSubject: token?.['sub'] ?? '',
+      identityProviderSubject: token?.['sub'] ?? '',
       username: token?.['preferred_username'],
       email: token?.['email'],
       givenName: token?.['given_name'],

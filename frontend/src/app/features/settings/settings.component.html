@@ -1,13 +1,13 @@
-<app-fluid-container title="settings.title">
+<app-fluid-container title="settings.title" size="lg" backRoute="/app/recipes/list">
   <div class="flex flex-col md:flex-row gap-6">
-    <nav class="md:w-64 bg-background-alt rounded-lg shadow-sm p-2">
+    <nav class="h-full md:w-64 bg-background-alt rounded-lg shadow-sm p-2">
       <ul class="space-y-2 p-0">
         @for (item of settingsNav; track item.route) {
           <li class="list-none">
             <a
-              [routerLink]="item.route"
-              routerLinkActive="font-bold"
-              class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-primary/20 transition-colors"
+              [routerLink]="[item.route]"
+              routerLinkActive="bg-background border-border/40!"
+              class="flex items-center gap-3 rounded-lg px-3 py-2 no-underline border border-transparent hover:bg-background/70 transition-colors"
             >
               <mat-icon class="text-text!">{{ item.icon }}</mat-icon>
               <span>{{ item.label | translate }}</span>
@@ -17,7 +17,9 @@
       </ul>
     </nav>
 
-    <div class="grow bg-background-alt p-6 rounded-lg shadow-sm min-h-100">
+    <div class="flex flex-col grow bg-background-alt p-6 gap-2 rounded-lg shadow-sm">
+      <h2 class="text-xl font-medium">{{ 'settings.' + currentRoute() + '.title' | translate }}</h2>
+
       <router-outlet />
     </div>
   </div>

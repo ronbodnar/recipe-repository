@@ -89,9 +89,6 @@
   --mat-sys-on-surface-variant: var(--color-text) !important;
   --mat-sys-outline: var(--color-border) !important;
   --mat-sys-on-background: var(--color-border) !important;
-
-  --mat-toolbar-standard-height: 75px;
-  --mat-stepper-header-height: 60px;
 }
 
 html.dark {

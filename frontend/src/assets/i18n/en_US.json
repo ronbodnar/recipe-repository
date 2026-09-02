@@ -257,7 +257,9 @@
       "pattern": "Invalid format.",
       "email": "Invalid email address format.",
       "invalid": "Invalid value.",
-      "duplicateRecipe": "A recipe with this name already exists."
+      "duplicateRecipe": "A recipe with this name already exists.",
+      "emailAlreadyInUse": "This email is already in use.",
+      "displayNameAlreadyInUse": "This display name is already in use."
     }
   }
 }

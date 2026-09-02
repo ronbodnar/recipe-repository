@@ -1,23 +1,51 @@
 <form [formGroup]="form()" (ngSubmit)="submit()">
-  <div>
-    <label for="username">Username:</label>
-    <input id="username" formControlName="username" />
-  </div>
+  <div class="flex flex-col gap-2">
+    <app-image-selector
+      class="self-center mb-6"
+      label="Profile picture"
+      [existingImages]="getExistingProfileImages()"
+      (imagesSelected)="onProfileImagesSelected($event)"
+      (imageRemoved)="onProfileImageRemoved($event)"
+    />
 
-  <div>
-    <label for="email">Email:</label>
-    <input id="email" formControlName="email" />
-  </div>
+    <nmf-text
+      label="Display Name"
+      formControlName="displayName"
+      [loading]="form().get('displayName')?.value === ''"
+    />
 
-  <div>
-    <label for="givenName">Given Name:</label>
-    <input id="givenName" formControlName="givenName" />
-  </div>
+    <nmf-text
+      type="email"
+      label="Email"
+      formControlName="email"
+      [loading]="form().get('email')?.value === ''"
+    />
 
-  <div>
-    <label for="familyName">Family Name:</label>
-    <input id="familyName" formControlName="familyName" />
-  </div>
+    <nmf-text
+      label="Given Name"
+      formControlName="givenName"
+      [loading]="form().get('givenName')?.value === ''"
+    />
 
-  <button type="submit">Save</button>
+    <nmf-text
+      label="Family Name"
+      formControlName="familyName"
+      [loading]="form().get('familyName')?.value === ''"
+    />
+
+    <div class="flex gap-6 items-center">
+      <app-button
+        type="submit"
+        label="Save"
+        [disabled]="!form().dirty || status() === 'submitting'"
+        [loading]="status() === 'submitting'"
+      />
+
+      @if (status() === 'success') {
+        <span class="text-success">Profile updated successfully!</span>
+      } @else if (status() === 'error') {
+        <span class="text-danger">Error updating profile.</span>
+      }
+    </div>
+  </div>
 </form>
