@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, Output, signal } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { ButtonComponent } from '@shared/ui/button/button.component';
 
 export interface ImageSelectorExistingImage {
   id: string;
@@ -21,13 +20,14 @@ interface SelectedImage {
 
 @Component({
   selector: 'app-image-selector',
-  imports: [MatIconModule, MatTooltipModule],
+  imports: [ButtonComponent],
   templateUrl: './image-selector.component.html',
 })
 export class ImageSelectorComponent implements OnDestroy {
   @Input() size = 36;
   @Input() existingImages: readonly ImageSelectorExistingImage[] = [];
   @Input() multiple = false;
+  @Input() rounded = false;
   @Input() label = 'Images';
 
   @Output() imagesSelected = new EventEmitter<File[]>();
@@ -39,14 +39,23 @@ export class ImageSelectorComponent implements OnDestroy {
 
   onImagesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const files = Array.from(input.files ?? []).filter((file) => file.type.startsWith('image/'));
+    this.selectImages(input.files);
     input.value = '';
+  }
 
-    if (!files.length) {
+  onImagesDropped(event: DragEvent): void {
+    event.preventDefault();
+    this.selectImages(event.dataTransfer?.files ?? null);
+  }
+
+  private selectImages(files: FileList | null): void {
+    const imageFiles = Array.from(files ?? []).filter((file) => file.type.startsWith('image/'));
+
+    if (!imageFiles.length) {
       return;
     }
 
-    const selectedFiles = this.multiple ? files : files.slice(0, 1);
+    const selectedFiles = this.multiple ? imageFiles : imageFiles.slice(0, 1);
     const newImages = selectedFiles.map((file) => ({
       file,
       previewUrl: URL.createObjectURL(file),

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormArray, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,12 +30,15 @@ import {
   InputSelectComponent,
   InputTextareaComponent,
   InputTextComponent,
-  InputFileSelectorComponent,
 } from '@ng-modular-forms/core';
-import { FileUrlPipe } from '@shared/pipes/file-url.pipe';
 import { ApiError } from '@core/models/api-error.model';
 import { FullPageLoaderComponent } from '@shared/ui/full-page-loader.component';
 import { ImageService } from '@core/services/image.service';
+import {
+  ImageSelectorComponent,
+  ImageSelectorExistingImage,
+  ImageSelectorRemovedImage,
+} from '@shared/ui/image-selector/image-selector.component';
 
 @Component({
   selector: 'app-edit-recipe',
@@ -52,13 +55,12 @@ import { ImageService } from '@core/services/image.service';
     InputTextareaComponent,
     InputNumberComponent,
     InputSelectComponent,
-    InputFileSelectorComponent,
     ButtonComponent,
     TranslatePipe,
     MatExpansionModule,
     CheckboxGroupComponent,
     FullPageLoaderComponent,
-    FileUrlPipe,
+    ImageSelectorComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './edit-recipe.component.html',
@@ -156,18 +158,34 @@ export class EditRecipeComponent {
 
   removeExistingImage(index: number) {
     const control = this.form().controls.existingImages;
-
     control.setValue(control.value.filter((_, i) => i !== index));
   }
 
   removeImage(index: number) {
-    const imagesControl = this.form().get('images') as FormControl<File[] | null>;
-    if (!imagesControl) {
+    const control = this.form().controls.images;
+    control.setValue((control.value ?? []).filter((_, imageIndex) => imageIndex !== index));
+  }
+
+  getExistingRecipeImages(): ImageSelectorExistingImage[] {
+    return this.form().controls.existingImages.value.map((id, index) => ({
+      id,
+      src: this.imageService.getImageUrl(id),
+      alt: `Recipe image ${index + 1}`,
+    }));
+  }
+
+  onRecipeImagesSelected(images: File[]): void {
+    const control = this.form().controls.images;
+    control.setValue([...(control.value ?? []), ...images]);
+  }
+
+  onRecipeImageRemoved(image: ImageSelectorRemovedImage): void {
+    if (image.type === 'existing') {
+      this.removeExistingImage(image.index);
       return;
     }
-    const currentImages = imagesControl.value ?? [];
-    const updatedImages = currentImages.filter((_, i) => i !== index);
-    imagesControl.setValue(updatedImages);
+
+    this.removeImage(image.index);
   }
 
   loadRecipe(recipeId: string) {

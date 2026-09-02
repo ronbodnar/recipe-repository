@@ -1,4 +1,9 @@
-<section class="grid justify-items-start gap-2" [attr.aria-label]="label">
+<section
+  class="grid justify-items-start gap-2"
+  [attr.aria-label]="label"
+  (dragover)="$event.preventDefault()"
+  (drop)="onImagesDropped($event)"
+>
   <input
     #fileInput
     class="pointer-events-none absolute size-px opacity-0"
@@ -10,91 +15,100 @@
 
   <div class="flex flex-wrap gap-4">
     @for (image of existingImages; track image.id; let index = $index) {
-      <div class="relative size-{{ size }}">
-        <div
-          class="grid size-full place-items-center overflow-hidden rounded-md border-2 border-border/40 bg-background text-text"
-        >
-          @if (image.src) {
-            <img class="size-full object-cover" [src]="image.src" [alt]="image.alt ?? label" />
-          } @else {
-            <span class="max-w-4/5 overflow-hidden wrap-anywhere text-xs">{{ image.id }}</span>
-          }
-        </div>
-        @if (!multiple) {
-          <button
-            type="button"
-            class="absolute -top-2 -right-2 grid size-8 place-items-center rounded-full border border-border bg-background text-text shadow-sm hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            (click)="fileInput.click()"
-            aria-label="Replace image"
-            matTooltip="Replace image"
+      <div class="flex flex-col items-center gap-2" [style.width.rem]="size / 4">
+        <div class="relative" [style.width.rem]="size / 4" [style.height.rem]="size / 4">
+          <div
+            class="grid size-full place-items-center overflow-hidden border-2 border-border/40 bg-background text-text"
+            [class.rounded-md]="!rounded"
+            [class.rounded-full]="rounded"
           >
-            <mat-icon class="flex size-5! items-center! justify-center! text-xl! leading-none!">
-              edit
-            </mat-icon>
-          </button>
-        }
-        <button
-          type="button"
-          class="absolute -right-2 -bottom-2 grid size-8 place-items-center rounded-full border border-border bg-background text-danger shadow-sm hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-          (click)="removeExistingImage(index)"
-          [attr.aria-label]="'Delete ' + label"
-          matTooltip="Delete image"
-        >
-          <mat-icon class="flex size-5! items-center! justify-center! text-xl! leading-none!">
-            delete
-          </mat-icon>
-        </button>
+            @if (image.src) {
+              <img class="size-full object-cover" [src]="image.src" [alt]="image.alt ?? label" />
+            } @else {
+              <span class="max-w-4/5 overflow-hidden wrap-anywhere text-xs">{{ image.id }}</span>
+            }
+          </div>
+        </div>
+        <div class="flex items-center justify-center gap-2">
+          @if (!multiple) {
+            <app-button
+              type="button"
+              color="background"
+              size="xs"
+              classList="!border-0 !bg-transparent !p-0 !text-sm !text-text underline"
+              (click)="fileInput.click()"
+              tooltip="Replace image"
+            >
+              Edit
+            </app-button>
+          }
+          <app-button
+            type="button"
+            color="background"
+            size="xs"
+            classList="!border-0 !bg-transparent !p-0 !text-sm !text-danger underline"
+            (click)="removeExistingImage(index)"
+            tooltip="Delete image"
+          >
+            Delete
+          </app-button>
+        </div>
       </div>
     }
 
     @for (image of selectedImages(); track image.previewUrl; let index = $index) {
-      <div class="relative size-{{ size }}">
+      <div class="flex flex-col items-center gap-2" [style.width.rem]="size / 4">
         <img
-          class="size-full rounded-md border-2 border-border/40 object-cover"
+          class="size-full border-2 border-border/40 object-cover"
+          [class.rounded-md]="!rounded"
+          [class.rounded-full]="rounded"
+          [style.height.rem]="size / 4"
           [src]="image.previewUrl"
           [alt]="'New ' + label"
         />
-        @if (!multiple) {
-          <button
+        <div class="flex items-center justify-center gap-2">
+          @if (!multiple) {
+            <app-button
+              type="button"
+              color="background"
+              size="xs"
+              classList="!border-0 !bg-transparent !p-0 !text-sm !text-text underline"
+              (click)="fileInput.click()"
+              tooltip="Replace image"
+            >
+              Edit
+            </app-button>
+          }
+          <app-button
             type="button"
-            class="absolute -top-2 -right-2 grid size-8 place-items-center rounded-full border border-border bg-background text-text shadow-sm hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            (click)="fileInput.click()"
-            aria-label="Replace image"
-            matTooltip="Replace image"
+            color="background"
+            size="xs"
+            classList="!border-0 !bg-transparent !p-0 !text-sm !text-danger underline"
+            (click)="removeSelectedImage(index)"
+            tooltip="Delete image"
           >
-            <mat-icon class="flex size-5! items-center! justify-center! text-xl! leading-none!">
-              edit
-            </mat-icon>
-          </button>
-        }
-        <button
-          type="button"
-          class="absolute -right-2 -bottom-2 grid size-8 place-items-center rounded-full border border-border bg-background text-danger shadow-sm hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-          (click)="removeSelectedImage(index)"
-          [attr.aria-label]="'Delete ' + label"
-          matTooltip="Delete image"
-        >
-          <mat-icon class="flex size-5! items-center! justify-center! text-xl! leading-none!">
-            delete
-          </mat-icon>
-        </button>
+            Delete
+          </app-button>
+        </div>
       </div>
     }
 
     @if (multiple || (!existingImages.length && !selectedImages().length)) {
-      <button
-        type="button"
-        class="grid size-{{
-          size
-        }} place-items-center rounded-md border-2 border-dashed border-border/40 bg-background text-text hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-        (click)="fileInput.click()"
-        [attr.aria-label]="'Select ' + label"
-        matTooltip="Select image"
-      >
-        <mat-icon class="flex size-8! items-center! justify-center! text-4xl! leading-none!">
-          add
-        </mat-icon>
-      </button>
+      <div [style.width.rem]="size / 4" [style.height.rem]="size / 4">
+        <app-button
+          type="button"
+          color="background"
+          size="md"
+          icon="add"
+          [classList]="
+            rounded
+              ? '!size-full !rounded-full !border-2 !border-dashed !border-border/40'
+              : '!size-full !rounded-md !border-2 !border-dashed !border-border/40'
+          "
+          (click)="fileInput.click()"
+          [tooltip]="'Select ' + label"
+        />
+      </div>
     }
   </div>
 </section>

@@ -36,54 +36,16 @@
         [rows]="4"
       />
 
-      <div class="flex flex-col gap-4">
-        <nmf-file-selector
-          formControlName="images"
-          label="recipes.edit.fields.images"
-          selectionMode="append"
+      <div class="flex flex-col gap-2">
+        <h3>{{ 'recipes.edit.fields.images' | translate }}</h3>
+        <app-image-selector
+          [size]="30"
           [multiple]="true"
-          [accept]="'image/*'"
+          [label]="'recipes.edit.fields.images' | translate"
+          [existingImages]="getExistingRecipeImages()"
+          (imagesSelected)="onRecipeImagesSelected($event)"
+          (imageRemoved)="onRecipeImageRemoved($event)"
         />
-
-        <!-- Existing Image urls -->
-        @if (form().controls.existingImages.value.length) {
-          <div class="flex flex-col gap-4">
-            <h3>{{ 'recipes.edit.fields.existingImages' | translate }}</h3>
-
-            @for (image of form().controls.existingImages.value; track image; let i = $index) {
-              <div class="flex items-center gap-4">
-                <app-button
-                  type="button"
-                  color="danger"
-                  size="sm"
-                  icon="delete"
-                  (click)="removeExistingImage(i)"
-                />
-
-                <img
-                  [src]="imageService.getImageUrl(image)"
-                  alt="Recipe Image {{ i + 1 }}"
-                  class="h-30 w-30 rounded-md object-cover"
-                />
-              </div>
-            }
-          </div>
-        }
-
-        <!-- New image files -->
-        @if (form().controls.images.value?.length) {
-          <div class="flex flex-col gap-4">
-            <h3>{{ 'recipes.edit.fields.newImages' | translate }}</h3>
-
-            @for (image of form().controls.images.value; track image; let i = $index) {
-              <div class="flex items-center gap-4">
-                <app-button type="button" color="danger" icon="delete" (click)="removeImage(i)" />
-
-                <img [src]="image | fileUrl" class="h-30 w-30 rounded-md object-cover" />
-              </div>
-            }
-          </div>
-        }
       </div>
 
       <h3>{{ 'recipes.labels.variants' | translate }}</h3>
