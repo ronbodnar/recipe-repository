@@ -1,13 +1,14 @@
 package com.ronbodnar.recipes.user;
 
+import com.ronbodnar.recipes.common.exception.BusinessException;
+import com.ronbodnar.recipes.common.exception.ErrorCode;
+import com.ronbodnar.recipes.identity.domain.IdentityUser;
+import com.ronbodnar.recipes.user.dto.UserAccountChangeRequest;
 import com.ronbodnar.recipes.user.dto.UserAccountDTO;
+
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -19,19 +20,43 @@ public class UserAccountService {
         this.userAccountRepository = userAccountRepository;
     }
 
-    public UserAccountDTO getOrCreateUserAccount(Jwt jwt) {
-        UUID keycloakSubject = UUID.fromString(
-                Objects.requireNonNull(jwt.getSubject(), "JWT subject is missing")
-        );
-
-        UserAccount userAccount = userAccountRepository.findByKeycloakSubject(keycloakSubject)
+    public UserAccountDTO getOrCreateUserAccount(IdentityUser identityUser) {
+        UserAccount userAccount = userAccountRepository.findByIdentityProviderSubject(identityUser.subject())
                 .orElseGet(() -> {
                     UserAccount user = new UserAccount();
-                    user.setKeycloakSubject(keycloakSubject);
+                    user.setIdentityProviderSubject(identityUser.subject());
+                    user.setDisplayName(identityUser.username());
 
                     return userAccountRepository.save(user);
                 });
 
         return UserAccountDTO.fromEntity(userAccount);
+    }
+
+    public void updateUserAccount(IdentityUser identityUser, UserAccountChangeRequest request) {
+        UserAccount userAccount = userAccountRepository.findByIdentityProviderSubject(identityUser.subject())
+                .orElseThrow(() ->
+                        new BusinessException(
+                            ErrorCode.USER_NOT_FOUND,
+                            "Failed to find a UserAccount with ID %s".formatted(identityUser.subject())
+                        )
+                );
+
+        boolean isDisplayNameTaken = userAccountRepository.existsDisplayNameUsedByAnotherUser(
+                request.displayName(),
+                identityUser.subject()
+        );
+
+        if (isDisplayNameTaken) {
+            throw new BusinessException(
+                    ErrorCode.DISPLAY_NAME_ALREADY_IN_USE,
+                    "displayName",
+                    "This display name is already in use."
+            );
+        }
+
+        userAccount.setDisplayName(request.displayName());
+
+        // Updating profile image
     }
 }

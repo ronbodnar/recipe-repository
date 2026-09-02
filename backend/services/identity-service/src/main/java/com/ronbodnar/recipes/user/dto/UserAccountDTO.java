@@ -7,7 +7,8 @@ import java.util.UUID;
 
 public record UserAccountDTO(
         Long id,
-        UUID keycloakSubject,
+        String identityProviderSubject,
+        String displayName,
         UUID profileImageId,
         LocalDateTime createdAt,
         LocalDateTime lastModifiedAt
@@ -16,7 +17,8 @@ public record UserAccountDTO(
     public static UserAccountDTO fromEntity(UserAccount userAccount) {
         return new UserAccountDTO(
                 userAccount.getId(),
-                userAccount.getKeycloakSubject(),
+                userAccount.getIdentityProviderSubject(),
+                userAccount.getDisplayName(),
                 userAccount.getProfileImageId(),
                 userAccount.getCreatedAt(),
                 userAccount.getLastModifiedAt()

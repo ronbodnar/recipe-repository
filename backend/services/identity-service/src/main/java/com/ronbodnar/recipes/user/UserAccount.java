@@ -2,6 +2,7 @@ package com.ronbodnar.recipes.user;
 
 import jakarta.persistence.*;
 
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,12 +29,17 @@ public class UserAccount {
     private Long id;
 
     /*
-     * Keycloak acts as the source of truth for this UserAccount's authentication and metadata.
-     * It's responsible for the username, email, and user's given and family name. Updates to these fields
-     * are made to Keycloak through {TBD} and to avoid synchronization issues are solely kept there.
+     * The identity provider is the source of truth for this user's authentication
+     * identity and identity attributes such as username, email, given name, and
+     * family name. Changes to these attributes are propagated through
+     * IdentityProvider rather than managed directly by this entity.
      */
-    @Column(name = "keycloak_subject", nullable = false, unique = true)
-    private UUID keycloakSubject;
+    @Column(name = "idp_subject", nullable = false, unique = true)
+    private String identityProviderSubject;
+
+    @Size(min = 2, max = 50)
+    @Column(name = "display_name", nullable = false, unique = true, length = 50)
+    private String displayName;
 
     @Column(name = "profile_image_id")
     private UUID profileImageId;
@@ -48,8 +54,8 @@ public class UserAccount {
 
     @Override
     public String toString() {
-        return String.format("User={id=%s, keycloakSubject=%s, profileImageId=%s}",
-                this.id, this.keycloakSubject, this.profileImageId);
+        return String.format("User={id=%s, identityProviderSubject=%s, profileImageId=%s}",
+                this.id, this.identityProviderSubject, this.profileImageId);
     }
 
     @Override

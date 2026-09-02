@@ -44,9 +44,11 @@ public enum ErrorCode {
     UNSUPPORTED_MEDIA_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, LogLevel.WARN),
 
     // Users
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND,LogLevel.WARN),
     USER_PROFILE_CONFLICT(HttpStatus.CONFLICT, LogLevel.WARN),
     EMAIL_ALREADY_IN_USE(HttpStatus.CONFLICT, LogLevel.INFO),
-    USERNAME_ALREADY_IN_USE(HttpStatus.CONFLICT, LogLevel.INFO);
+    USERNAME_ALREADY_IN_USE(HttpStatus.CONFLICT, LogLevel.INFO),
+    DISPLAY_NAME_ALREADY_IN_USE(HttpStatus.CONFLICT, LogLevel.INFO);
 
     private final HttpStatus httpStatus;
     private final LogLevel logLevel;
