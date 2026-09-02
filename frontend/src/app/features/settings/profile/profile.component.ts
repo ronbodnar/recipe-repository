@@ -89,9 +89,27 @@ export class SettingsProfileComponent {
 
     const request = this.form().value;
 
+    const formData = new FormData();
+    if (request.profileImage) {
+      formData.append('profileImage', request.profileImage);
+    }
+
+    formData.append(
+      'profile',
+      new Blob(
+        [
+          JSON.stringify({
+            ...request,
+            profileImage: undefined,
+          }),
+        ],
+        { type: 'application/json' },
+      ),
+    );
+
     this._status.set('submitting');
 
-    this.fetchApi.putData('identity/me', request).subscribe({
+    this.fetchApi.putData('identity/me', formData).subscribe({
       next: (response) => {
         console.log('Profile updated successfully:', response);
         this.authService.update({
