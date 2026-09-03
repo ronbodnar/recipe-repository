@@ -3,9 +3,9 @@
 --
 CREATE TABLE `recipe` (
     `id` binary(16) NOT NULL,
-    `author_id` binary(16) DEFAULT NULL,
+    `author_id` VARCHAR(255) NOT NULL,
     `created_at` datetime(6) NOT NULL,
-    `description` varchar(255) NOT NULL,
+    `description` varchar(255) DEFAULT NULL,
     `title` varchar(255) NOT NULL,
     `updated_at` datetime(6) DEFAULT NULL,
     PRIMARY KEY (`id`)
@@ -16,7 +16,9 @@ CREATE TABLE `recipe` (
 --
 CREATE TABLE `recipe_course` (
     `recipe_id` binary(16) NOT NULL,
-    `course` enum('APPETIZER','BEVERAGE','DESSERT','MAIN_COURSE','SIDE_DISH') DEFAULT NULL,
+    `course` enum(
+        'APPETIZER','BEVERAGE','DESSERT','MAIN_COURSE','SIDE_DISH'
+    ) DEFAULT NULL,
     UNIQUE KEY `uk_recipe_course_recipe_id_course` (`recipe_id`,`course`),
     CONSTRAINT `fk_recipe_course_recipe` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -26,7 +28,11 @@ CREATE TABLE `recipe_course` (
 --
 CREATE TABLE `recipe_cuisine` (
     `recipe_id` binary(16) NOT NULL,
-    `cuisine` enum('AMERICAN','CHINESE','FRENCH','GERMAN','GREEK','INDIAN','ITALIAN','JAPANESE','KOREAN','MEDITERRANEAN','MEXICAN','SALVADORAN','SPANISH') DEFAULT NULL,
+    `cuisine` enum(
+        'AMERICAN','CHINESE','FRENCH','GERMAN','GREEK','INDIAN',
+        'ITALIAN','JAPANESE','KOREAN','MEDITERRANEAN','MEXICAN',
+        'SALVADORAN','SPANISH'
+    ) DEFAULT NULL,
     UNIQUE KEY `uk_recipe_cuisine_recipe_id_cuisine` (`recipe_id`,`cuisine`),
     CONSTRAINT `fk_recipe_cuisine_recipe` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -36,7 +42,9 @@ CREATE TABLE `recipe_cuisine` (
 --
 CREATE TABLE `recipe_diet_type` (
     `recipe_id` binary(16) NOT NULL,
-    `diet_type` enum('DAIRY_FREE','GLUTEN_FREE','KETO','LOW_CARB','VEGAN','VEGETARIAN') DEFAULT NULL,
+    `diet_type` enum(
+        'DAIRY_FREE','GLUTEN_FREE','KETO','LOW_CARB','VEGAN','VEGETARIAN'
+    ) DEFAULT NULL,
     UNIQUE KEY `uk_recipe_diet_type_recipe_id_diet_type` (`recipe_id`,`diet_type`),
     CONSTRAINT `fk_recipe_diet_type_recipe` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -46,7 +54,9 @@ CREATE TABLE `recipe_diet_type` (
 --
 CREATE TABLE `recipe_meal_type` (
     `recipe_id` binary(16) NOT NULL,
-    `meal_type` enum('BREAKFAST','BRUNCH','DINNER','LUNCH','SNACK') DEFAULT NULL,
+    `meal_type` enum(
+        'BREAKFAST','BRUNCH','DINNER','LUNCH','SNACK'
+    ) DEFAULT NULL,
     UNIQUE KEY `uk_recipe_meal_type_recipe_id_meal_type` (`recipe_id`,`meal_type`),
     CONSTRAINT `fk_recipe_meal_type_recipe` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -69,7 +79,10 @@ CREATE TABLE `recipe_variant` (
     `id` binary(16) NOT NULL,
     `name` VARCHAR(255) DEFAULT NULL,
     `cook_time` int DEFAULT NULL,
-    `cooking_method` enum('AIR_FRYER','BARBECUE','GRILL','MICROWAVE','NO_COOK','OVEN','PRESSURE_COOKER','SLOW_COOKER','SMOKER','STOVETOP') NOT NULL,
+    `cooking_method` enum(
+        'AIR_FRYER','BARBECUE','GRILL','MICROWAVE','NO_COOK','OVEN',
+        'PRESSURE_COOKER','SLOW_COOKER','SMOKER','STOVETOP'
+    ) NOT NULL,
     `prep_time` int DEFAULT NULL,
     `num_servings` int DEFAULT NULL,
     `total_time` int DEFAULT NULL,

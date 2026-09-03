@@ -9,10 +9,9 @@ import { from, switchMap } from 'rxjs';
 })
 export class ImageService {
   private readonly fetchApi = inject(FetchApiService);
-  private readonly urlPrefix = `${environment.cdnUrl}/recipe-images`;
 
-  getImageUrl(imageId: string): string {
-    return `${this.urlPrefix}/${imageId}/original.webp`;
+  getImageUrl(imageId: string, purpose: 'RECIPE' | 'PROFILE' = 'RECIPE'): string {
+    return `${environment.cdnUrl}/${purpose.toLowerCase()}-images/${imageId}/original.webp`;
   }
 
   uploadImages(images: File[], purpose: 'RECIPE' | 'PROFILE' = 'RECIPE') {

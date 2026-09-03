@@ -20,6 +20,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.ronbodnar</groupId>
+            <artifactId>image-service-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Spring Boot Starters (Versions managed by Root Parent) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

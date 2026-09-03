@@ -2,8 +2,11 @@ package com.ronbodnar.recipes.image;
 
 import com.ronbodnar.recipes.common.exception.BusinessException;
 import com.ronbodnar.recipes.common.exception.ErrorCode;
-import org.apache.tika.Tika;
+
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+
+import org.apache.tika.Tika;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,9 +17,14 @@ import java.security.MessageDigest;
 import java.util.HexFormat;
 import java.util.UUID;
 
-public class ImageFactory {
+@Component
+public final class ImageFactory {
 
-    public static Image createFromMultipartFile(MultipartFile file, ImagePurpose purpose, Tika tika) {
+    private static final Tika TIKA = new Tika();
+
+    private ImageFactory() {}
+
+    public static Image createFromMultipartFile(MultipartFile file, ImagePurpose purpose) {
         try {
             Path tempFile = Files.createTempFile("upload-", ".tmp");
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -36,7 +44,7 @@ public class ImageFactory {
             image.setId(UUID.randomUUID());
             image.setFileHash(hash);
             image.setTempFilePath(tempFile);
-            image.setContentType(tika.detect(tempFile));
+            image.setContentType(TIKA.detect(tempFile));
             image.setSize(file.getSize());
 
             return image;

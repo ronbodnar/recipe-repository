@@ -14,6 +14,7 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -95,6 +96,12 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleInvalidContentTypeException(InvalidContentTypeException ex) {
         log.warn("Unsupported media type: {}", ex.getMessage());
         return ProblemDetailFactory.create(ErrorCode.UNSUPPORTED_MEDIA_TYPE, ex.getMessage());
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ProblemDetail handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
+        log.info("Unauthorized access to resource: {}", ex.getMessage());
+        return ProblemDetailFactory.create(ErrorCode.NOT_AUTHORIZED, ex.getMessage());
     }
 
     private ErrorCode mapValidationError(org.springframework.validation.FieldError fieldError) {

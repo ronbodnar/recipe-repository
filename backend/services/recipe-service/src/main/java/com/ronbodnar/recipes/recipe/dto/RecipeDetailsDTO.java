@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public record RecipeDetailsDTO(UUID id,
                                String title,
                                String description,
-                               UUID authorId,
+                               String authorId,
                                LocalDateTime createdAt,
                                LocalDateTime updatedAt,
                                List<UUID> images,

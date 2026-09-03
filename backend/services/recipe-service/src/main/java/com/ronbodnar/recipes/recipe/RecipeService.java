@@ -2,6 +2,7 @@ package com.ronbodnar.recipes.recipe;
 
 import com.ronbodnar.recipes.common.exception.BusinessException;
 import com.ronbodnar.recipes.common.exception.ErrorCode;
+import com.ronbodnar.recipes.image.ImageServiceClient;
 import com.ronbodnar.recipes.recipe.dto.RecipeDetailsDTO;
 import com.ronbodnar.recipes.recipe.dto.RecipeRequest;
 import com.ronbodnar.recipes.recipe.dto.RecipeSummaryDTO;
@@ -12,27 +13,28 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestClient;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
-
-import static org.springframework.security.oauth2.client.web.ClientAttributes.clientRegistrationId;
 
 @Slf4j
 @Service
 public class RecipeService {
 
-    private final RestClient restClient;
-
     private final RecipeRepository recipeRepository;
 
-    public RecipeService(RestClient restClient, RecipeRepository recipeRepository) {
-        this.restClient = restClient;
+    private final ImageServiceClient imageServiceClient;
+
+    public RecipeService(RecipeRepository recipeRepository, ImageServiceClient imageServiceClient) {
         this.recipeRepository = recipeRepository;
+        this.imageServiceClient = imageServiceClient;
     }
 
-    public Page<RecipeSummaryDTO> getAllSummaries(UUID authorId, int paginationStart, int paginationLength, String paginationSortOrder) {
+    public Page<RecipeSummaryDTO> getAllSummaries(
+            String authorId,
+            int paginationStart,
+            int paginationLength,
+            String paginationSortOrder
+    ) {
         Page<Recipe> recipes = recipeRepository.findAllByAuthorIdWithImages(
                 authorId,
                 PageRequest.of(paginationStart, paginationLength)
@@ -60,11 +62,12 @@ public class RecipeService {
     }
 
     public void deleteById(UUID id) {
+        // TODO: delete images
         recipeRepository.deleteById(id);
     }
 
     @Transactional
-    public RecipeDetailsDTO handleCreateRequest(RecipeRequest recipeRequest, UUID authorId) {
+    public RecipeDetailsDTO handleCreateRequest(RecipeRequest recipeRequest, String authorId) {
         log.info("Attempting create a recipe titled {} with {} images from author {}", recipeRequest.title(), recipeRequest.imageIds().size(), authorId);
 
         if (recipeRepository.existsByTitle(recipeRequest.title())) {
@@ -78,9 +81,9 @@ public class RecipeService {
 
         Recipe recipe = RecipeMapper.toEntity(recipeRequest, authorId);
 
-        Recipe saved = recipeRepository.save(recipe);
+        Recipe saved = recipeRepository.saveAndFlush(recipe);
 
-        attachImages(saved.getImageIds());
+        imageServiceClient.attach(new HashSet<>(saved.getImageIds()));
 
         log.info("Recipe with title {} has been created", recipeRequest.title());
 
@@ -88,10 +91,12 @@ public class RecipeService {
     }
 
     @Transactional
-    public RecipeDetailsDTO handleUpdateRequest(UUID id,
-                                                RecipeRequest recipeRequest,
-                                                Optional<List<MultipartFile>> images) {
-        log.info("Attempting update a recipe titled {} with {} images", recipeRequest.title(), images.map(List::size).orElse(0));
+    public RecipeDetailsDTO handleUpdateRequest(UUID id, RecipeRequest recipeRequest) {
+        log.info(
+                "Attempting update a recipe titled {} with {} images",
+                recipeRequest.title(),
+                recipeRequest.imageIds().size()
+        );
 
         Recipe existingRecipe = recipeRepository.findById(id).orElseThrow(() ->
                 new BusinessException(
@@ -121,22 +126,21 @@ public class RecipeService {
                         .map(RecipeVariant::new)
                         .toList();
 
+        Set<UUID> existingImageIds = new HashSet<>(existingRecipe.getImageIds());
+        Set<UUID> newImageIds = new HashSet<>(recipeRequest.imageIds());
+        Set<UUID> imagesToDelete = new HashSet<>(existingImageIds);
+        imagesToDelete.removeAll(newImageIds);
+
         existingRecipe.updateFrom(recipeRequest, patchVariants);
 
-        attachImages(existingRecipe.getImageIds());
+        recipeRepository.saveAndFlush(existingRecipe);
+
+        imageServiceClient.markForDeletion(imagesToDelete);
+        imageServiceClient.attach(new HashSet<>(existingRecipe.getImageIds()));
 
         log.info("Recipe with title {} has been updated", recipeRequest.title());
 
         return RecipeDetailsDTO.fromRecipe(existingRecipe);
-    }
-
-    private void attachImages(List<UUID> imageIds) {
-        restClient.post()
-                .uri("http://localhost:8080/api/v1/images/attach")
-                .attributes(clientRegistrationId("keycloak"))
-                .body(imageIds)
-                .retrieve()
-                .toBodilessEntity();
     }
 
 }

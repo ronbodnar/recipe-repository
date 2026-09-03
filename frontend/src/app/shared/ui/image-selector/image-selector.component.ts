@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnDestroy, Output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+  signal,
+} from '@angular/core';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 
 export interface ImageSelectorExistingImage {
@@ -21,6 +29,7 @@ interface SelectedImage {
 @Component({
   selector: 'app-image-selector',
   imports: [ButtonComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './image-selector.component.html',
 })
 export class ImageSelectorComponent implements OnDestroy {
@@ -38,6 +47,7 @@ export class ImageSelectorComponent implements OnDestroy {
   readonly selectedImages = this._selectedImages.asReadonly();
 
   onImagesSelected(event: Event): void {
+    console.log('onImagesSelected event:', event);
     const input = event.target as HTMLInputElement;
     this.selectImages(input.files);
     input.value = '';
@@ -49,6 +59,7 @@ export class ImageSelectorComponent implements OnDestroy {
   }
 
   private selectImages(files: FileList | null): void {
+    console.log('selectImages called with files:', files);
     const imageFiles = Array.from(files ?? []).filter((file) => file.type.startsWith('image/'));
 
     if (!imageFiles.length) {

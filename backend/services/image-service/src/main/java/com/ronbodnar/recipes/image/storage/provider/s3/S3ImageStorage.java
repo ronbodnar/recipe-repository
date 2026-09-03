@@ -1,7 +1,8 @@
-package com.ronbodnar.recipes.image.storage;
+package com.ronbodnar.recipes.image.storage.provider.s3;
 
 import com.ronbodnar.recipes.image.Image;
 
+import com.ronbodnar.recipes.image.storage.ImageStorage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

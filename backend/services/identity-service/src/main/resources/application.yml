@@ -1,3 +1,7 @@
+app:
+  services:
+    image-service: http://localhost:8083
+
 server:
   port: 8082
   forward-headers-strategy: native

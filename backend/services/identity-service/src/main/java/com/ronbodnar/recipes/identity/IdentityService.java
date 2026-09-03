@@ -33,7 +33,7 @@ public class IdentityService {
     }
 
     @Transactional(rollbackFor = BusinessException.class)
-    public void updateAuthenticatedUser(UserAccountChangeRequest request, MultipartFile profileImage, Jwt jwt) {
+    public void updateAuthenticatedUser(UserAccountChangeRequest request, Jwt jwt) {
         log.info("Received request to update authenticated user: {}", request);
 
         IdentityUser identityUser = identityProvider.fromToken(jwt);

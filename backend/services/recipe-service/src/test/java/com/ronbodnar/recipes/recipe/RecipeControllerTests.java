@@ -49,14 +49,14 @@ class RecipeControllerTests {
 
     private Recipe recipe;
 
-    private static UUID authorId;
+    private static String authorId;
 
     private static UUID recipeId;
 
     @BeforeAll
     static void setUpAll() {
         recipeId = UUID.randomUUID();
-        authorId = UUID.randomUUID();
+        authorId = UUID.randomUUID().toString();
     }
 
     @BeforeEach
@@ -69,12 +69,12 @@ class RecipeControllerTests {
 
     private ResultActions performAuthenticatedRequest(
             ConfigurableSmartRequestBuilder<?> builder,
-            UUID userId,
+            String authorId,
             String... authorities
     ) throws Exception {
         return mockMvc.perform(builder
                 .with(jwt()
-                        .jwt(jwt -> jwt.subject(userId.toString()))
+                        .jwt(jwt -> jwt.subject(authorId))
                         .authorities(
                                 Arrays.stream(authorities)
                                         .map(SimpleGrantedAuthority::new)
@@ -153,7 +153,7 @@ class RecipeControllerTests {
 
         performAuthenticatedRequest(
                 get(RECIPE_API_URL + "/{id}", requestedRecipeId),
-                UUID.randomUUID(),
+                UUID.randomUUID().toString(),
                 "ROLE_VIEW-RECIPE"
         )
                 .andExpect(status().isNotFound());
@@ -192,7 +192,7 @@ class RecipeControllerTests {
 
         performAuthenticatedRequest(
                 multipart(RECIPE_API_URL).file(multipartFile).file(images),
-                UUID.randomUUID()
+                UUID.randomUUID().toString()
         )
                 .andExpect(status().isCreated())
                 .andExpect(content().string(Matchers.containsString("Test Recipe")));

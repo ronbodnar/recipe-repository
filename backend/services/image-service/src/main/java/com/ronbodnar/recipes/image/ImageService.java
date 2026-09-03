@@ -3,16 +3,17 @@ package com.ronbodnar.recipes.image;
 import com.ronbodnar.recipes.common.exception.BusinessException;
 import com.ronbodnar.recipes.common.exception.ErrorCode;
 import com.ronbodnar.recipes.image.storage.ImageStorage;
-import com.ronbodnar.recipes.image.storage.StorageKeyProvider;
+import com.ronbodnar.recipes.image.storage.provider.StorageKeyProvider;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.apache.tika.Tika;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -65,6 +66,12 @@ public class ImageService {
         imageRepository.saveAll(images);
     }
 
+    public void markImagesForDeletion(List<UUID> imageIds) {
+        List<Image> images = imageRepository.findAllByIdIn(imageIds);
+        images.forEach(image -> image.setStatus(ImageStatus.MARKED_FOR_DELETION));
+        imageRepository.saveAll(images);
+    }
+
     public void deleteImages(List<UUID> imageIds) {
         List<Image> images = imageRepository.findAllByIdIn(imageIds);
 
@@ -82,19 +89,36 @@ public class ImageService {
         }
     }
 
+    @Transactional
+    public void cleanupImages() {
+        log.info("Cleaning up images...");
+        LocalDateTime cutoff = LocalDateTime.now().minusDays(1);
+
+        List<Image> imagesToDelete =
+                imageRepository.findImagesEligibleForCleanup(cutoff);
+
+        List<UUID> imageIdsToDelete =
+                imagesToDelete.stream()
+                        .map(Image::getId)
+                        .toList();
+
+        deleteImages(imageIdsToDelete);
+
+        imageRepository.deleteAllByIdIn(imageIdsToDelete);
+        log.info("Completed image cleanup task");
+    }
+
     private List<Image> getProcessedImages(List<MultipartFile> imageFiles, ImagePurpose purpose) {
         if (imageFiles == null || imageFiles.isEmpty()) {
             return Collections.emptyList();
         }
 
-        Tika tika = new Tika();
-
         List<Image> images = new ArrayList<>(imageFiles.size());
 
         for (MultipartFile imageFile : imageFiles) {
-            Image image = ImageFactory.createFromMultipartFile(imageFile, purpose, tika);
+            Image image = ImageFactory.createFromMultipartFile(imageFile, purpose);
 
-            image.setStorageKey(storageKeyProvider.buildStorageKey(image.getId(), image.getContentType()));
+            image.setStorageKey(storageKeyProvider.buildStorageKey(image.getId(), image.getContentType(), purpose));
 
             images.add(image);
         }

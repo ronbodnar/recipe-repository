@@ -39,7 +39,7 @@ class RecipeServiceTests {
 
     @Test
     void getAllSummaries_returnsRecipeSummaries() {
-        UUID authorId = UUID.randomUUID();
+        String authorId = UUID.randomUUID().toString();
 
         Recipe recipe = new Recipe();
         recipe.setId(UUID.randomUUID());
@@ -58,7 +58,7 @@ class RecipeServiceTests {
 
     @Test
     void getAllSummaries_returnsPaginatedRecipes() {
-        UUID authorId = UUID.randomUUID();
+        String authorId = UUID.randomUUID().toString();
 
         List<Recipe> recipes = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -89,7 +89,7 @@ class RecipeServiceTests {
     @Test
     void getById_returnsRecipeDetails() {
         UUID id = UUID.randomUUID();
-        UUID authorId = UUID.randomUUID();
+        String authorId = UUID.randomUUID().toString();
 
         Recipe recipe = new Recipe();
         recipe.setId(id);
@@ -123,7 +123,7 @@ class RecipeServiceTests {
                     }
                 );
 
-        RecipeDetailsDTO createdRecipe = recipeService.handleCreateRequest(request, UUID.randomUUID());
+        RecipeDetailsDTO createdRecipe = recipeService.handleCreateRequest(request, UUID.randomUUID().toString());
 
         ArgumentCaptor<Recipe> recipeCaptor = ArgumentCaptor.forClass(Recipe.class);
 

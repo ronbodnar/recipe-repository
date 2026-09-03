@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class RecipeMapper {
 
-    public static Recipe toEntity(RecipeRequest recipeRequest, UUID authorId) {
+    public static Recipe toEntity(RecipeRequest recipeRequest, String authorId) {
         Recipe recipe = new Recipe(recipeRequest);
         recipe.setAuthorId(authorId);
 

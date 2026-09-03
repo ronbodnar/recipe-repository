@@ -36,8 +36,8 @@ public class Recipe {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "author_id", nullable = true)
-    private UUID authorId;
+    @Column(name = "author_id", nullable = false)
+    private String authorId;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

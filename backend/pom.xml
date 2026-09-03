@@ -18,6 +18,7 @@
 	<modules>
 		<module>services/common-core</module>
 		<module>services/gateway</module>
+		<module>services/image-service-client</module>
 		<module>services/recipe-service</module>
 		<module>services/identity-service</module>
 		<module>services/image-service</module>

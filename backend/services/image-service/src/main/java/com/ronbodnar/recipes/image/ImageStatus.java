@@ -3,6 +3,7 @@ package com.ronbodnar.recipes.image;
 public enum ImageStatus {
 
     STAGED,
-    ATTACHED
+    ATTACHED,
+    MARKED_FOR_DELETION
 
 }

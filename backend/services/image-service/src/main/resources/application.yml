@@ -1,3 +1,10 @@
+app:
+  aws:
+    s3:
+      bucket-name: recipe-repository
+  images:
+    cleanup-interval: 60000
+
 server:
   port: 8083
   forward-headers-strategy: native
@@ -63,8 +70,3 @@ logging:
     com.fasterxml.jackson.databind: INFO
     org.springframework.http.converter: INFO
     org.springframework.web.servlet.mvc.method.annotation: INFO
-
-app:
-  aws:
-    s3:
-      bucket-name: recipe-repository

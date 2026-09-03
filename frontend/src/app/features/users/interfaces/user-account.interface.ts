@@ -1,7 +1,7 @@
 export interface UserAccount {
   id: string;
   displayName: string;
-  profileImageId: string;
+  profileImageId: string | null;
   createdAt: Date;
   lastModifiedAt: Date;
 

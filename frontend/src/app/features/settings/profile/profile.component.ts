@@ -1,9 +1,10 @@
-import { Component, signal, inject, effect } from '@angular/core';
-import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, signal, inject, effect, ChangeDetectionStrategy } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ErrorService } from '@core/errors/error.service';
 import { ApiError } from '@core/models/api-error.model';
 import { AuthenticationService } from '@core/services/authentication.service';
 import { FetchApiService } from '@core/services/fetch-api.service';
+import { ImageService } from '@core/services/image.service';
 import { InputTextComponent } from '@ng-modular-forms/core';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 import {
@@ -11,14 +12,18 @@ import {
   ImageSelectorExistingImage,
   ImageSelectorRemovedImage,
 } from '@shared/ui/image-selector/image-selector.component';
+import { ProfileFactory } from './profile.factory';
+import { ProfileFormModel } from './profile.types';
 
 @Component({
   selector: 'app-settings-profile',
   imports: [ReactiveFormsModule, InputTextComponent, ButtonComponent, ImageSelectorComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './profile.component.html',
 })
 export class SettingsProfileComponent {
   private readonly fetchApi = inject(FetchApiService);
+  private readonly imageService = inject(ImageService);
   private readonly errorService = inject(ErrorService);
   private readonly authService = inject(AuthenticationService);
 
@@ -26,36 +31,7 @@ export class SettingsProfileComponent {
 
   readonly status = this._status.asReadonly();
 
-  private readonly nameValidators = [
-    Validators.required,
-    Validators.minLength(2),
-    Validators.pattern(/^[a-zA-Z\s'-]+$/),
-  ];
-
-  form = signal(
-    new FormGroup({
-      profileImage: new FormControl<File | null>(null),
-      existingProfileImage: new FormControl<string | null>(
-        this.authService.authUser()?.profileImageId ?? null,
-      ),
-      displayName: new FormControl(this.authService.authUser()?.displayName ?? '', {
-        validators: this.nameValidators,
-      }),
-      email: new FormControl<string>(this.authService.authUser()?.email ?? '', {
-        validators: [
-          Validators.required,
-          Validators.email,
-          Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
-        ],
-      }),
-      givenName: new FormControl(this.authService.authUser()?.givenName ?? '', {
-        validators: this.nameValidators,
-      }),
-      familyName: new FormControl(this.authService.authUser()?.familyName ?? '', {
-        validators: this.nameValidators,
-      }),
-    }),
-  );
+  form = signal(ProfileFactory.profile(this.authService.authUser() ?? undefined));
 
   constructor() {
     effect(() => {
@@ -66,12 +42,7 @@ export class SettingsProfileComponent {
         return;
       }
 
-      this.form().patchValue({
-        displayName: user.displayName,
-        email: user.email,
-        givenName: user.givenName,
-        familyName: user.familyName,
-      });
+      this.form.set(ProfileFactory.profile(user));
     });
 
     this.form().valueChanges.subscribe(() => {
@@ -87,37 +58,72 @@ export class SettingsProfileComponent {
       return;
     }
 
-    const request = this.form().value;
-
-    const formData = new FormData();
-    if (request.profileImage) {
-      formData.append('profileImage', request.profileImage);
-    }
-
-    formData.append(
-      'profile',
-      new Blob(
-        [
-          JSON.stringify({
-            ...request,
-            profileImage: undefined,
-          }),
-        ],
-        { type: 'application/json' },
-      ),
-    );
+    const request = this.form().getRawValue();
 
     this._status.set('submitting');
 
+    if (request.profileImage) {
+      this.uploadProfileImageAndUpdate(request);
+    } else {
+      this.updateProfile(request);
+    }
+  }
+
+  onProfileImagesSelected(images: File[]): void {
+    const file = images[0];
+    if (!file || !file.type.startsWith('image/')) {
+      return;
+    }
+
+    this.form().patchValue({ profileImage: file, profileImageId: null });
+    this.form().markAsDirty();
+  }
+
+  getExistingProfileImages(): ImageSelectorExistingImage[] {
+    const imageId = this.form().controls.profileImageId.value;
+    return imageId
+      ? [
+          {
+            id: imageId,
+            src: this.imageService.getImageUrl(imageId, 'PROFILE'),
+            alt: `Profile image`,
+          },
+        ]
+      : [];
+  }
+
+  onProfileImageRemoved(_: ImageSelectorRemovedImage): void {
+    this.form().patchValue({ profileImage: null, profileImageId: null });
+    this.form().markAsDirty();
+  }
+
+  private uploadProfileImageAndUpdate(formData: ProfileFormModel) {
+    this.imageService
+      .uploadImages(formData.profileImage ? [formData.profileImage] : [], 'PROFILE')
+      .subscribe({
+        next: (uploadedImageIds) => {
+          if (uploadedImageIds.length > 0) {
+            formData.profileImageId = uploadedImageIds[0];
+          }
+          this.updateProfile(formData);
+        },
+        error: (error: ApiError) => {
+          console.error('Error uploading profile image:', error);
+          this._status.set('error');
+        },
+      });
+  }
+
+  private updateProfile(formData: ProfileFormModel) {
     this.fetchApi.putData('identity/me', formData).subscribe({
-      next: (response) => {
-        console.log('Profile updated successfully:', response);
+      next: () => {
         this.authService.update({
           ...this.authService.authUser()!,
-          displayName: request.displayName!,
-          email: request.email!,
-          givenName: request.givenName!,
-          familyName: request.familyName!,
+          displayName: formData.displayName!,
+          email: formData.email!,
+          givenName: formData.givenName!,
+          familyName: formData.familyName!,
+          profileImageId: formData.profileImageId ?? null,
         });
         this._status.set('success');
         setTimeout(() => this._status.set('idle'), 3000);
@@ -131,25 +137,5 @@ export class SettingsProfileComponent {
         }
       },
     });
-  }
-
-  onProfileImagesSelected(images: File[]): void {
-    const file = images[0];
-    if (!file || !file.type.startsWith('image/')) {
-      return;
-    }
-
-    this.form().patchValue({ profileImage: file, existingProfileImage: null });
-    this.form().markAsDirty();
-  }
-
-  getExistingProfileImages(): ImageSelectorExistingImage[] {
-    const imageId = this.form().controls.existingProfileImage.value;
-    return imageId ? [{ id: imageId }] : [];
-  }
-
-  onProfileImageRemoved(_: ImageSelectorRemovedImage): void {
-    this.form().patchValue({ profileImage: null, existingProfileImage: null });
-    this.form().markAsDirty();
   }
 }

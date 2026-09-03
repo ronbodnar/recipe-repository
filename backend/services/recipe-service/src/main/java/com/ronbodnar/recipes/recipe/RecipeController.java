@@ -39,9 +39,7 @@ public class RecipeController {
                                          @RequestParam(name = "paginationLength", defaultValue = "10") Integer paginationLength,
                                          @RequestParam(name = "paginationSortOrder", defaultValue = "id=asc") String paginationSortOrder,
                                          @AuthenticationPrincipal Jwt jwt) {
-        UUID authorId = UUID.fromString(
-                Objects.requireNonNull(jwt.getSubject(), "JWT subject is missing")
-        );
+        String authorId = Objects.requireNonNull(jwt.getSubject(), "JWT subject is missing");
         return recipeService.getAllSummaries(authorId, paginationStart, paginationLength, paginationSortOrder);
     }
 
@@ -51,9 +49,7 @@ public class RecipeController {
     public RecipeDetailsDTO create(@RequestBody @Valid RecipeRequest recipeRequest,
                                    @AuthenticationPrincipal Jwt jwt
     ) {
-        UUID authorId = UUID.fromString(
-                Objects.requireNonNull(jwt.getSubject(), "JWT subject is missing")
-        );
+        String authorId = Objects.requireNonNull(jwt.getSubject(), "JWT subject is missing");
 
         return recipeService.handleCreateRequest(recipeRequest, authorId);
     }
@@ -61,9 +57,8 @@ public class RecipeController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public RecipeDetailsDTO update(@PathVariable("id") UUID id,
-                                   @RequestPart(name = "recipe") @Valid RecipeRequest recipeRequest,
-                                   @RequestPart(name = "images", required = false) Optional<List<MultipartFile>> images) {
-        return recipeService.handleUpdateRequest(id, recipeRequest, images);
+                                   @RequestBody @Valid RecipeRequest recipeRequest) {
+        return recipeService.handleUpdateRequest(id, recipeRequest);
     }
 
     @GetMapping("/{id}")
@@ -72,9 +67,9 @@ public class RecipeController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('DELETE-RECIPE')")
-    public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
+    public void delete(@PathVariable("id") UUID id) {
         recipeService.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 }
