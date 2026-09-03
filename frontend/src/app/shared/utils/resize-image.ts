@@ -6,12 +6,6 @@ export async function resizeImage(file: File, maxDimension = 1600, quality = 0.8
   const width = Math.round(bitmap.width * scale);
   const height = Math.round(bitmap.height * scale);
 
-  // Don't bother creating a new image if it's already small enough
-  if (scale === 1 && file.size <= 2 * 1024 * 1024) {
-    bitmap.close();
-    return file;
-  }
-
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
