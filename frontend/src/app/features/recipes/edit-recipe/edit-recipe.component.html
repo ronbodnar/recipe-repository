@@ -36,6 +36,30 @@
         [rows]="4"
       />
 
+      <nmf-select
+        formControlName="visibility"
+        label="recipes.labels.visibility"
+        [options]="visibilityOptions"
+      />
+
+      @switch (form().controls.visibility.value) {
+        @case ('PUBLIC') {
+          <p class="text-sm font-semibold text-muted my-0">
+            {{ 'recipes.edit.visibility.publicDescription' | translate }}
+          </p>
+        }
+        @case ('PRIVATE') {
+          <p class="text-sm font-semibold text-muted my-0">
+            {{ 'recipes.edit.visibility.privateDescription' | translate }}
+          </p>
+        }
+        @case ('FAMILY') {
+          <p class="text-sm font-semibold text-muted my-0">
+            {{ 'recipes.edit.visibility.familyDescription' | translate }}
+          </p>
+        }
+      }
+
       <div class="flex flex-col gap-2">
         <h3>{{ 'recipes.edit.fields.images' | translate }}</h3>
         <app-image-selector
@@ -152,41 +176,33 @@
         }
       </div>
 
-      <mat-accordion>
-        <mat-expansion-panel class="bg-background-alt!">
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{ 'recipes.labels.categories' | translate }}</mat-panel-title>
-          </mat-expansion-panel-header>
+      <h3 class="mb-0">{{ 'recipes.labels.courses' | translate }}</h3>
+      <app-checkbox-group
+        [label]="'recipes.labels.courses' | translate"
+        [options]="courseOptions"
+        [control]="form().controls.courses"
+      />
 
-          <h3 class="text-sm">{{ 'recipes.labels.courses' | translate }}</h3>
-          <app-checkbox-group
-            [label]="'recipes.labels.courses' | translate"
-            [options]="courseOptions"
-            [control]="form().controls.courses"
-          />
+      <h3 class="mb-0">{{ 'recipes.labels.cuisines' | translate }}</h3>
+      <app-checkbox-group
+        [label]="'recipes.labels.cuisines' | translate"
+        [options]="cuisineOptions"
+        [control]="form().controls.cuisines"
+      />
 
-          <h3 class="text-sm">{{ 'recipes.labels.cuisines' | translate }}</h3>
-          <app-checkbox-group
-            [label]="'recipes.labels.cuisines' | translate"
-            [options]="cuisineOptions"
-            [control]="form().controls.cuisines"
-          />
+      <h3 class="mb-0">{{ 'recipes.labels.dietTypes' | translate }}</h3>
+      <app-checkbox-group
+        [label]="'recipes.labels.dietTypes' | translate"
+        [options]="dietTypeOptions"
+        [control]="form().controls.dietTypes"
+      />
 
-          <h3 class="text-sm">{{ 'recipes.labels.dietTypes' | translate }}</h3>
-          <app-checkbox-group
-            [label]="'recipes.labels.dietTypes' | translate"
-            [options]="dietTypeOptions"
-            [control]="form().controls.dietTypes"
-          />
-
-          <h3 class="text-sm">{{ 'recipes.labels.mealTypes' | translate }}</h3>
-          <app-checkbox-group
-            [label]="'recipes.labels.mealTypes' | translate"
-            [options]="mealTypeOptions"
-            [control]="form().controls.mealTypes"
-          />
-        </mat-expansion-panel>
-      </mat-accordion>
+      <h3 class="mb-0">{{ 'recipes.labels.mealTypes' | translate }}</h3>
+      <app-checkbox-group
+        [label]="'recipes.labels.mealTypes' | translate"
+        [options]="mealTypeOptions"
+        [control]="form().controls.mealTypes"
+      />
 
       <div class="flex justify-between items-center">
         <p class="text-sm text-danger">

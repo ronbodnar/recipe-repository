@@ -1,12 +1,18 @@
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
-import { Cuisine, MealType, Course, DietType, CookingMethod } from '@features/recipes/recipe.types';
-
-export type TBackendEnum = string;
+import {
+  Cuisine,
+  MealType,
+  Course,
+  DietType,
+  CookingMethod,
+  RecipeVisibility,
+} from '@features/recipes/recipe.types';
 
 export type RecipeForm = FormGroup<{
   id: FormControl<string | null>;
   title: FormControl<string>;
   description: FormControl<string>;
+  visibility: FormControl<RecipeVisibility>;
   imageIds: FormControl<string[]>; // Images from the backend (existing images)
   images: FormControl<File[] | null>;
   cuisines: FormControl<Cuisine[]>;
@@ -32,6 +38,7 @@ export type RecipeFormModel = {
   id: string | null;
   title: string;
   description: string;
+  visibility: RecipeVisibility;
   imageIds?: string[];
   images: File[] | null;
   cuisines: Cuisine[];
@@ -57,11 +64,12 @@ export type RecipeFormRequest = {
   id: string | null;
   title: string;
   description: string;
+  visibility: RecipeVisibility;
   imageIds?: string[];
-  cuisines: string[];
-  mealTypes: string[];
-  courses: string[];
-  dietTypes: string[];
+  cuisines: Cuisine[];
+  mealTypes: MealType[];
+  courses: Course[];
+  dietTypes: DietType[];
   variants: RecipeVariantRequest[];
 };
 
@@ -70,7 +78,7 @@ export type RecipeVariantRequest = {
   prepTime: number;
   cookTime: number;
   servings: number;
-  cookingMethod: TBackendEnum;
+  cookingMethod: CookingMethod | null;
   ingredients: string[];
   instructions: string[];
   notes: string[];

@@ -25,7 +25,7 @@
 }
 
 <ng-template #recipeList>
-  <ul class="m-0 p-0 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 list-none">
+  <ul class="p-0 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 list-none">
     @for (recipe of loadedRecipes(); track recipe.id) {
       <li>
         <article class="flex flex-col gap-4 p-4 bg-background-alt rounded mat-elevation-z4">

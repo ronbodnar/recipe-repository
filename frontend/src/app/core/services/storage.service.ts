@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserAccount } from '@features/users/interfaces/user-account.interface';
+import { UserAccount } from '@features/users/user.types';
 
 @Injectable({
   providedIn: 'root',

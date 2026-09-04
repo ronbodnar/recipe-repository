@@ -1,7 +1,6 @@
 package com.ronbodnar.recipes.recipe;
 
-import com.ronbodnar.recipes.common.exception.BusinessException;
-import com.ronbodnar.recipes.common.exception.ErrorCode;
+import com.ronbodnar.recipes.recipe.domain.RecipeVisibility;
 import com.ronbodnar.recipes.recipe.dto.RecipeRequest;
 import com.ronbodnar.recipes.recipe.dto.RecipeSummaryDTO;
 import com.ronbodnar.recipes.recipe.dto.RecipeDetailsDTO;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -43,9 +41,9 @@ class RecipeServiceTests {
 
         Recipe recipe = new Recipe();
         recipe.setId(UUID.randomUUID());
-        recipe.setAuthorId(authorId);
+        recipe.setAuthorSubject(authorId);
 
-        given(recipeRepository.findAllByAuthorIdWithImages(
+        given(recipeRepository.findAllByAuthorKeyWithImages(
                 eq(authorId),
                 any(Pageable.class)
         )).willReturn(new PageImpl<>(List.of(recipe)));
@@ -64,7 +62,7 @@ class RecipeServiceTests {
         for (int i = 0; i < 10; i++) {
             Recipe recipe = new Recipe();
             recipe.setId(UUID.randomUUID());
-            recipe.setAuthorId(authorId);
+            recipe.setAuthorSubject(authorId);
 
             recipes.add(recipe);
         }
@@ -75,7 +73,7 @@ class RecipeServiceTests {
                 11
         );
 
-        given(recipeRepository.findAllByAuthorIdWithImages(
+        given(recipeRepository.findAllByAuthorKeyWithImages(
                 eq(authorId),
                 any(Pageable.class)
         )).willReturn(page);
@@ -94,7 +92,7 @@ class RecipeServiceTests {
         Recipe recipe = new Recipe();
         recipe.setId(id);
         recipe.setTitle("Test recipe");
-        recipe.setAuthorId(authorId);
+        recipe.setAuthorSubject(authorId);
 
         given(recipeRepository.findById(id)).willReturn(Optional.of(recipe));
 
@@ -109,6 +107,7 @@ class RecipeServiceTests {
                 UUID.randomUUID(),
                 "Test recipe",
                 "Test description",
+                RecipeVisibility.FAMILY,
                 List.of()
         );
 

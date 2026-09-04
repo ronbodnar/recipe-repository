@@ -7,6 +7,7 @@ import com.ronbodnar.recipes.image.ImageServiceClient;
 import com.ronbodnar.recipes.user.dto.UserAccountChangeRequest;
 import com.ronbodnar.recipes.user.dto.UserAccountDTO;
 
+import com.ronbodnar.recipes.user.dto.UserAccountSummaryDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
@@ -26,6 +27,13 @@ public class UserAccountService {
     public UserAccountService(ImageServiceClient imageServiceClient, UserAccountRepository userAccountRepository) {
         this.imageServiceClient = imageServiceClient;
         this.userAccountRepository = userAccountRepository;
+    }
+
+    public UserAccountSummaryDTO getSummaryBySubject(String subject) {
+        UserAccount userAccount = userAccountRepository.findByIdentityProviderSubject(subject)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        return UserAccountSummaryDTO.fromEntity(userAccount);
     }
 
     public UserAccountDTO getOrCreateUserAccount(IdentityUser identityUser) {

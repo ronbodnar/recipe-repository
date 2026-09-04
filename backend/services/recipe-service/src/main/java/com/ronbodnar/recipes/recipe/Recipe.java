@@ -36,8 +36,12 @@ public class Recipe {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "author_id", nullable = false)
-    private String authorId;
+    @Column(name = "author_subject", nullable = false)
+    private String authorSubject;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "visibility", nullable = false)
+    private RecipeVisibility visibility;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -107,6 +111,7 @@ public class Recipe {
     public Recipe(RecipeRequest recipeRequest) {
         this.title = recipeRequest.title();
         this.description = recipeRequest.description();
+        this.visibility = recipeRequest.visibility();
         this.imageIds = recipeRequest.imageIds();
         this.cuisines = recipeRequest.cuisines();
         this.mealTypes = recipeRequest.mealTypes();
@@ -121,6 +126,10 @@ public class Recipe {
 
         if (patch.description() != null && !patch.description().isBlank()) {
             this.description = patch.description();
+        }
+
+        if (patch.visibility() != null) {
+            this.visibility = patch.visibility();
         }
 
         if (patch.imageIds() != null) {
@@ -160,7 +169,8 @@ public class Recipe {
                 "id=" + id +
                 ", title=" + title +
                 ", description=" + description +
-                ", authorId=" + authorId +
+                ", visibility=" + visibility +
+                ", authorSubject=" + authorSubject +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", variants=" + variants +

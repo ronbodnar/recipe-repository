@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Recipe } from '../recipe.types';
 import { FullPageLoaderComponent } from '@shared/ui/full-page-loader.component';
 import { FluidContainerComponent } from '@shared/ui/fluid-container/fluid-container.component';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 import { MatIconModule } from '@angular/material/icon';
 import { RichTextListComponent } from '../components/rich-text-list/rich-text-list.component';
@@ -11,6 +11,11 @@ import { DialogService } from '@shared/ui/dialog/dialog.service';
 import { RecipeService } from '../recipe.service';
 import { SnackbarService, SnackbarType } from '@shared/ui/snackbar.component';
 import { ImageService } from '@core/services/image.service';
+import { DatePipe, LowerCasePipe } from '@angular/common';
+import { UserService } from '@features/users/user.service';
+import { UserAccountSummary } from '@features/users/user.types';
+import { AuthenticationService } from '@core/services/authentication.service';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-recipe-details',
@@ -21,6 +26,9 @@ import { ImageService } from '@core/services/image.service';
     ButtonComponent,
     MatIconModule,
     RichTextListComponent,
+    DatePipe,
+    LowerCasePipe,
+    MatTabsModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './recipe-details.component.html',
@@ -28,18 +36,23 @@ import { ImageService } from '@core/services/image.service';
 export class RecipeDetailsComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly translate = inject(TranslateService);
   private readonly dialogService = inject(DialogService);
   private readonly recipeService = inject(RecipeService);
   private readonly snackbarService = inject(SnackbarService);
+  private readonly userService = inject(UserService);
+  private readonly authService = inject(AuthenticationService);
   readonly imageService = inject(ImageService);
 
   private readonly _recipe = signal<Recipe | null>(null);
+  private readonly _author = signal<UserAccountSummary | null>(null);
   private readonly _loading = signal(true);
   private readonly _deleting = signal(false);
   private readonly _hasError = signal(false);
   private readonly _selectedVariantIndex = signal<number | null>(null);
 
   readonly recipe = this._recipe.asReadonly();
+  readonly author = this._author.asReadonly();
   readonly loading = this._loading.asReadonly();
   readonly hasError = this._hasError.asReadonly();
   readonly deleting = this._deleting.asReadonly();
@@ -47,6 +60,50 @@ export class RecipeDetailsComponent {
   readonly selectedVariant = computed(
     () => this.recipe()?.variants[this.selectedVariantIndex() ?? 0] ?? null,
   );
+
+  readonly recipeAttributes = computed(() => {
+    const recipe = this.recipe();
+    if (!recipe) {
+      return [];
+    }
+
+    const translateAndSort = (items: string[], keyPrefix: string) =>
+      items
+        .map((item) =>
+          this.translate.instant(
+            `recipes.attributes.${keyPrefix}.${item.toLowerCase().replaceAll('_', '-')}`,
+          ),
+        )
+        .sort((a, b) => a.localeCompare(b));
+
+    return [
+      {
+        label: 'Cuisine',
+        icon: 'public',
+        values: translateAndSort(recipe.cuisines, 'cuisines'),
+      },
+      {
+        label: 'Course',
+        icon: 'restaurant',
+        values: translateAndSort(recipe.courses, 'courses'),
+      },
+      {
+        label: 'Meal',
+        icon: 'wb_sunny',
+        values: translateAndSort(recipe.mealTypes, 'mealTypes'),
+      },
+      {
+        label: 'Dietary',
+        icon: 'eco',
+        values: translateAndSort(recipe.dietTypes, 'dietTypes'),
+      },
+    ].filter((attribute) => attribute.values.length > 0);
+  });
+
+  readonly isRecipeOwner = computed(() => {
+    const currentUser = this.authService.authUser();
+    return currentUser?.identityProviderSubject === this.recipe()?.authorSubject;
+  });
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -61,16 +118,18 @@ export class RecipeDetailsComponent {
       next: (recipe) => {
         console.log('Fetched recipe detail:', recipe);
 
-        const recipeSortedVariants = recipe.variants.sort((a, b) => {
+        /*         const recipeSortedVariants = recipe.variants.sort((a, b) => {
           const methodA = a.name ?? a.cookingMethod ?? '';
           const methodB = b.name ?? b.cookingMethod ?? '';
           return methodA.localeCompare(methodB);
         });
-        recipe.variants = recipeSortedVariants;
+        recipe.variants = recipeSortedVariants; */
 
         if (recipe.variants.length > 0) {
           this._selectedVariantIndex.set(0);
         }
+
+        this.loadAuthor(recipe.authorSubject);
 
         this._recipe.set(recipe);
         this._hasError.set(false);
@@ -113,18 +172,27 @@ export class RecipeDetailsComponent {
       return;
     }
 
-    console.log('Deleting recipe with ID:', recipeId);
-
     this._deleting.set(true);
     this.recipeService.deleteRecipe(recipeId).subscribe({
       next: () => {
-        console.log('Recipe deleted successfully.');
         this.router.navigate(['/app/recipes/list']);
       },
       error: (error) => {
-        console.error('Failed to delete recipe:', error);
+        console.error('An error occurred while deleting this recipe:', error);
         this._deleting.set(false);
         this.snackbarService.openSnackBar(SnackbarType.ERROR, 'recipes.details.deleteError');
+      },
+    });
+  }
+
+  private loadAuthor(subject: string) {
+    this.userService.loadUserSummary(subject).subscribe({
+      next: (user) => {
+        this._author.set(user);
+        console.log('Fetched author details:', user);
+      },
+      error: (error) => {
+        console.error('Failed to fetch author details:', error);
       },
     });
   }

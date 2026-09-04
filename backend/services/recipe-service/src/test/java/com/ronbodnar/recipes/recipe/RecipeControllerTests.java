@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -64,7 +63,7 @@ class RecipeControllerTests {
         recipe = new Recipe();
         recipe.setId(recipeId);
         recipe.setTitle("Test Recipe A");
-        recipe.setAuthorId(authorId);
+        recipe.setAuthorSubject(authorId);
     }
 
     private ResultActions performAuthenticatedRequest(
@@ -86,7 +85,7 @@ class RecipeControllerTests {
     @Test
     void getAllRecipes_returnsRecipeByAuthorId() throws Exception {
         given(recipeService.getAllSummaries(
-                eq(recipe.getAuthorId()),
+                eq(recipe.getAuthorSubject()),
                 eq(0),
                 eq(10),
                 eq("id=asc")
@@ -99,7 +98,7 @@ class RecipeControllerTests {
                         .param("paginationStart", "0")
                         .param("paginationLength", "10")
                         .param("paginationSortOrder", "id=asc"),
-                recipe.getAuthorId(),
+                recipe.getAuthorSubject(),
                 "ROLE_VIEW-RECIPE"
         )
                 .andExpect(status().isOk())
@@ -115,7 +114,7 @@ class RecipeControllerTests {
                     """.formatted(recipeId)));
 
         then(recipeService).should().getAllSummaries(
-                recipe.getAuthorId(),
+                recipe.getAuthorSubject(),
                 0,
                 10,
                 "id=asc"
@@ -129,7 +128,7 @@ class RecipeControllerTests {
 
         performAuthenticatedRequest(
                 get(RECIPE_API_URL + "/{id}", recipe.getId()),
-                recipe.getAuthorId(),
+                recipe.getAuthorSubject(),
                 "ROLE_VIEW-RECIPE"
         )
                 .andExpect(status().isOk())

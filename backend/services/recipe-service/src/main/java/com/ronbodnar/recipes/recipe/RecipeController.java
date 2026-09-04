@@ -39,8 +39,8 @@ public class RecipeController {
                                          @RequestParam(name = "paginationLength", defaultValue = "10") Integer paginationLength,
                                          @RequestParam(name = "paginationSortOrder", defaultValue = "id=asc") String paginationSortOrder,
                                          @AuthenticationPrincipal Jwt jwt) {
-        String authorId = Objects.requireNonNull(jwt.getSubject(), "JWT subject is missing");
-        return recipeService.getAllSummaries(authorId, paginationStart, paginationLength, paginationSortOrder);
+        String authorSubject = Objects.requireNonNull(jwt.getSubject(), "JWT subject is missing");
+        return recipeService.getAllSummaries(authorSubject, paginationStart, paginationLength, paginationSortOrder);
     }
 
     @PostMapping
@@ -49,9 +49,9 @@ public class RecipeController {
     public RecipeDetailsDTO create(@RequestBody @Valid RecipeRequest recipeRequest,
                                    @AuthenticationPrincipal Jwt jwt
     ) {
-        String authorId = Objects.requireNonNull(jwt.getSubject(), "JWT subject is missing");
+        String authorSubject = Objects.requireNonNull(jwt.getSubject(), "JWT subject is missing");
 
-        return recipeService.handleCreateRequest(recipeRequest, authorId);
+        return recipeService.handleCreateRequest(recipeRequest, authorSubject);
     }
 
     @PutMapping("/{id}")

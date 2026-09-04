@@ -14,3 +14,9 @@ export interface UserAccount {
   name: string;
   roles: string[];
 }
+
+export interface UserAccountSummary {
+  identityProviderSubject: string;
+  displayName: string;
+  profileImageId: string | null;
+}

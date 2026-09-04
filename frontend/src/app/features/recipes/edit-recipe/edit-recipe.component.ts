@@ -18,13 +18,13 @@ import {
   CUISINE_TYPES,
   DIET_TYPES,
   COURSE_TYPES,
+  VISIBILITY_TYPES,
 } from '@features/recipes/recipe.types';
 import { ErrorService } from '@core/errors/error.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CheckboxGroupComponent } from '@features/recipes/components/checkbox-group/checkbox-group.component';
-import { toBackendEnum } from '@shared/utils/enum-mapping.utils';
 import {
   InputNumberComponent,
   InputSelectComponent,
@@ -96,38 +96,43 @@ export class EditRecipeComponent {
   MAX_VARIANTS = COOKING_METHODS.length;
 
   cookingMethodOptions = COOKING_METHODS.map((method) => ({
-    value: toBackendEnum(method),
+    value: method,
     label: this.translate.instant(
-      `recipes.labels.cookingMethods.${method.toLowerCase().replaceAll(' ', '-')}`,
+      `recipes.labels.cookingMethods.${method.toLowerCase().replaceAll('_', '-')}`,
     ),
   })).sort((a, b) => a.label.localeCompare(b.label));
 
   courseOptions = COURSE_TYPES.map((course) => ({
-    value: toBackendEnum(course),
+    value: course,
     label: this.translate.instant(
-      `recipes.categories.courses.${course.toLowerCase().replaceAll(' ', '-')}`,
+      `recipes.attributes.courses.${course.toLowerCase().replaceAll('_', '-')}`,
     ),
   })).sort((a, b) => a.label.localeCompare(b.label));
 
   cuisineOptions = CUISINE_TYPES.map((cuisine) => ({
-    value: toBackendEnum(cuisine),
+    value: cuisine,
     label: this.translate.instant(
-      `recipes.categories.cuisines.${cuisine.toLowerCase().replaceAll(' ', '-')}`,
+      `recipes.attributes.cuisines.${cuisine.toLowerCase().replaceAll('_', '-')}`,
     ),
   })).sort((a, b) => a.label.localeCompare(b.label));
 
   dietTypeOptions = DIET_TYPES.map((dietType) => ({
-    value: toBackendEnum(dietType),
+    value: dietType,
     label: this.translate.instant(
-      `recipes.categories.dietTypes.${dietType.toLowerCase().replaceAll(' ', '-')}`,
+      `recipes.attributes.dietTypes.${dietType.toLowerCase().replaceAll('_', '-')}`,
     ),
   })).sort((a, b) => a.label.localeCompare(b.label));
 
   mealTypeOptions = MEAL_TYPES.map((mealType) => ({
-    value: toBackendEnum(mealType),
+    value: mealType,
     label: this.translate.instant(
-      `recipes.categories.mealTypes.${mealType.toLowerCase().replaceAll(' ', '-')}`,
+      `recipes.attributes.mealTypes.${mealType.toLowerCase().replaceAll('_', '-')}`,
     ),
+  })).sort((a, b) => a.label.localeCompare(b.label));
+
+  visibilityOptions = VISIBILITY_TYPES.map((visibility) => ({
+    value: visibility,
+    label: this.translate.instant(`recipes.visibility.${visibility.toLowerCase()}`),
   })).sort((a, b) => a.label.localeCompare(b.label));
 
   get variants(): FormArray<RecipeVariantForm> {

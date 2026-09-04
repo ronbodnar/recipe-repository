@@ -12,7 +12,7 @@ export const routes: Routes = [
   {
     path: 'app/users',
     canActivate: [authGuard],
-    loadChildren: () => import('./features/users/users.routes').then((m) => m.routes),
+    loadChildren: () => import('./features/users/user.routes').then((m) => m.routes),
   },
   {
     path: 'app/recipes',

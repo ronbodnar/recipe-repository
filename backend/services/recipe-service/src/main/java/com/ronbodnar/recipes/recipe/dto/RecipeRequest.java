@@ -1,9 +1,6 @@
 package com.ronbodnar.recipes.recipe.dto;
 
-import com.ronbodnar.recipes.recipe.domain.MealType;
-import com.ronbodnar.recipes.recipe.domain.Cuisine;
-import com.ronbodnar.recipes.recipe.domain.DietType;
-import com.ronbodnar.recipes.recipe.domain.Course;
+import com.ronbodnar.recipes.recipe.domain.*;
 
 import jakarta.validation.constraints.NotBlank;
 
@@ -15,6 +12,7 @@ public record RecipeRequest(
         UUID id,
         @NotBlank String title,
         String description,
+        RecipeVisibility visibility,
         List<UUID> imageIds,
         List<RecipeVariantRequest> variants,
         Set<Course> courses,
@@ -33,7 +31,7 @@ public record RecipeRequest(
     }
 
     // Needed to simplify testing setup
-    public RecipeRequest(UUID id, String title, String description, List<RecipeVariantRequest> variants) {
-        this(id, title, description, List.of(), variants, null, null, null, null);
+    public RecipeRequest(UUID id, String title, String description, RecipeVisibility visibility, List<RecipeVariantRequest> variants) {
+        this(id, title, description, visibility, List.of(), variants, null, null, null, null);
     }
 }

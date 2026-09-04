@@ -20,6 +20,10 @@ export class RecipeFormFactory {
         nonNullable: true,
       }),
       description: new FormControl(v?.description ?? '', { nonNullable: true }),
+      visibility: new FormControl(v?.visibility ?? 'FAMILY', {
+        validators: [Validators.required],
+        nonNullable: true,
+      }),
       imageIds: new FormControl<string[]>(v?.images ?? [], { nonNullable: true }),
       images: new FormControl<File[] | null>(null, {
         validators: [Validators.maxLength(2)],

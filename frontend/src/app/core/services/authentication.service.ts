@@ -1,10 +1,10 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
-import { UserAccount } from '@features/users/interfaces/user-account.interface';
 import { KEYCLOAK_EVENT_SIGNAL, KeycloakEventType } from 'keycloak-angular';
 import Keycloak from 'keycloak-js';
 import { environment } from '@env';
 import { FetchApiService } from './fetch-api.service';
 import { StorageService } from './storage.service';
+import { UserAccount } from '@features/users/user.types';
 
 @Injectable({
   providedIn: 'root',

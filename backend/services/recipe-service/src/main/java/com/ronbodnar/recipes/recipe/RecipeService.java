@@ -35,7 +35,7 @@ public class RecipeService {
             int paginationLength,
             String paginationSortOrder
     ) {
-        Page<Recipe> recipes = recipeRepository.findAllByAuthorIdWithImages(
+        Page<Recipe> recipes = recipeRepository.findAllByAuthorKeyWithImages(
                 authorId,
                 PageRequest.of(paginationStart, paginationLength)
         );
@@ -67,8 +67,8 @@ public class RecipeService {
     }
 
     @Transactional
-    public RecipeDetailsDTO handleCreateRequest(RecipeRequest recipeRequest, String authorId) {
-        log.info("Attempting create a recipe titled {} with {} images from author {}", recipeRequest.title(), recipeRequest.imageIds().size(), authorId);
+    public RecipeDetailsDTO handleCreateRequest(RecipeRequest recipeRequest, String authorSubject) {
+        log.info("Attempting create a recipe titled {} with {} images from author {}", recipeRequest.title(), recipeRequest.imageIds().size(), authorSubject);
 
         if (recipeRepository.existsByTitle(recipeRequest.title())) {
             log.info("Failed to create recipe: a recipe with title {} already exists!", recipeRequest.title());
@@ -79,7 +79,7 @@ public class RecipeService {
             );
         }
 
-        Recipe recipe = RecipeMapper.toEntity(recipeRequest, authorId);
+        Recipe recipe = RecipeMapper.toEntity(recipeRequest, authorSubject);
 
         Recipe saved = recipeRepository.saveAndFlush(recipe);
 

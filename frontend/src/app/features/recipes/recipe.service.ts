@@ -2,7 +2,6 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FetchApiService } from '@core/services/fetch-api.service';
 import { RecipeFormModel, RecipeFormRequest } from './edit-recipe/edit-recipe.types';
-import { toBackendEnum } from '@shared/utils/enum-mapping.utils';
 import { Recipe, RecipeSummary } from './recipe.types';
 import { PaginatedResponse } from '@core/interfaces/paginated-response.interface';
 
@@ -36,17 +35,18 @@ export class RecipeService {
       id: recipeData.id,
       title: recipeData.title,
       description: recipeData.description,
+      visibility: recipeData.visibility ?? 'FAMILY',
       imageIds: recipeData.imageIds,
-      cuisines: recipeData.cuisines.map((cuisine) => toBackendEnum(cuisine) ?? ''),
-      courses: recipeData.courses.map((course) => toBackendEnum(course) ?? ''),
-      mealTypes: recipeData.mealTypes.map((mealType) => toBackendEnum(mealType) ?? ''),
-      dietTypes: recipeData.dietTypes.map((dietType) => toBackendEnum(dietType) ?? ''),
+      cuisines: recipeData.cuisines,
+      courses: recipeData.courses,
+      mealTypes: recipeData.mealTypes,
+      dietTypes: recipeData.dietTypes,
       variants: recipeData.variants.map((variant) => ({
         name: variant.name ?? null,
         prepTime: variant.prepTime ?? 0,
         cookTime: variant.cookTime ?? 0,
         servings: variant.servings ?? 0,
-        cookingMethod: toBackendEnum(variant.cookingMethod) ?? null,
+        cookingMethod: variant.cookingMethod ?? null,
         ingredients: variant.ingredients === '' ? [] : variant.ingredients.split('\n'),
         instructions: variant.instructions === '' ? [] : variant.instructions.split('\n'),
         notes: variant.notes === '' ? [] : variant.notes.split('\n'),

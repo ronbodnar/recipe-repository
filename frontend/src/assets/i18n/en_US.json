@@ -60,7 +60,7 @@
     "secondaryCtaButton": "Log In"
   },
   "recipes": {
-    "categories": {
+    "attributes": {
       "courses": {
         "appetizer": "Appetizer",
         "main-course": "Main Course",
@@ -103,9 +103,15 @@
         "dessert": "Dessert"
       }
     },
+    "visibility": {
+      "public": "Public",
+      "private": "Private",
+      "family": "Family"
+    },
     "labels": {
       "title": "Title",
       "description": "Description",
+      "visibility": "Visibility",
       "variants": "Variants",
       "cookingMethod": "Cooking Method",
       "servings": "Servings",
@@ -114,7 +120,6 @@
       "ingredients": "Ingredients",
       "instructions": "Instructions",
       "notes": "Notes",
-      "categories": "Categories",
       "courses": "Courses",
       "cuisines": "Cuisines",
       "dietTypes": "Diet Types",
@@ -175,6 +180,11 @@
         "ingredients": "Enter ingredients, one per line",
         "instructions": "Enter instructions, one per line",
         "notes": "Enter notes or tips for the recipe"
+      },
+      "visibility": {
+        "familyDescription": "Visible to family members only. This applies to all families.",
+        "privateDescription": "Visible only to you.",
+        "publicDescription": "Visible to everyone."
       },
       "title": {
         "new": "Add Recipe",

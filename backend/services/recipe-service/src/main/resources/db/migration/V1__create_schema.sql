@@ -3,7 +3,10 @@
 --
 CREATE TABLE `recipe` (
     `id` binary(16) NOT NULL,
-    `author_id` VARCHAR(255) NOT NULL,
+    `author_subject` VARCHAR(255) NOT NULL,
+    `visibility` enum(
+        'PUBLIC','FAMILY','PRIVATE'
+    ) NOT NULL,
     `created_at` datetime(6) NOT NULL,
     `description` varchar(255) DEFAULT NULL,
     `title` varchar(255) NOT NULL,

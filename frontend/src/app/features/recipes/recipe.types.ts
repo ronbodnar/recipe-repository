@@ -2,8 +2,9 @@ export interface Recipe {
   id: string;
   title: string;
   description: string;
+  visibility: RecipeVisibility;
   images: string[];
-  authorId: string;
+  authorSubject: string;
   createdAt: Date;
   updatedAt: Date;
   courses: Course[];
@@ -33,57 +34,60 @@ export interface RecipeVariant {
 }
 
 export const COOKING_METHODS = [
-  'Air Fryer',
-  'Barbecue',
-  'Grill',
-  'Microwave',
-  'No-Cook',
-  'Oven',
-  'Pressure Cooker',
-  'Slow Cooker',
-  'Smoker',
-  'Stovetop',
+  'AIR_FRYER',
+  'BARBECUE',
+  'GRILL',
+  'MICROWAVE',
+  'NO_COOK',
+  'OVEN',
+  'PRESSURE_COOKER',
+  'SLOW_COOKER',
+  'SMOKER',
+  'STOVETOP',
 ] as const;
 
 export const COURSE_TYPES = [
-  'Appetizer',
-  'Main Course',
-  'Side Dish',
-  'Dessert',
-  'Beverage',
-  'Soup',
-  'Salad',
+  'APPETIZER',
+  'MAIN_COURSE',
+  'SIDE_DISH',
+  'DESSERT',
+  'BEVERAGE',
+  'SOUP',
+  'SALAD',
 ] as const;
 
 export const CUISINE_TYPES = [
-  'American',
-  'Italian',
-  'Mexican',
-  'Indian',
-  'Chinese',
-  'Japanese',
-  'French',
-  'German',
-  'Spanish',
-  'Greek',
-  'Korean',
-  'Salvadoran',
-  'Mediterranean',
+  'AMERICAN',
+  'ITALIAN',
+  'MEXICAN',
+  'INDIAN',
+  'CHINESE',
+  'JAPANESE',
+  'FRENCH',
+  'GERMAN',
+  'SPANISH',
+  'GREEK',
+  'KOREAN',
+  'SALVADORAN',
+  'MEDITERRANEAN',
 ] as const;
 
 export const DIET_TYPES = [
-  'Gluten-Free',
-  'Vegetarian',
-  'Dairy-Free',
-  'Keto',
-  'Vegan',
-  'Low Carb',
+  'GLUTEN_FREE',
+  'VEGETARIAN',
+  'DAIRY_FREE',
+  'KETO',
+  'VEGAN',
+  'LOW_CARB',
 ] as const;
 
-export const MEAL_TYPES = ['Breakfast', 'Brunch', 'Lunch', 'Dinner', 'Snack'] as const;
+export const MEAL_TYPES = ['BREAKFAST', 'BRUNCH', 'LUNCH', 'DINNER', 'SNACK'] as const;
+
+export const VISIBILITY_TYPES = ['PUBLIC', 'PRIVATE', 'FAMILY'] as const;
 
 export type CookingMethod = (typeof COOKING_METHODS)[number];
 export type Course = (typeof COURSE_TYPES)[number];
 export type Cuisine = (typeof CUISINE_TYPES)[number];
 export type DietType = (typeof DIET_TYPES)[number];
 export type MealType = (typeof MEAL_TYPES)[number];
+export type RecipeVisibility = (typeof VISIBILITY_TYPES)[number];

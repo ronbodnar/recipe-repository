@@ -13,9 +13,9 @@ import java.util.UUID;
 public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
 
     @Query("""
-        SELECT r FROM Recipe r LEFT JOIN FETCH r.imageIds WHERE r.authorId = :authorId
+        SELECT r FROM Recipe r LEFT JOIN FETCH r.imageIds WHERE r.authorSubject = :authorSubject
     """)
-    Page<Recipe> findAllByAuthorIdWithImages(@Param("authorId") String authorId, Pageable pageable);
+    Page<Recipe> findAllByAuthorKeyWithImages(@Param("authorSubject") String authorSubject, Pageable pageable);
 
     boolean existsByTitle(String title);
 

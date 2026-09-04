@@ -1,10 +1,7 @@
 package com.ronbodnar.recipes.recipe.dto;
 
 import com.ronbodnar.recipes.recipe.Recipe;
-import com.ronbodnar.recipes.recipe.domain.MealType;
-import com.ronbodnar.recipes.recipe.domain.Cuisine;
-import com.ronbodnar.recipes.recipe.domain.DietType;
-import com.ronbodnar.recipes.recipe.domain.Course;
+import com.ronbodnar.recipes.recipe.domain.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -13,7 +10,8 @@ import java.util.stream.Collectors;
 public record RecipeDetailsDTO(UUID id,
                                String title,
                                String description,
-                               String authorId,
+                               RecipeVisibility visibility,
+                               String authorSubject,
                                LocalDateTime createdAt,
                                LocalDateTime updatedAt,
                                List<UUID> images,
@@ -28,7 +26,8 @@ public record RecipeDetailsDTO(UUID id,
                 recipe.getId(),
                 recipe.getTitle(),
                 recipe.getDescription(),
-                recipe.getAuthorId(),
+                recipe.getVisibility(),
+                recipe.getAuthorSubject(),
                 recipe.getCreatedAt(),
                 recipe.getUpdatedAt(),
                 new ArrayList<>(recipe.getImageIds()),
