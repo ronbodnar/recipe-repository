@@ -57,7 +57,7 @@ export class SidebarComponent implements OnDestroy {
 
   readonly NAV_ITEMS = getNavItems();
 
-  private expandedSections = signal<string[]>(['accounting', 'crm', 'configuration']);
+  private expandedSections = signal<string[]>(['recipes', 'groups']);
 
   toggleSection(section: string) {
     this.expandedSections.update((current) =>

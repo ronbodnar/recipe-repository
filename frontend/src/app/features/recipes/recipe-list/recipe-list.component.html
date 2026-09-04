@@ -1,7 +1,7 @@
 @if (isLoading()) {
   <app-full-page-loader message="recipes.list.loading" />
 } @else {
-  <app-fluid-container [title]="!hasRecipes() ? '' : 'recipes.list.title'" [size]="'xl'">
+  <app-fluid-container [pageTitle]="!hasRecipes() ? '' : 'recipes.list.title'" [size]="'xl'">
     @if (!hasError() && !isLoading()) {
       <div actions class="flex gap-2">
         <app-button

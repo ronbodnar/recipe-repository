@@ -10,7 +10,7 @@ import { ButtonComponent } from '../button/button.component';
   styleUrl: './fluid-container.component.css',
 })
 export class FluidContainerComponent {
-  title = input<string>('');
+  pageTitle = input<string>('');
   size = input<'sm' | 'md' | 'lg' | 'xl' | 'full'>('md');
   backRoute = input<string | null>(null);
 

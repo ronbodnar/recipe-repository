@@ -2,6 +2,7 @@ export interface Recipe {
   id: string;
   title: string;
   description: string;
+  source: string;
   visibility: RecipeVisibility;
   images: string[];
   authorSubject: string;
@@ -27,7 +28,7 @@ export interface RecipeVariant {
   cookingMethod: CookingMethod;
   prepTime: number;
   cookTime: number;
-  servings: number;
+  yield: string | null;
   ingredients: string[];
   instructions: string[];
   notes: string[];

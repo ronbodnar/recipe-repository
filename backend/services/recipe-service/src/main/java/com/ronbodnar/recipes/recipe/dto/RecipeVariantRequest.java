@@ -9,7 +9,7 @@ public record RecipeVariantRequest(
         String name,
         int prepTime,
         int cookTime,
-        int servings,
+        String yield,
         @NotNull CookingMethod cookingMethod,
         List<String> ingredients,
         List<String> instructions,

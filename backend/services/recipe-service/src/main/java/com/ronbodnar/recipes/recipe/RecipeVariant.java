@@ -38,8 +38,8 @@ public class RecipeVariant {
     @Column(name = "cook_time")
     private int cookTime;
 
-    @Column(name = "num_servings")
-    private int servings;
+    @Column(name = "yield")
+    private String yield;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "cooking_method")
@@ -68,7 +68,7 @@ public class RecipeVariant {
         this.name = recipeVariantRequest.name();
         this.prepTime = recipeVariantRequest.prepTime();
         this.cookTime = recipeVariantRequest.cookTime();
-        this.servings = recipeVariantRequest.servings();
+        this.yield = recipeVariantRequest.yield();
         this.cookingMethod = recipeVariantRequest.cookingMethod();
         this.ingredients = recipeVariantRequest.ingredients();
         this.instructions = recipeVariantRequest.instructions();

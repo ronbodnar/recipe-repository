@@ -3,33 +3,33 @@
     <app-image-selector
       class="self-center mb-6"
       [rounded]="true"
-      label="Profile picture"
+      label="settings.profile.labels.profilePicture"
       [existingImages]="getExistingProfileImages()"
       (imagesSelected)="onProfileImagesSelected($event)"
       (imageRemoved)="onProfileImageRemoved($event)"
     />
 
     <nmf-text
-      label="Display Name"
+      label="settings.profile.labels.displayName"
       formControlName="displayName"
       [loading]="form().get('displayName')?.value === ''"
     />
 
     <nmf-text
       type="email"
-      label="Email"
+      label="settings.profile.labels.email"
       formControlName="email"
       [loading]="form().get('email')?.value === ''"
     />
 
     <nmf-text
-      label="Given Name"
+      label="settings.profile.labels.givenName"
       formControlName="givenName"
       [loading]="form().get('givenName')?.value === ''"
     />
 
     <nmf-text
-      label="Family Name"
+      label="settings.profile.labels.familyName"
       formControlName="familyName"
       [loading]="form().get('familyName')?.value === ''"
     />
@@ -37,15 +37,15 @@
     <div class="flex gap-6 items-center">
       <app-button
         type="submit"
-        label="Save"
+        label="settings.profile.saveButton"
         [disabled]="!form().dirty || status() === 'submitting'"
         [loading]="status() === 'submitting'"
       />
 
       @if (status() === 'success') {
-        <span class="text-success">Profile updated successfully!</span>
+        <span class="text-success">{{ 'settings.profile.updateSuccess' | translate }}</span>
       } @else if (status() === 'error') {
-        <span class="text-danger">Error updating profile.</span>
+        <span class="text-danger">{{ 'settings.profile.updateError' | translate }}</span>
       }
     </div>
   </div>

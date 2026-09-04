@@ -44,7 +44,10 @@
                 @for (child of navItem.children; track child.label; let i = $index) {
                   @if (hasRole(child.requiredRole)) {
                     <mat-list-item class="h-10! pl-12!" (click)="onNavigationClick(navItem, i)">
-                      <div class="font-medium text-text flex items-center gap-2">
+                      <div class="font-medium text-text text-sm flex items-center gap-2">
+                        @if (child.icon) {
+                          <mat-icon class="text-base!">{{ child.icon }}</mat-icon>
+                        }
                         {{ child.label | translate }}
                       </div>
                     </mat-list-item>

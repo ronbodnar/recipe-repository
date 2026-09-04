@@ -20,8 +20,13 @@
     }
   },
   "navigation": {
+    "recipes": "Recipes",
     "myRecipes": "My Recipes",
     "addRecipe": "Add Recipe",
+    "discoverRecipes": "Discover Recipes",
+    "groups": "Groups",
+    "myGroups": "My Groups",
+    "addGroup": "Add Group",
     "settings": "Settings",
     "logout": "Log Out"
   },
@@ -125,19 +130,22 @@
     "labels": {
       "title": "Title",
       "description": "Description",
+      "source": "Source",
       "visibility": "Visibility",
       "variants": "Variants",
       "cookingMethod": "Cooking Method",
-      "servings": "Servings",
+      "yield": "Yield",
       "prepTime": "Preparation Time",
       "cookTime": "Cooking Time",
       "ingredients": "Ingredients",
       "instructions": "Instructions",
       "notes": "Notes",
+      "attributes": "Attributes",
       "courses": "Courses",
       "cuisines": "Cuisines",
       "dietTypes": "Diets",
       "mealTypes": "Meals",
+      "minutes": "mins",
       "cookingMethods": {
         "air-fryer": "Air Fryer",
         "barbecue": "Barbecue",
@@ -196,9 +204,10 @@
       "placeholders": {
         "title": "Enter recipe title",
         "description": "Enter recipe description",
+        "source": "Enter recipe source if applicable (e.g., cookbook, website, family member)",
         "variantName": "Enter variant name (cooking method will be used as a fallback)",
         "cookingMethod": "Enter cooking method",
-        "servings": "Enter number of servings",
+        "yield": "Enter yield (e.g., 4 servings, 2 loaves)",
         "prepTime": "Enter preparation time in minutes",
         "cookTime": "Enter cooking time in minutes",
         "ingredients": "Enter ingredients, one per line",
@@ -250,7 +259,17 @@
     },
     "profile": {
       "title": "Profile Settings",
-      "label": "Profile"
+      "label": "Profile",
+      "saveButton": "Save Changes",
+      "successMessage": "Profile updated successfully.",
+      "errorMessage": "An error occurred while updating your profile. Please try again later.",
+      "labels": {
+        "profilePicture": "Profile Picture",
+        "displayName": "Display Name",
+        "email": "Email",
+        "givenName": "Given Name",
+        "familyName": "Family Name"
+      }
     },
     "security": {
       "title": "Security Settings",

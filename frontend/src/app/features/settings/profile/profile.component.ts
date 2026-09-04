@@ -14,10 +14,17 @@ import {
 } from '@shared/ui/image-selector/image-selector.component';
 import { ProfileFactory } from './profile.factory';
 import { ProfileFormModel } from './profile.types';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-settings-profile',
-  imports: [ReactiveFormsModule, InputTextComponent, ButtonComponent, ImageSelectorComponent],
+  imports: [
+    ReactiveFormsModule,
+    InputTextComponent,
+    ButtonComponent,
+    ImageSelectorComponent,
+    TranslatePipe,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './profile.component.html',
 })

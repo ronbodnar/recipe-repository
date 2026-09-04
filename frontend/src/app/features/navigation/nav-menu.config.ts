@@ -7,16 +7,43 @@ export const getNavItems = (): NavItem[] => {
 
   return [
     {
-      sectionName: 'my-recipes',
-      icon: 'menu_book',
-      label: 'navigation.myRecipes',
-      route: '/app/recipes/list',
+      sectionName: 'recipes',
+      icon: 'restaurant_menu',
+      label: 'navigation.recipes',
+      children: [
+        {
+          icon: 'menu_book',
+          label: 'navigation.myRecipes',
+          route: '/app/recipes/list',
+        },
+        {
+          icon: 'add',
+          label: 'navigation.addRecipe',
+          route: '/app/recipes/edit/new',
+        },
+        {
+          icon: 'explore',
+          label: 'navigation.discoverRecipes',
+          route: '/app/recipes/discover',
+        },
+      ],
     },
     {
-      sectionName: 'add-recipe',
-      icon: 'add',
-      label: 'navigation.addRecipe',
-      route: '/app/recipes/edit/new',
+      sectionName: 'groups',
+      icon: 'diversity_3',
+      label: 'navigation.groups',
+      children: [
+        {
+          icon: 'group',
+          label: 'navigation.myGroups',
+          route: '/app/groups/list',
+        },
+        {
+          icon: 'group_add',
+          label: 'navigation.addGroup',
+          route: '/app/groups/edit/new',
+        },
+      ],
     },
     {
       sectionName: 'settings',

@@ -20,6 +20,7 @@ export class RecipeFormFactory {
         nonNullable: true,
       }),
       description: new FormControl(v?.description ?? '', { nonNullable: true }),
+      source: new FormControl(v?.source ?? null, { nonNullable: true }),
       visibility: new FormControl(v?.visibility ?? 'FAMILY', {
         validators: [Validators.required],
         nonNullable: true,
@@ -51,7 +52,7 @@ export class RecipeFormFactory {
       }),
       prepTime: new FormControl(v?.prepTime ?? null),
       cookTime: new FormControl(v?.cookTime ?? null),
-      servings: new FormControl(v?.servings ?? null),
+      yield: new FormControl(v?.yield ?? null),
       ingredients: new FormControl(v?.ingredients?.join('\n') ?? '', { nonNullable: true }),
       instructions: new FormControl(v?.instructions?.join('\n') ?? '', { nonNullable: true }),
       notes: new FormControl(v?.notes?.join('\n') ?? '', { nonNullable: true }),

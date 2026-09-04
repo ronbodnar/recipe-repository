@@ -13,7 +13,7 @@
       icon="chevron_left"
       iconClassList="text-white!"
       [tooltip]="'ui.imageCarousel.previousButton' | translate"
-      [classList]="'absolute left-2 top-1/2 z-10 -translate-y-1/2'"
+      [classList]="'absolute -left-2 top-1/2 z-10 -translate-y-1/2'"
       (click)="previous()"
     />
 
@@ -22,12 +22,12 @@
       icon="chevron_right"
       iconClassList="text-white!"
       [tooltip]="'ui.imageCarousel.nextButton' | translate"
-      [classList]="'absolute right-2 top-1/2 z-10 -translate-y-1/2'"
+      [classList]="'absolute -right-2 top-1/2 z-10 -translate-y-1/2'"
       (click)="next()"
     />
 
     <span
-      class="absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-background/80 px-2 py-1 text-xs"
+      class="absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-background/80 px-2 py-0.5 text-xs"
       aria-live="polite"
     >
       {{ currentIndex() + 1 }} / {{ images().length }}

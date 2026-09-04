@@ -5,5 +5,5 @@ export interface NavItem {
   route?: string;
   onClick?: () => void;
   requiredRole?: string;
-  children?: { label: string; route: string; requiredRole?: string }[];
+  children?: { icon?: string; label: string; route: string; requiredRole?: string }[];
 }

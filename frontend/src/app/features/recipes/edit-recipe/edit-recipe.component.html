@@ -3,7 +3,7 @@
 } @else {
   <app-fluid-container
     size="lg"
-    [title]="loadedRecipeId() ? 'recipes.edit.title.existing' : 'recipes.edit.title.new'"
+    [pageTitle]="loadedRecipeId() ? 'recipes.edit.title.existing' : 'recipes.edit.title.new'"
     [backRoute]="
       loadedRecipeId() ? '/app/recipes/details/' + loadedRecipeId() : '/app/recipes/list'
     "
@@ -20,7 +20,7 @@
 }
 
 <ng-template #formTemplate>
-  <form [formGroup]="form()" (ngSubmit)="submit()">
+  <form class="mt-6" [formGroup]="form()" (ngSubmit)="submit()">
     <!-- Recipe Details -->
     <div class="col-span-3 flex flex-col min-w-0 gap-4">
       <nmf-text
@@ -34,6 +34,12 @@
         label="recipes.labels.description"
         placeholder="recipes.edit.placeholders.description"
         [rows]="4"
+      />
+
+      <nmf-text
+        formControlName="source"
+        label="recipes.labels.source"
+        placeholder="recipes.edit.placeholders.source"
       />
 
       <nmf-select
@@ -133,11 +139,10 @@
               [options]="cookingMethodOptions"
             />
 
-            <nmf-number
-              formControlName="servings"
-              label="recipes.labels.servings"
-              placeholder="recipes.edit.placeholders.servings"
-              [min]="0"
+            <nmf-text
+              formControlName="yield"
+              label="recipes.labels.yield"
+              placeholder="recipes.edit.placeholders.yield"
             />
 
             <nmf-number
@@ -182,33 +187,41 @@
         }
       </div>
 
-      <h3 class="mb-0">{{ 'recipes.labels.courses' | translate }}</h3>
-      <app-checkbox-group
-        [label]="'recipes.labels.courses' | translate"
-        [options]="courseOptions"
-        [control]="form().controls.courses"
-      />
+      <mat-accordion>
+        <mat-expansion-panel class="bg-background-alt!">
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{ 'recipes.labels.attributes' | translate }}</mat-panel-title>
+          </mat-expansion-panel-header>
 
-      <h3 class="mb-0">{{ 'recipes.labels.cuisines' | translate }}</h3>
-      <app-checkbox-group
-        [label]="'recipes.labels.cuisines' | translate"
-        [options]="cuisineOptions"
-        [control]="form().controls.cuisines"
-      />
+          <h3 class="text-sm">{{ 'recipes.labels.courses' | translate }}</h3>
+          <app-checkbox-group
+            [label]="'recipes.labels.courses' | translate"
+            [options]="courseOptions"
+            [control]="form().controls.courses"
+          />
 
-      <h3 class="mb-0">{{ 'recipes.labels.dietTypes' | translate }}</h3>
-      <app-checkbox-group
-        [label]="'recipes.labels.dietTypes' | translate"
-        [options]="dietTypeOptions"
-        [control]="form().controls.dietTypes"
-      />
+          <h3 class="text-sm">{{ 'recipes.labels.cuisines' | translate }}</h3>
+          <app-checkbox-group
+            [label]="'recipes.labels.cuisines' | translate"
+            [options]="cuisineOptions"
+            [control]="form().controls.cuisines"
+          />
 
-      <h3 class="mb-0">{{ 'recipes.labels.mealTypes' | translate }}</h3>
-      <app-checkbox-group
-        [label]="'recipes.labels.mealTypes' | translate"
-        [options]="mealTypeOptions"
-        [control]="form().controls.mealTypes"
-      />
+          <h3 class="text-sm">{{ 'recipes.labels.dietTypes' | translate }}</h3>
+          <app-checkbox-group
+            [label]="'recipes.labels.dietTypes' | translate"
+            [options]="dietTypeOptions"
+            [control]="form().controls.dietTypes"
+          />
+
+          <h3 class="text-sm">{{ 'recipes.labels.mealTypes' | translate }}</h3>
+          <app-checkbox-group
+            [label]="'recipes.labels.mealTypes' | translate"
+            [options]="mealTypeOptions"
+            [control]="form().controls.mealTypes"
+          />
+        </mat-expansion-panel>
+      </mat-accordion>
 
       <div class="flex justify-between items-center">
         <p class="text-sm text-danger">
