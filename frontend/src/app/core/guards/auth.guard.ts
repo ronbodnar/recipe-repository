@@ -1,7 +1,7 @@
 import { Router, CanActivateFn } from '@angular/router';
-import { AuthenticationService } from '../../services/authentication.service';
 import { inject } from '@angular/core';
 import { SnackbarService, SnackbarType } from '@shared/ui/snackbar.component';
+import { AuthenticationService } from '@core/services/authentication.service';
 
 export const authGuard: CanActivateFn = (route, _state) => {
   const router = inject(Router);
