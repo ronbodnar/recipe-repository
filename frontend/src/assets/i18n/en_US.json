@@ -182,7 +182,7 @@
         "notes": "Enter notes or tips for the recipe"
       },
       "visibility": {
-        "familyDescription": "Visible to family members only. This applies to all families.",
+        "familyDescription": "Visible to you and your family members only. This applies to any families you belong to.",
         "privateDescription": "Visible only to you.",
         "publicDescription": "Visible to everyone."
       },

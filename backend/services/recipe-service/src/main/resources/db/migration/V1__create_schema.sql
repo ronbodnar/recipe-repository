@@ -71,6 +71,7 @@ CREATE TABLE `recipe_image` (
     `id` bigint NOT NULL AUTO_INCREMENT,
     `recipe_id` binary(16) NOT NULL,
     `image_id` binary(16) NOT NULL,
+    `display_order` INT NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_recipe_image_recipe` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

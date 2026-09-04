@@ -65,6 +65,7 @@ public class Recipe {
             joinColumns = @JoinColumn(name = "recipe_id")
     )
     @Column(name = "image_id")
+    @OrderColumn(name = "display_order")
     private List<UUID> imageIds = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)

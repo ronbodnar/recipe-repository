@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Input,
+  input,
   OnDestroy,
-  Output,
+  output,
   signal,
 } from '@angular/core';
 import { ButtonComponent } from '@shared/ui/button/button.component';
@@ -33,21 +32,20 @@ interface SelectedImage {
   templateUrl: './image-selector.component.html',
 })
 export class ImageSelectorComponent implements OnDestroy {
-  @Input() size = 36;
-  @Input() existingImages: readonly ImageSelectorExistingImage[] = [];
-  @Input() multiple = false;
-  @Input() rounded = false;
-  @Input() label = 'Images';
+  size = input<number>(36);
+  existingImages = input<ImageSelectorExistingImage[]>([]);
+  multiple = input<boolean>(false);
+  rounded = input<boolean>(false);
+  label = input<string>('Images');
 
-  @Output() imagesSelected = new EventEmitter<File[]>();
-  @Output() imageRemoved = new EventEmitter<ImageSelectorRemovedImage>();
+  imagesSelected = output<File[]>();
+  imageRemoved = output<ImageSelectorRemovedImage>();
 
   private readonly _selectedImages = signal<SelectedImage[]>([]);
 
   readonly selectedImages = this._selectedImages.asReadonly();
 
   onImagesSelected(event: Event): void {
-    console.log('onImagesSelected event:', event);
     const input = event.target as HTMLInputElement;
     this.selectImages(input.files);
     input.value = '';
@@ -59,20 +57,19 @@ export class ImageSelectorComponent implements OnDestroy {
   }
 
   private selectImages(files: FileList | null): void {
-    console.log('selectImages called with files:', files);
     const imageFiles = Array.from(files ?? []).filter((file) => file.type.startsWith('image/'));
 
     if (!imageFiles.length) {
       return;
     }
 
-    const selectedFiles = this.multiple ? imageFiles : imageFiles.slice(0, 1);
+    const selectedFiles = this.multiple() ? imageFiles : imageFiles.slice(0, 1);
     const newImages = selectedFiles.map((file) => ({
       file,
       previewUrl: URL.createObjectURL(file),
     }));
 
-    if (this.multiple) {
+    if (this.multiple()) {
       this._selectedImages.update((images) => [...images, ...newImages]);
     } else {
       this.revokeSelectedImages();
