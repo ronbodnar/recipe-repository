@@ -5,6 +5,20 @@
     "copyright": "All rights reserved.",
     "loadingMessage": "Almost there..."
   },
+  "ui": {
+    "imageCarousel": {
+      "previousButton": "Previous Image",
+      "nextButton": "Next Image"
+    },
+    "imageSelector": {
+      "replace": "Replace",
+      "delete": "Delete",
+      "images": "Images",
+      "selectImagesButton": "Select {{label}}",
+      "replaceImage": "Replace Image",
+      "deleteImage": "Delete Image"
+    }
+  },
   "navigation": {
     "myRecipes": "My Recipes",
     "addRecipe": "Add Recipe",
@@ -122,8 +136,8 @@
       "notes": "Notes",
       "courses": "Courses",
       "cuisines": "Cuisines",
-      "dietTypes": "Diet Types",
-      "mealTypes": "Meal Types",
+      "dietTypes": "Diets",
+      "mealTypes": "Meals",
       "cookingMethods": {
         "air-fryer": "Air Fryer",
         "barbecue": "Barbecue",
@@ -141,6 +155,7 @@
       "title": "My Recipes",
       "viewRecipeButton": "View Recipe",
       "loading": "Loading your recipes...",
+      "errorLoading": "Error loading recipes. Please try again.",
       "noRecipes": {
         "title": "Welcome to {{appName}}!",
         "empty": "You haven't added any recipes yet.",
@@ -148,6 +163,10 @@
       }
     },
     "details": {
+      "author": "Author",
+      "createdAt": "Created",
+      "updatedAt": "Updated",
+      "profilePictureAlt": "{{author}}'s profile picture",
       "noDescription": "No description provided.",
       "noVariants": "No variants found. Edit the recipe to add variants and see ingredients, instructions, and notes.",
       "noIngredients": "No ingredients provided.",
@@ -160,6 +179,11 @@
       "deleteConfirmation": {
         "title": "Delete Recipe",
         "message": "Are you sure you want to delete this recipe?<br /><br /><strong>This action is permanent and cannot be undone.</strong>"
+      },
+      "notFound": {
+        "title": "Recipe Not Found",
+        "message": "The recipe you're looking for doesn't exist, may have been deleted, or you may not have permission to view it.",
+        "backAction": "Back to My Recipes"
       }
     },
     "edit": {

@@ -27,7 +27,7 @@
                 <img
                   class="size-full object-cover"
                   [src]="image.src"
-                  [alt]="image.alt ?? label()"
+                  [alt]="image.alt ?? label() | translate"
                 />
               } @else {
                 <span class="max-w-4/5 overflow-hidden wrap-anywhere text-xs">{{ image.id }}</span>
@@ -42,9 +42,9 @@
                 size="xs"
                 classList="!border-0 !bg-transparent !p-0 !text-sm !text-text underline"
                 (click)="fileInput.click()"
-                tooltip="Replace image"
+                [tooltip]="'ui.imageSelector.replaceImage' | translate"
               >
-                Replace
+                {{ 'ui.imageSelector.replace' | translate }}
               </app-button>
             }
             <app-button
@@ -53,9 +53,9 @@
               size="xs"
               classList="!border-0 !bg-transparent !p-0 !text-sm !text-danger underline"
               (click)="removeExistingImage(index)"
-              tooltip="Delete image"
+              [tooltip]="'ui.imageSelector.deleteImage' | translate"
             >
-              Delete
+              {{ 'ui.imageSelector.delete' | translate }}
             </app-button>
           </div>
         </div>
@@ -70,7 +70,7 @@
           [class.rounded-full]="rounded()"
           [style.height.rem]="size() / 4"
           [src]="image.previewUrl"
-          [alt]="'New ' + label()"
+          [alt]="label() | translate"
         />
         <div class="flex items-center justify-center gap-2">
           @if (!multiple()) {
@@ -80,9 +80,9 @@
               size="xs"
               classList="!border-0 !bg-transparent !p-0 !text-sm !text-text underline"
               (click)="fileInput.click()"
-              tooltip="Replace image"
+              [tooltip]="'ui.imageSelector.replaceImage' | translate"
             >
-              Replace
+              {{ 'ui.imageSelector.replace' | translate }}
             </app-button>
           }
           <app-button
@@ -91,9 +91,9 @@
             size="xs"
             classList="!border-0 !bg-transparent !p-0 !text-sm !text-danger underline"
             (click)="removeSelectedImage(index)"
-            tooltip="Delete image"
+            [tooltip]="'ui.imageSelector.deleteImage' | translate"
           >
-            Delete
+            {{ 'ui.imageSelector.delete' | translate }}
           </app-button>
         </div>
       </div>
@@ -112,7 +112,9 @@
               : '!size-full !rounded-md !border-2 !border-dashed !border-border/40'
           "
           (click)="fileInput.click()"
-          [tooltip]="'Select ' + label()"
+          [tooltip]="
+            'ui.imageSelector.selectImagesButton' | translate: { label: label() | translate }
+          "
         />
       </div>
     }

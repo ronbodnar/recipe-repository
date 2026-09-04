@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { LandingComponent } from './features/landing/landing.component';
-import { landingGuard } from '@core/guards/landing.guard';
-import { authGuard } from '@core/guards/auth.guard';
+import { landingGuard } from '@core/errors/guards/landing.guard';
+import { authGuard } from '@core/errors/guards/auth.guard';
 
 export const routes: Routes = [
   {

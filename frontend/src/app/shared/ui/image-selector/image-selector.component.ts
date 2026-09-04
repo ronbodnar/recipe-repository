@@ -6,6 +6,7 @@ import {
   output,
   signal,
 } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 
 export interface ImageSelectorExistingImage {
@@ -27,7 +28,7 @@ interface SelectedImage {
 
 @Component({
   selector: 'app-image-selector',
-  imports: [ButtonComponent],
+  imports: [ButtonComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './image-selector.component.html',
 })
@@ -36,7 +37,7 @@ export class ImageSelectorComponent implements OnDestroy {
   existingImages = input<ImageSelectorExistingImage[]>([]);
   multiple = input<boolean>(false);
   rounded = input<boolean>(false);
-  label = input<string>('Images');
+  label = input<string>('ui.imageSelector.images');
 
   imagesSelected = output<File[]>();
   imageRemoved = output<ImageSelectorRemovedImage>();

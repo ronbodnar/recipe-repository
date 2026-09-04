@@ -29,26 +29,13 @@
     @for (recipe of loadedRecipes(); track recipe.id) {
       <li>
         <article class="flex flex-col gap-4 p-4 bg-background-alt rounded mat-elevation-z4">
-          <div class="relative w-full h-60 xl:h-50 overflow-hidden rounded">
-            <div class="absolute inset-0 flex items-center justify-center bg-background/40">
-              <mat-icon class="text-text/50! text-5xl! size-12!">restaurant</mat-icon>
-            </div>
-
-            @if (recipe.imageIds.length) {
-              <img
-                [src]="imageService.getImageUrl(recipe.imageIds[0])"
-                class="relative w-full h-full object-cover"
-              />
-            }
+          <div class="h-60 w-full overflow-hidden rounded xl:h-50">
+            <app-image-carousel [images]="recipeImageUrls(recipe.imageIds)" [alt]="recipe.title" />
           </div>
 
           <h2 class="text-lg font-semibold my-0">
             {{ recipe.title }}
           </h2>
-
-          <p class="text-sm text-text/75 my-0 truncate">
-            {{ recipe.description || 'A simple family recipe.' }}
-          </p>
 
           <app-button
             color="background"
@@ -78,6 +65,6 @@
 
 <ng-template #errorTemplate>
   <section class="flex justify-center items-center h-64">
-    <span class="text-red-500">Error loading recipes. Please try again.</span>
+    <span class="text-red-500">{{ 'recipes.list.errorLoading' | translate }}</span>
   </section>
 </ng-template>

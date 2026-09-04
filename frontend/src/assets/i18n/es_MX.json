@@ -5,6 +5,20 @@
     "copyright": "Todos los derechos reservados.",
     "loadingMessage": "Casi terminamos..."
   },
+  "ui": {
+    "imageCarousel": {
+      "previousButton": "Imagen anterior",
+      "nextButton": "Imagen siguiente"
+    },
+    "imageSelector": {
+      "replace": "Reemplazar",
+      "delete": "Eliminar",
+      "images": "Imágenes",
+      "selectImagesButton": "Seleccionar {{label}}",
+      "replaceImage": "Reemplazar imagen",
+      "deleteImage": "Eliminar imagen"
+    }
+  },
   "navigation": {
     "myRecipes": "Mis recetas",
     "addRecipe": "Agregar receta",
@@ -48,19 +62,19 @@
     }
   },
   "landing": {
-    "subtitle": "Organiza tus recetas privadas para cocinar donde quieras.",
-    "comingSoon": "Próximamente en tu cocina...",
+    "subtitle": "Organiza tus recetas privadas para cocinar dondequiera que estés.",
+    "comingSoon": "Muy pronto en tu cocina...",
     "privateRecipeTitle": "Recetas privadas",
     "privateRecipeSubtitle": "Mantén tus recetas personales privadas y organizadas.",
-    "ingredientsTitle": "Encuentra ingredientes",
+    "ingredientsTitle": "Encuentra recetas por ingredientes",
     "ingredientsSubtitle": "Busca fácilmente recetas según los ingredientes que tengas.",
-    "scaleTitle": "Ajusta las recetas",
+    "scaleTitle": "Ajusta las porciones",
     "scaleSubtitle": "Ajusta las porciones sin tener que hacer las cuentas.",
     "primaryCtaButton": "Crear cuenta",
     "secondaryCtaButton": "Iniciar sesión"
   },
   "recipes": {
-    "categories": {
+    "attributes": {
       "courses": {
         "appetizer": "Entrada",
         "main-course": "Plato fuerte",
@@ -103,9 +117,15 @@
         "dessert": "Postre"
       }
     },
+    "visibility": {
+      "public": "Pública",
+      "private": "Privada",
+      "family": "Familiar"
+    },
     "labels": {
       "title": "Título",
       "description": "Descripción",
+      "visibility": "Visibilidad",
       "variants": "Variantes",
       "cookingMethod": "Método de cocción",
       "servings": "Porciones",
@@ -114,15 +134,14 @@
       "ingredients": "Ingredientes",
       "instructions": "Instrucciones",
       "notes": "Notas",
-      "categories": "Categorías",
       "courses": "Tipos de platillo",
       "cuisines": "Cocinas",
       "dietTypes": "Tipos de dieta",
-      "mealTypes": "Tipos de comida",
+      "mealTypes": "Comidas",
       "cookingMethods": {
         "air-fryer": "Freidora de aire",
-        "barbecue": "Barbacoa",
-        "grill": "Parrilla",
+        "barbecue": "Parrilla",
+        "grill": "Asador",
         "microwave": "Microondas",
         "no-cook": "Sin cocción",
         "oven": "Horno",
@@ -136,6 +155,7 @@
       "title": "Mis recetas",
       "viewRecipeButton": "Ver receta",
       "loading": "Cargando tus recetas...",
+      "errorLoading": "Ocurrió un error al cargar las recetas. Inténtalo de nuevo.",
       "noRecipes": {
         "title": "¡Bienvenido a {{appName}}!",
         "empty": "Aún no has agregado ninguna receta.",
@@ -143,11 +163,15 @@
       }
     },
     "details": {
+      "author": "Autor",
+      "createdAt": "Creada",
+      "updatedAt": "Actualizada",
+      "profilePictureAlt": "Foto de perfil de {{author}}",
       "noDescription": "No se proporcionó una descripción.",
-      "noVariants": "No se encontraron variantes. Edita la receta para agregar variantes y ver los ingredientes, las instrucciones y las notas.",
+      "noVariants": "No se encontraron variantes. Edita la receta para agregar variantes y ver los ingredientes, instrucciones y notas.",
       "noIngredients": "No se proporcionaron ingredientes.",
       "noInstructions": "No se proporcionaron instrucciones.",
-      "loading": "Cargando los detalles de la receta...",
+      "loading": "Cargando detalles de la receta...",
       "deleting": "Eliminando receta...",
       "deleteError": "No se pudo eliminar la receta. Inténtalo de nuevo más tarde.",
       "deleteButton": "Eliminar receta",
@@ -155,6 +179,11 @@
       "deleteConfirmation": {
         "title": "Eliminar receta",
         "message": "¿Estás seguro de que deseas eliminar esta receta?<br /><br /><strong>Esta acción es permanente y no se puede deshacer.</strong>"
+      },
+      "notFound": {
+        "title": "Receta no encontrada",
+        "message": "La receta que buscas no existe, pudo haber sido eliminada o es posible que no tengas permiso para verla.",
+        "backAction": "Volver a mis recetas"
       }
     },
     "edit": {
@@ -167,7 +196,7 @@
       "placeholders": {
         "title": "Ingresa el título de la receta",
         "description": "Ingresa la descripción de la receta",
-        "variantName": "Ingresa el nombre de la variante (el método de cocción se usará como nombre predeterminado)",
+        "variantName": "Ingresa el nombre de la variante (se usará el método de cocción como alternativa)",
         "cookingMethod": "Ingresa el método de cocción",
         "servings": "Ingresa el número de porciones",
         "prepTime": "Ingresa el tiempo de preparación en minutos",
@@ -175,6 +204,11 @@
         "ingredients": "Ingresa los ingredientes, uno por línea",
         "instructions": "Ingresa las instrucciones, una por línea",
         "notes": "Ingresa notas o consejos para la receta"
+      },
+      "visibility": {
+        "familyDescription": "Visible solo para ti y los miembros de tu familia. Esto aplica a cualquier familia a la que pertenezcas.",
+        "privateDescription": "Visible solo para ti.",
+        "publicDescription": "Visible para todos."
       },
       "title": {
         "new": "Agregar receta",
@@ -191,9 +225,10 @@
       "addButton": "Agregar receta",
       "addVariantButton": "Agregar variante",
       "noVariantsMessage": "No se han agregado variantes. Haz clic en el botón \"+ Agregar variante\" para comenzar.",
-      "noCookingMethodSelected": "No especificado",
-      "loading": "Cargando los detalles de la receta...",
-      "error": "Ocurrió un error al cargar la receta. Inténtalo de nuevo más tarde."
+      "noCookingMethodSelected": "Sin especificar",
+      "loading": "Cargando detalles de la receta...",
+      "errorLoading": "Ocurrió un error al cargar la receta. Inténtalo de nuevo más tarde.",
+      "errorSubmitting": "Ocurrió un error al guardar la receta. Inténtalo de nuevo más tarde."
     }
   },
   "settings": {
@@ -209,8 +244,8 @@
       },
       "languageLabel": "Idioma",
       "languageOptions": {
-        "en_US": "Inglés (English)",
-        "es_MX": "Español"
+        "en_US": "Inglés",
+        "es_MX": "Español (Español)"
       }
     },
     "profile": {
@@ -227,25 +262,25 @@
     "serverUnavailable": "El servidor no está disponible. Inténtalo de nuevo más tarde.",
     "networkTimeout": "La solicitud tardó demasiado. Inténtalo de nuevo más tarde.",
     "internalError": "Ocurrió un error interno del servidor.",
-    "messageNotReadable": "No se pudo leer el mensaje de la solicitud.",
-    "messageNotWritable": "No se pudo escribir la respuesta.",
-    "validationFailed": "La validación falló. Verifica los datos ingresados.",
+    "messageNotReadable": "No se pudo leer la solicitud.",
+    "messageNotWritable": "No se pudo generar la respuesta.",
+    "validationFailed": "La validación falló. Revisa los datos ingresados.",
     "notAuthorized": "No tienes autorización para acceder a este recurso.",
     "invalidAccessToken": "Tu sesión ha expirado. Inicia sesión nuevamente.",
     "invalidRefreshToken": "Tu sesión ha expirado. Inicia sesión nuevamente.",
     "invalidCredentials": "El nombre de usuario o la contraseña no son válidos.",
     "authUserBlocked": "Tu cuenta ha sido bloqueada.",
     "authUserLocked": "Tu cuenta está bloqueada.",
-    "authUserNotFound": "No se encontró el usuario.",
+    "authUserNotFound": "Usuario no encontrado.",
     "missingParameters": "Faltan parámetros obligatorios.",
     "invalidDateFormat": "El formato de fecha no es válido.",
-    "userNotFound": "No se encontró el usuario.",
+    "userNotFound": "Usuario no encontrado.",
     "duplicateEmail": "Este correo electrónico ya está en uso.",
     "duplicateUsername": "Este nombre de usuario ya está en uso.",
     "passwordMismatch": "Las contraseñas no coinciden.",
     "incorrectPassword": "La contraseña es incorrecta.",
     "incorrectNewPassword": "La nueva contraseña no es válida.",
-    "invalidEmail": "La dirección de correo electrónico no es válida.",
+    "invalidEmail": "El correo electrónico no es válido.",
     "fieldMessage": "Hay errores en uno o más campos. Corrígelos e inténtalo de nuevo.",
     "fields": {
       "required": "Este campo es obligatorio.",
@@ -256,7 +291,9 @@
       "pattern": "Formato no válido.",
       "email": "Formato de correo electrónico no válido.",
       "invalid": "Valor no válido.",
-      "duplicateRecipe": "Ya existe una receta con este nombre."
+      "duplicateRecipe": "Ya existe una receta con este nombre.",
+      "emailAlreadyInUse": "Este correo electrónico ya está en uso.",
+      "displayNameAlreadyInUse": "Este nombre para mostrar ya está en uso."
     }
   }
 }

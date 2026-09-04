@@ -9,6 +9,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FullPageLoaderComponent } from '@shared/ui/full-page-loader.component';
 import { RecipeService } from '../recipe.service';
 import { ImageService } from '@core/services/image.service';
+import { ImageCarouselComponent } from '@shared/ui/image-carousel/image-carousel.component';
 
 @Component({
   selector: 'app-recipe-list',
@@ -20,6 +21,7 @@ import { ImageService } from '@core/services/image.service';
     ButtonComponent,
     TranslatePipe,
     FullPageLoaderComponent,
+    ImageCarouselComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './recipe-list.component.html',
@@ -37,6 +39,9 @@ export class RecipeListComponent {
   readonly loadedRecipes = this._loadedRecipes.asReadonly();
   readonly isLoading = this._isLoading.asReadonly();
   readonly hasError = this._hasError.asReadonly();
+
+  readonly recipeImageUrls = (imageIds: string[]) =>
+    imageIds.map((imageId) => this.imageService.getImageUrl(imageId));
 
   readonly appName = this.translate.instant('app.name');
 

@@ -1,0 +1,36 @@
+<div class="relative size-full overflow-hidden bg-background/40">
+  @if (currentImage(); as image) {
+    <img class="size-full object-cover" [src]="image" [alt]="alt() | translate" />
+  } @else {
+    <div class="flex size-full items-center justify-center">
+      <mat-icon class="text-5xl! size-12! text-text/50!">restaurant</mat-icon>
+    </div>
+  }
+
+  @if (hasMultipleImages()) {
+    <app-button
+      color="transparent"
+      icon="chevron_left"
+      iconClassList="text-white!"
+      [tooltip]="'ui.imageCarousel.previousButton' | translate"
+      [classList]="'absolute left-2 top-1/2 z-10 -translate-y-1/2'"
+      (click)="previous()"
+    />
+
+    <app-button
+      color="transparent"
+      icon="chevron_right"
+      iconClassList="text-white!"
+      [tooltip]="'ui.imageCarousel.nextButton' | translate"
+      [classList]="'absolute right-2 top-1/2 z-10 -translate-y-1/2'"
+      (click)="next()"
+    />
+
+    <span
+      class="absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-background/80 px-2 py-1 text-xs"
+      aria-live="polite"
+    >
+      {{ currentIndex() + 1 }} / {{ images().length }}
+    </span>
+  }
+</div>

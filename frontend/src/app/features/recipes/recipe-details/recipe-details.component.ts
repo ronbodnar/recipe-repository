@@ -16,6 +16,7 @@ import { UserService } from '@features/users/user.service';
 import { UserAccountSummary } from '@features/users/user.types';
 import { AuthenticationService } from '@core/services/authentication.service';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ImageCarouselComponent } from '@shared/ui/image-carousel/image-carousel.component';
 
 @Component({
   selector: 'app-recipe-details',
@@ -29,6 +30,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     DatePipe,
     LowerCasePipe,
     MatTabsModule,
+    ImageCarouselComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './recipe-details.component.html',
@@ -78,22 +80,22 @@ export class RecipeDetailsComponent {
 
     return [
       {
-        label: 'Cuisine',
+        label: 'recipes.labels.cuisines',
         icon: 'public',
         values: translateAndSort(recipe.cuisines, 'cuisines'),
       },
       {
-        label: 'Course',
+        label: 'recipes.labels.courses',
         icon: 'restaurant',
         values: translateAndSort(recipe.courses, 'courses'),
       },
       {
-        label: 'Meal',
+        label: 'recipes.labels.mealTypes',
         icon: 'wb_sunny',
         values: translateAndSort(recipe.mealTypes, 'mealTypes'),
       },
       {
-        label: 'Dietary',
+        label: 'recipes.labels.dietTypes',
         icon: 'eco',
         values: translateAndSort(recipe.dietTypes, 'dietTypes'),
       },
@@ -117,13 +119,6 @@ export class RecipeDetailsComponent {
     this.recipeService.loadRecipe(id).subscribe({
       next: (recipe) => {
         console.log('Fetched recipe detail:', recipe);
-
-        /*         const recipeSortedVariants = recipe.variants.sort((a, b) => {
-          const methodA = a.name ?? a.cookingMethod ?? '';
-          const methodB = b.name ?? b.cookingMethod ?? '';
-          return methodA.localeCompare(methodB);
-        });
-        recipe.variants = recipeSortedVariants; */
 
         if (recipe.variants.length > 0) {
           this._selectedVariantIndex.set(0);
