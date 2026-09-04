@@ -89,7 +89,8 @@ CREATE TABLE `recipe_variant` (
     `prep_time` int DEFAULT NULL,
     `num_servings` int DEFAULT NULL,
     `total_time` int DEFAULT NULL,
-    `recipe_id` binary(16) DEFAULT NULL,
+    `recipe_id` binary(16) NOT NULL,
+    `display_order` int DEFAULT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_recipe_variant_recipe` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

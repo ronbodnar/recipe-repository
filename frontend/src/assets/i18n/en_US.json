@@ -201,7 +201,7 @@
       "addButton": "Add Recipe",
       "addVariantButton": "Add Variant",
       "noVariantsMessage": "No variants added. Click the \"+ Add Variant\" button to get started.",
-      "noCookingMethodSelected": "No Type Selected",
+      "noCookingMethodSelected": "Unspecified",
       "loading": "Loading recipe details...",
       "errorLoading": "An error occurred while loading the recipe. Please try again later.",
       "errorSubmitting": "An error occurred while submitting the recipe. Please try again later."

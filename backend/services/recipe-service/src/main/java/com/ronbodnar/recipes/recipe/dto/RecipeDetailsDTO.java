@@ -15,7 +15,7 @@ public record RecipeDetailsDTO(UUID id,
                                LocalDateTime createdAt,
                                LocalDateTime updatedAt,
                                List<UUID> images,
-                               Set<RecipeVariantDTO> variants,
+                               List<RecipeVariantDTO> variants,
                                Set<Cuisine> cuisines,
                                Set<MealType> mealTypes,
                                Set<Course> courses,
@@ -30,14 +30,14 @@ public record RecipeDetailsDTO(UUID id,
                 recipe.getAuthorSubject(),
                 recipe.getCreatedAt(),
                 recipe.getUpdatedAt(),
-                new ArrayList<>(recipe.getImageIds()),
+                List.copyOf(recipe.getImageIds()),
                 recipe.getVariants().stream()
                         .map(RecipeVariantDTO::fromEntity)
-                        .collect(Collectors.toSet()),
-                new HashSet<>(recipe.getCuisines()),
-                new HashSet<>(recipe.getMealTypes()),
-                new HashSet<>(recipe.getCourses()),
-                new HashSet<>(recipe.getDietTypes())
+                        .toList(),
+                Set.copyOf(recipe.getCuisines()),
+                Set.copyOf(recipe.getMealTypes()),
+                Set.copyOf(recipe.getCourses()),
+                Set.copyOf(recipe.getDietTypes())
         );
     }
 }

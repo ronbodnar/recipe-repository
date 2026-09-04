@@ -25,6 +25,10 @@ public class RecipeVariant {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @ManyToOne
+    @JoinColumn(name = "recipe_id", nullable = false)
+    private Recipe recipe;
+
     @Column(name = "name")
     private String name;
 

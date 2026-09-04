@@ -75,9 +75,14 @@
       <h3>{{ 'recipes.labels.variants' | translate }}</h3>
 
       <div class="flex flex-col xl:flex-row gap-4">
-        <div class="flex flex-col gap-4 basis-1/4 border border-border/40 rounded-md p-4">
+        <div
+          cdkDropList
+          class="flex flex-col gap-4 basis-1/4 border border-border/40 rounded-md p-4"
+          (cdkDropListDropped)="dropVariant($event)"
+        >
           @for (variant of variants.controls; track variant; let index = $index) {
             <div
+              cdkDrag
               class="relative flex items-center justify-between rounded-md px-4 py-2 gap-4 cursor-pointer"
               [ngClass]="{
                 'bg-background-alt': activeVariantIndex() === index,
@@ -88,6 +93,8 @@
               @if (validated() && variants.at(index).invalid) {
                 <mat-icon class="text-danger! absolute -left-3">error</mat-icon>
               }
+
+              <mat-icon cdkDragHandle>drag_indicator</mat-icon>
 
               <span>
                 {{ variant.get('name')?.value ?? (getVariantLabel(index) | translate) }}

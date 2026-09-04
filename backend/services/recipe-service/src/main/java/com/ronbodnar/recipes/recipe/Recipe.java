@@ -52,10 +52,11 @@ public class Recipe {
     private LocalDateTime updatedAt;
 
     @OneToMany(
+            mappedBy = "recipe",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @JoinColumn(name = "recipe_id")
+    @OrderColumn(name = "display_order")
     private List<RecipeVariant> variants = new ArrayList<>();
 
     @ElementCollection
@@ -104,6 +105,7 @@ public class Recipe {
 
     public void addVariant(RecipeVariant recipeVariant) {
         if (recipeVariant.getId() == null) {
+            recipeVariant.setRecipe(this);
             variants.add(recipeVariant);
         }
     }
@@ -139,7 +141,7 @@ public class Recipe {
 
         if (patchVariants != null && !patchVariants.isEmpty()) {
             this.variants.clear();
-            this.variants.addAll(patchVariants);
+            patchVariants.forEach(this::addVariant);
         }
 
         if (patch.cuisines() != null && !patch.cuisines().isEmpty()) {

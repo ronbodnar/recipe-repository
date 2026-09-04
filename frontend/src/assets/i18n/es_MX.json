@@ -191,7 +191,7 @@
       "addButton": "Agregar receta",
       "addVariantButton": "Agregar variante",
       "noVariantsMessage": "No se han agregado variantes. Haz clic en el botón \"+ Agregar variante\" para comenzar.",
-      "noCookingMethodSelected": "No se seleccionó ningún tipo",
+      "noCookingMethodSelected": "No especificado",
       "loading": "Cargando los detalles de la receta...",
       "error": "Ocurrió un error al cargar la receta. Inténtalo de nuevo más tarde."
     }

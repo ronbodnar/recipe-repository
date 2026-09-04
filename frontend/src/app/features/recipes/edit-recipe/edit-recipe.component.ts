@@ -4,6 +4,13 @@ import { FormArray, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
+import {
+  CdkDrag,
+  CdkDragHandle,
+  CdkDragDrop,
+  CdkDropList,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { MediaService } from '@core/services/media.service';
 import { FluidContainerComponent } from '@shared/ui/fluid-container/fluid-container.component';
 import { ButtonComponent } from '@shared/ui/button/button.component';
@@ -51,6 +58,9 @@ import {
     MatIconModule,
     MatButtonModule,
     MatTabsModule,
+    CdkDropList,
+    CdkDrag,
+    CdkDragHandle,
     InputTextComponent,
     InputTextareaComponent,
     InputNumberComponent,
@@ -221,6 +231,11 @@ export class EditRecipeComponent {
     } else {
       this.saveRecipe(request);
     }
+  }
+
+  dropVariant(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.variants.controls, event.previousIndex, event.currentIndex);
+    this.activeVariantIndex.set(event.currentIndex);
   }
 
   private loadRecipe(recipeId: string) {

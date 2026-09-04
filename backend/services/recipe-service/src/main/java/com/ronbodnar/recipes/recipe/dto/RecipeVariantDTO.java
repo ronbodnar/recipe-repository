@@ -24,9 +24,9 @@ public record RecipeVariantDTO(UUID id,
                 recipeVariant.getCookTime(),
                 recipeVariant.getServings(),
                 recipeVariant.getCookingMethod(),
-                recipeVariant.getIngredients(),
-                recipeVariant.getInstructions(),
-                recipeVariant.getNotes()
+                List.copyOf(recipeVariant.getIngredients()),
+                List.copyOf(recipeVariant.getInstructions()),
+                List.copyOf(recipeVariant.getNotes())
         );
     }
 
