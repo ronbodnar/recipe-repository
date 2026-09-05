@@ -107,7 +107,7 @@ class RecipeServiceTests {
                 UUID.randomUUID(),
                 "Test recipe",
                 "Test description",
-                RecipeVisibility.FAMILY,
+                RecipeVisibility.GROUP,
                 List.of()
         );
 

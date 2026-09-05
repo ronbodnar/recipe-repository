@@ -2,15 +2,18 @@ package com.ronbodnar.recipes.recipe.dto;
 
 import com.ronbodnar.recipes.recipe.RecipeVariant;
 import com.ronbodnar.recipes.recipe.domain.CookingMethod;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 import java.util.UUID;
 
 public record RecipeVariantDTO(UUID id,
-                               String name,
-                               Integer prepTime,
-                               Integer cookTime,
-                               String yield,
+                               @Size(max = 50) String name,
+                               @Min(0) @Max(2880) Integer prepTime,
+                               @Min(0) @Max(2880) Integer cookTime,
+                               @Size(max = 50) String yield,
                                CookingMethod cookingMethod,
                                List<String> ingredients,
                                List<String> instructions,

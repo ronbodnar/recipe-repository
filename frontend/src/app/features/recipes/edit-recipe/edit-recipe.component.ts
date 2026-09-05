@@ -46,6 +46,9 @@ import {
   ImageSelectorExistingImage,
   ImageSelectorRemovedImage,
 } from '@shared/ui/image-selector/image-selector.component';
+import { RecipeNotFoundComponent } from '../components/recipe-not-found/recipe-not-found.component';
+import { redirectTo } from '@shared/utils/redirect-to';
+import { DialogService } from '@shared/ui/dialog/dialog.service';
 
 @Component({
   selector: 'app-edit-recipe',
@@ -71,6 +74,7 @@ import {
     CheckboxGroupComponent,
     FullPageLoaderComponent,
     ImageSelectorComponent,
+    RecipeNotFoundComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './edit-recipe.component.html',
@@ -79,6 +83,7 @@ import {
 export class EditRecipeComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly dialogService = inject(DialogService);
   private readonly translate = inject(TranslateService);
   private readonly mediaService = inject(MediaService);
   private readonly recipeService = inject(RecipeService);
@@ -157,6 +162,25 @@ export class EditRecipeComponent {
       : `recipes.edit.noCookingMethodSelected`;
   }
 
+  promptConfirmDeleteVariant(index: number) {
+    const cookingMethod = this.variants.at(index).get('cookingMethod')?.value;
+    const name = this.variants.at(index).get('name')?.value;
+    if (cookingMethod === null && (name == null || name.length === 0)) {
+      this.removeVariant(index);
+      return;
+    }
+    // Bug: when there is only 1 variant and the dialog shows to delete it, it does not trigger change detection.
+    this.dialogService.openConfirmationDialog(
+      'recipes.edit.deleteVariantConfirmation.title',
+      'recipes.edit.deleteVariantConfirmation.message',
+      (response: boolean) => {
+        if (response) {
+          this.removeVariant(index);
+        }
+      },
+    );
+  }
+
   removeVariant(index: number) {
     this.variants.removeAt(index);
     this.activeVariantIndex.set(0);
@@ -208,6 +232,7 @@ export class EditRecipeComponent {
 
     if (this.form().invalid) {
       this.form().markAllAsTouched();
+      console.log('Form is invalid, cannot submit:', this.form());
       return;
     }
 
@@ -238,6 +263,10 @@ export class EditRecipeComponent {
     this.activeVariantIndex.set(event.currentIndex);
   }
 
+  redirectToNew() {
+    redirectTo(this.router, '/app/recipes/edit/new');
+  }
+
   private loadRecipe(recipeId: string) {
     this.loadedRecipeId.set(recipeId);
     this.recipeService.loadRecipe(recipeId!).subscribe({
@@ -249,7 +278,6 @@ export class EditRecipeComponent {
       error: (error: ApiError) => {
         console.error('Error loading recipe:', error);
         this.status.set('error');
-        this.loading.set(false);
       },
     });
   }

@@ -5,13 +5,14 @@ CREATE TABLE `recipe` (
     `id` binary(16) NOT NULL,
     `author_subject` VARCHAR(255) NOT NULL,
     `visibility` enum(
-        'PUBLIC','FAMILY','PRIVATE'
+        'PUBLIC','GROUP','PRIVATE'
     ) NOT NULL,
     `created_at` datetime(6) NOT NULL,
     `description` varchar(255) DEFAULT NULL,
-    `title` varchar(255) NOT NULL,
+    `title` varchar(50) NOT NULL,
     `updated_at` datetime(6) DEFAULT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    CONSTRAINT `chk_recipe_title_length` CHECK (CHAR_LENGTH(`title`) >= 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -81,19 +82,21 @@ CREATE TABLE `recipe_image` (
 --
 CREATE TABLE `recipe_variant` (
     `id` binary(16) NOT NULL,
-    `name` VARCHAR(255) DEFAULT NULL,
+    `name` VARCHAR(50) DEFAULT NULL,
     `cook_time` int DEFAULT NULL,
     `cooking_method` enum(
         'AIR_FRYER','BARBECUE','GRILL','MICROWAVE','NO_COOK','OVEN',
         'PRESSURE_COOKER','SLOW_COOKER','SMOKER','STOVETOP'
     ) NOT NULL,
     `prep_time` int DEFAULT NULL,
-    `num_servings` int DEFAULT NULL,
+    `yield` VARCHAR(50) DEFAULT NULL,
     `total_time` int DEFAULT NULL,
     `recipe_id` binary(16) NOT NULL,
     `display_order` int DEFAULT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `fk_recipe_variant_recipe` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`)
+    CONSTRAINT `fk_recipe_variant_recipe` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`),
+    CONSTRAINT `chk_recipe_variant_name_length` CHECK (CHAR_LENGTH(`name`) >= 0),
+    CONSTRAINT `chk_recipe_variant_yield_length` CHECK (CHAR_LENGTH(`yield`) >= 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -101,8 +104,8 @@ CREATE TABLE `recipe_variant` (
 --
 CREATE TABLE `recipe_variant_ingredient` (
     `recipe_variant_id` BINARY(16) NOT NULL,
-    `display_order` INT NOT NULL,
     `text` TEXT NOT NULL,
+    `display_order` INT NOT NULL,
     PRIMARY KEY (`recipe_variant_id`, `display_order`),
     CONSTRAINT `fk_recipe_variant_ingredient_variant`
     FOREIGN KEY (`recipe_variant_id`)
@@ -114,8 +117,8 @@ CREATE TABLE `recipe_variant_ingredient` (
 --
 CREATE TABLE `recipe_variant_instruction` (
     `recipe_variant_id` BINARY(16) NOT NULL,
-    `display_order` INT NOT NULL,
     `text` TEXT NOT NULL,
+    `display_order` INT NOT NULL,
     PRIMARY KEY (`recipe_variant_id`, `display_order`),
     CONSTRAINT `fk_recipe_variant_instruction_variant`
     FOREIGN KEY (`recipe_variant_id`)
@@ -127,8 +130,8 @@ CREATE TABLE `recipe_variant_instruction` (
 --
 CREATE TABLE `recipe_variant_note` (
     `recipe_variant_id` BINARY(16) NOT NULL,
-    `display_order` INT NOT NULL,
     `text` TEXT NOT NULL,
+    `display_order` INT NOT NULL,
     PRIMARY KEY (`recipe_variant_id`, `display_order`),
     CONSTRAINT `fk_recipe_variant_note_variant`
     FOREIGN KEY (`recipe_variant_id`)

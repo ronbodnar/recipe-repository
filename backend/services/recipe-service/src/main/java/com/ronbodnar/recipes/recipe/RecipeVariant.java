@@ -4,8 +4,11 @@ import com.ronbodnar.recipes.recipe.domain.CookingMethod;
 import com.ronbodnar.recipes.recipe.dto.RecipeVariantRequest;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,15 +33,21 @@ public class RecipeVariant {
     private Recipe recipe;
 
     @Column(name = "name")
+    @Size(max = 50)
     private String name;
 
     @Column(name = "prep_time")
+    @Min(0)
+    @Max(2880)
     private int prepTime;
 
     @Column(name = "cook_time")
+    @Min(0)
+    @Max(2880)
     private int cookTime;
 
     @Column(name = "yield")
+    @Size(max = 50)
     private String yield;
 
     @Enumerated(EnumType.STRING)

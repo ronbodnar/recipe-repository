@@ -36,7 +36,7 @@ export class RecipeService {
       title: recipeData.title,
       description: recipeData.description,
       source: recipeData.source ?? null,
-      visibility: recipeData.visibility ?? 'FAMILY',
+      visibility: recipeData.visibility ?? 'GROUP',
       imageIds: recipeData.imageIds,
       cuisines: recipeData.cuisines,
       courses: recipeData.courses,

@@ -3,6 +3,7 @@ package com.ronbodnar.recipes.recipe.dto;
 import com.ronbodnar.recipes.recipe.domain.*;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 import java.util.Set;
@@ -10,7 +11,7 @@ import java.util.UUID;
 
 public record RecipeRequest(
         UUID id,
-        @NotBlank String title,
+        @NotBlank @Size(max = 50) String title,
         String description,
         RecipeVisibility visibility,
         List<UUID> imageIds,

@@ -17,6 +17,7 @@ import { UserAccountSummary } from '@features/users/user.types';
 import { AuthenticationService } from '@core/services/authentication.service';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ImageCarouselComponent } from '@shared/ui/image-carousel/image-carousel.component';
+import { RecipeNotFoundComponent } from '../components/recipe-not-found/recipe-not-found.component';
 
 @Component({
   selector: 'app-recipe-details',
@@ -31,6 +32,7 @@ import { ImageCarouselComponent } from '@shared/ui/image-carousel/image-carousel
     LowerCasePipe,
     MatTabsModule,
     ImageCarouselComponent,
+    RecipeNotFoundComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './recipe-details.component.html',

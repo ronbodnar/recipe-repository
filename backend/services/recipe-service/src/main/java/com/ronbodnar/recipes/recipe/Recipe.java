@@ -6,6 +6,7 @@ import com.ronbodnar.recipes.recipe.dto.RecipeRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +32,7 @@ public class Recipe {
 
     @Column(name = "title", nullable = false)
     @NotBlank
+    @Size(max = 50)
     private String title;
 
     @Column(name = "description")

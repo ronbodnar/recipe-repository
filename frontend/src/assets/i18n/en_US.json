@@ -79,6 +79,10 @@
     "secondaryCtaButton": "Log In"
   },
   "recipes": {
+    "notFound": {
+      "title": "Recipe Not Found",
+      "message": "The recipe you're looking for doesn't exist, may have been deleted, or you may not have permission to view it."
+    },
     "attributes": {
       "courses": {
         "appetizer": "Appetizer",
@@ -125,7 +129,7 @@
     "visibility": {
       "public": "Public",
       "private": "Private",
-      "family": "Family"
+      "group": "Group"
     },
     "labels": {
       "title": "Title",
@@ -189,8 +193,6 @@
         "message": "Are you sure you want to delete this recipe?<br /><br /><strong>This action is permanent and cannot be undone.</strong>"
       },
       "notFound": {
-        "title": "Recipe Not Found",
-        "message": "The recipe you're looking for doesn't exist, may have been deleted, or you may not have permission to view it.",
         "backAction": "Back to My Recipes"
       }
     },
@@ -215,7 +217,7 @@
         "notes": "Enter notes or tips for the recipe"
       },
       "visibility": {
-        "familyDescription": "Visible to you and your family members only. This applies to any families you belong to.",
+        "groupDescription": "Visible to you and your group members only. This applies to any groups you belong to.",
         "privateDescription": "Visible only to you.",
         "publicDescription": "Visible to everyone."
       },
@@ -230,6 +232,16 @@
       "submitButton": {
         "new": "Add Recipe",
         "existing": "Update Recipe"
+      },
+      "notFound": {
+        "backAction": "Create a New Recipe"
+      },
+      "errors": {
+        "maxImages": "You can only upload up to {{maxImages}} images."
+      },
+      "deleteVariantConfirmation": {
+        "title": "Delete Variant",
+        "message": "Are you sure you want to delete this variant?<br /><br /><strong>This action is permanent and cannot be undone.</strong>"
       },
       "addButton": "Add Recipe",
       "addVariantButton": "Add Variant",

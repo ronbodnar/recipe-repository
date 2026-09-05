@@ -1,5 +1,18 @@
-@if (loading()) {
+@if (loading() && status() !== 'error') {
   <app-full-page-loader message="recipes.edit.loading" />
+} @else if (status() === 'error') {
+  <app-recipe-not-found>
+    <ng-container backAction>
+      <app-button
+        color="background"
+        classList="border-border/40!"
+        icon="arrow_back"
+        label="recipes.edit.notFound.backAction"
+        routerLink="/app/recipes/edit/new"
+        (click)="redirectToNew()"
+      />
+    </ng-container>
+  </app-recipe-not-found>
 } @else {
   <app-fluid-container
     size="lg"
@@ -59,9 +72,9 @@
             {{ 'recipes.edit.visibility.privateDescription' | translate }}
           </p>
         }
-        @case ('FAMILY') {
+        @case ('GROUP') {
           <p class="text-sm font-semibold text-muted my-0">
-            {{ 'recipes.edit.visibility.familyDescription' | translate }}
+            {{ 'recipes.edit.visibility.groupDescription' | translate }}
           </p>
         }
       }
@@ -76,6 +89,17 @@
           (imageRemoved)="onRecipeImageRemoved($event)"
         />
       </div>
+
+      @if (form().controls.images.errors; as errors) {
+        @if (errors['maxlength']) {
+          <p class="text-sm text-danger my-0">
+            {{
+              'recipes.edit.errors.maxImages'
+                | translate: { maxImages: errors['maxlength'].requiredLength }
+            }}
+          </p>
+        }
+      }
 
       <h3>{{ 'recipes.labels.variants' | translate }}</h3>
 
@@ -105,7 +129,12 @@
                 {{ variant.get('name')?.value ?? (getVariantLabel(index) | translate) }}
               </span>
 
-              <app-button color="danger" size="xs" icon="delete" (click)="removeVariant(index)" />
+              <app-button
+                color="danger"
+                size="xs"
+                icon="delete"
+                (click)="promptConfirmDeleteVariant(index)"
+              />
             </div>
           }
 
@@ -187,7 +216,7 @@
         }
       </div>
 
-      <mat-accordion>
+      <mat-accordion class="mt-6">
         <mat-expansion-panel class="bg-background-alt!">
           <mat-expansion-panel-header>
             <mat-panel-title>{{ 'recipes.labels.attributes' | translate }}</mat-panel-title>

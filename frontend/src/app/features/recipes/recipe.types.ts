@@ -84,7 +84,7 @@ export const DIET_TYPES = [
 
 export const MEAL_TYPES = ['BREAKFAST', 'BRUNCH', 'LUNCH', 'DINNER', 'SNACK'] as const;
 
-export const VISIBILITY_TYPES = ['PUBLIC', 'PRIVATE', 'FAMILY'] as const;
+export const VISIBILITY_TYPES = ['PUBLIC', 'PRIVATE', 'GROUP'] as const;
 
 export type CookingMethod = (typeof COOKING_METHODS)[number];
 export type Course = (typeof COURSE_TYPES)[number];

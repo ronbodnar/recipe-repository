@@ -120,7 +120,7 @@
     "visibility": {
       "public": "Pública",
       "private": "Privada",
-      "family": "Familiar"
+      "group": "Familiar"
     },
     "labels": {
       "title": "Título",
@@ -206,7 +206,7 @@
         "notes": "Ingresa notas o consejos para la receta"
       },
       "visibility": {
-        "familyDescription": "Visible solo para ti y los miembros de tu familia. Esto aplica a cualquier familia a la que pertenezcas.",
+        "groupDescription": "Visible solo para ti y los miembros de tu grupo. Esto aplica a cualquier grupo al que pertenezcas.",
         "privateDescription": "Visible solo para ti.",
         "publicDescription": "Visible para todos."
       },

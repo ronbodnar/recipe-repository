@@ -159,7 +159,6 @@ export class ButtonComponent {
         //queryParams: this.routerState,
         target: this.routerTarget,
       } as NavigationBehaviorOptions);
-      return;
     }
     if (this.onClick) {
       this.onClick(event);
