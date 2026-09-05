@@ -15,6 +15,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 export interface DialogAction {
   label: string;
   action?: () => void;
+  response?: boolean;
   disabledFn?: () => boolean;
   loadingFn?: () => boolean;
   closeOnClick?: boolean;
@@ -61,11 +62,11 @@ export class DialogComponent {
       action.action();
     }
     if (action.closeOnClick !== false) {
-      this.close();
+      this.close(action.response);
     }
   }
 
-  close() {
-    this.dialogRef.close();
+  close(response?: boolean) {
+    this.dialogRef.close(response);
   }
 }

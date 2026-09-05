@@ -95,7 +95,7 @@ export class EditRecipeComponent {
   validated = signal<boolean>(false);
   status = signal<'idle' | 'submitting' | 'error'>('idle');
   loadedRecipeId = signal<string | null>(null);
-  activeVariantIndex = signal<number>(0);
+  activeVariantIndex = signal<number | null>(0);
 
   constructor() {
     const recipeId = this.route.snapshot.paramMap.get('id');
@@ -170,20 +170,21 @@ export class EditRecipeComponent {
       return;
     }
     // Bug: when there is only 1 variant and the dialog shows to delete it, it does not trigger change detection.
-    this.dialogService.openConfirmationDialog(
+    const dialog = this.dialogService.openConfirmationDialog(
       'recipes.edit.deleteVariantConfirmation.title',
       'recipes.edit.deleteVariantConfirmation.message',
-      (response: boolean) => {
-        if (response) {
-          this.removeVariant(index);
-        }
-      },
     );
+
+    dialog.afterClosed().subscribe((response) => {
+      if (response) {
+        this.removeVariant(index);
+      }
+    });
   }
 
   removeVariant(index: number) {
     this.variants.removeAt(index);
-    this.activeVariantIndex.set(0);
+    this.activeVariantIndex.set(this.variants.length - 1);
   }
 
   addVariant() {

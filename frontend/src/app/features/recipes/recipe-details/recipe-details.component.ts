@@ -151,15 +151,16 @@ export class RecipeDetailsComponent {
   }
 
   promptDeleteRecipe(): void {
-    this.dialogService.openConfirmationDialog(
+    const dialog = this.dialogService.openConfirmationDialog(
       'recipes.details.deleteConfirmation.title',
       'recipes.details.deleteConfirmation.message',
-      (confirmed) => {
-        if (confirmed) {
-          this.deleteRecipe();
-        }
-      },
     );
+
+    dialog.afterClosed().subscribe((response) => {
+      if (response) {
+        this.deleteRecipe();
+      }
+    });
   }
 
   deleteRecipe(): void {

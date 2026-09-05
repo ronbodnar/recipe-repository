@@ -17,7 +17,7 @@ export class DialogService {
     return this.dialog.open(component, config);
   }
 
-  openConfirmationDialog(title: string, message: string, responseFn: (response: boolean) => void) {
+  openConfirmationDialog(title: string, message: string): MatDialogRef<DialogComponent, boolean> {
     this.dialog.closeAll();
     return this.dialog.open(DialogComponent, {
       disableClose: true,
@@ -27,18 +27,12 @@ export class DialogService {
         actions: [
           {
             label: 'forms.cancel',
-            action: () => {
-              responseFn(false);
-              this.dialog.closeAll();
-            },
+            response: false,
             color: 'secondary',
           },
           {
             label: 'forms.confirm',
-            action: () => {
-              responseFn(true);
-              this.dialog.closeAll();
-            },
+            response: true,
             color: 'danger',
           },
         ],
