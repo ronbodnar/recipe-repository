@@ -16,10 +16,13 @@ export class RecipeFormFactory {
     return new FormGroup({
       id: new FormControl<string | null>(v?.id ?? null),
       title: new FormControl(v?.title ?? '', {
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.maxLength(50)],
         nonNullable: true,
       }),
-      description: new FormControl(v?.description ?? '', { nonNullable: true }),
+      description: new FormControl(v?.description ?? '', {
+        validators: [Validators.maxLength(500)],
+        nonNullable: true,
+      }),
       source: new FormControl(v?.source ?? null),
       visibility: new FormControl(v?.visibility ?? 'GROUP', {
         validators: [Validators.required],
@@ -37,7 +40,7 @@ export class RecipeFormFactory {
       variants: new FormArray<FormGroup>(
         (v?.variants ?? [{}]).map((variant) => this.variant(variant)),
         {
-          validators: [Validators.minLength(1), Validators.maxLength(COOKING_METHODS.length)],
+          validators: [Validators.maxLength(COOKING_METHODS.length)],
         },
       ),
     });
@@ -46,13 +49,13 @@ export class RecipeFormFactory {
   static variant(v?: Partial<RecipeVariant>) {
     return new FormGroup({
       id: new FormControl(v?.id ?? null),
-      name: new FormControl(v?.name ?? null),
+      name: new FormControl(v?.name ?? null, { validators: [Validators.maxLength(50)] }),
       cookingMethod: new FormControl(v?.cookingMethod ?? null, {
         validators: [Validators.required],
       }),
       prepTime: new FormControl(v?.prepTime ?? null),
       cookTime: new FormControl(v?.cookTime ?? null),
-      yield: new FormControl(v?.yield ?? null),
+      yield: new FormControl(v?.yield ?? null, { validators: [Validators.maxLength(50)] }),
       ingredients: new FormControl(v?.ingredients?.join('\n') ?? '', { nonNullable: true }),
       instructions: new FormControl(v?.instructions?.join('\n') ?? '', { nonNullable: true }),
       notes: new FormControl(v?.notes?.join('\n') ?? '', { nonNullable: true }),

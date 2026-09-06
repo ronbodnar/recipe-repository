@@ -18,6 +18,8 @@ import { AuthenticationService } from '@core/services/authentication.service';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ImageCarouselComponent } from '@shared/ui/image-carousel/image-carousel.component';
 import { RecipeNotFoundComponent } from '../components/recipe-not-found/recipe-not-found.component';
+import { RecipeListSource } from '../recipe-list/recipe-list.component';
+import { logDebug } from '@shared/utils/logging';
 
 @Component({
   selector: 'app-recipe-details',
@@ -53,6 +55,7 @@ export class RecipeDetailsComponent {
   private readonly _loading = signal(true);
   private readonly _deleting = signal(false);
   private readonly _hasError = signal(false);
+  private readonly _source = signal<RecipeListSource | null>(null);
   private readonly _selectedVariantIndex = signal<number | null>(null);
 
   readonly recipe = this._recipe.asReadonly();
@@ -60,7 +63,9 @@ export class RecipeDetailsComponent {
   readonly loading = this._loading.asReadonly();
   readonly hasError = this._hasError.asReadonly();
   readonly deleting = this._deleting.asReadonly();
+  readonly source = this._source.asReadonly();
   readonly selectedVariantIndex = this._selectedVariantIndex.asReadonly();
+
   readonly selectedVariant = computed(
     () => this.recipe()?.variants[this.selectedVariantIndex() ?? 0] ?? null,
   );
@@ -109,35 +114,34 @@ export class RecipeDetailsComponent {
     return currentUser?.identityProviderSubject === this.recipe()?.authorSubject;
   });
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
+  readonly backRoute = computed(() => {
+    const source = this.source();
+    if (source === 'discover') {
+      return '/app/recipes/discover';
+    }
+    return '/app/recipes/list';
+  });
 
-    if (!id) {
+  constructor() {
+    const state = this.router.currentNavigation()?.extras.state as
+      | { source?: RecipeListSource }
+      | undefined;
+
+    if (state?.source) {
+      this._source.set(state.source);
+    }
+  }
+
+  ngOnInit(): void {
+    const recipeId = this.route.snapshot.paramMap.get('id');
+
+    if (!recipeId) {
       this._hasError.set(true);
       this._loading.set(false);
       return;
     }
 
-    this.recipeService.loadRecipe(id).subscribe({
-      next: (recipe) => {
-        console.log('Fetched recipe detail:', recipe);
-
-        if (recipe.variants.length > 0) {
-          this._selectedVariantIndex.set(0);
-        }
-
-        this.loadAuthor(recipe.authorSubject);
-
-        this._recipe.set(recipe);
-        this._hasError.set(false);
-        this._loading.set(false);
-      },
-      error: (error) => {
-        console.error('Failed to fetch recipe detail:', error);
-        this._hasError.set(true);
-        this._loading.set(false);
-      },
-    });
+    this.loadRecipe(recipeId);
   }
 
   getVariantLabel(index: number) {
@@ -166,7 +170,7 @@ export class RecipeDetailsComponent {
   deleteRecipe(): void {
     const recipeId = this.recipe()?.id;
     if (!recipeId) {
-      console.error('No recipe ID available for deletion.');
+      logDebug('No recipe ID available for deletion.');
       return;
     }
 
@@ -176,9 +180,30 @@ export class RecipeDetailsComponent {
         this.router.navigate(['/app/recipes/list']);
       },
       error: (error) => {
-        console.error('An error occurred while deleting this recipe:', error);
+        logDebug('An error occurred while deleting this recipe:', error);
         this._deleting.set(false);
         this.snackbarService.openSnackBar(SnackbarType.ERROR, 'recipes.details.deleteError');
+      },
+    });
+  }
+
+  private loadRecipe(recipeId: string) {
+    this.recipeService.loadRecipe(recipeId).subscribe({
+      next: (recipe) => {
+        logDebug('Fetched recipe detail:', recipe);
+
+        if (recipe.variants.length > 0) {
+          this._selectedVariantIndex.set(0);
+        }
+
+        this.loadAuthor(recipe.authorSubject);
+
+        this._recipe.set(recipe);
+      },
+      error: (error) => {
+        logDebug('Failed to fetch recipe detail:', error);
+        this._hasError.set(true);
+        this._loading.set(false);
       },
     });
   }
@@ -186,11 +211,15 @@ export class RecipeDetailsComponent {
   private loadAuthor(subject: string) {
     this.userService.loadUserSummary(subject).subscribe({
       next: (user) => {
+        logDebug('Fetched author details:', user);
         this._author.set(user);
-        console.log('Fetched author details:', user);
+        this._hasError.set(false);
+        this._loading.set(false);
       },
       error: (error) => {
-        console.error('Failed to fetch author details:', error);
+        logDebug('Failed to fetch author details:', error);
+        this._hasError.set(true);
+        this._loading.set(false);
       },
     });
   }

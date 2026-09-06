@@ -117,7 +117,7 @@
                 'bg-background-alt': activeVariantIndex() === index,
                 'font-semibold': activeVariantIndex() === index,
               }"
-              (click)="activeVariantIndex.set(index)"
+              (click)="setActiveVariantIndex(index)"
             >
               @if (validated() && variants.at(index).invalid) {
                 <mat-icon class="text-danger! absolute -left-3">error</mat-icon>

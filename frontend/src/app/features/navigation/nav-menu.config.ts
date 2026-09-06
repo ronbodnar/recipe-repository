@@ -30,7 +30,7 @@ export const getNavItems = (): NavItem[] => {
     },
     {
       sectionName: 'groups',
-      icon: 'diversity_3',
+      icon: 'groups_3',
       label: 'navigation.groups',
       children: [
         {

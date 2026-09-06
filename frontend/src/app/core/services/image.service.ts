@@ -19,8 +19,6 @@ export class ImageService {
 
     return from(resizedImages).pipe(
       switchMap((images) => {
-        console.log('Resized images:', images);
-
         const formData = new FormData();
         formData.append('purpose', purpose);
 

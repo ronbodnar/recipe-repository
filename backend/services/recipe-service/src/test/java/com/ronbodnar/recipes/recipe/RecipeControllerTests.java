@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -86,18 +89,16 @@ class RecipeControllerTests {
     void getAllRecipes_returnsRecipeByAuthorId() throws Exception {
         given(recipeService.getAllSummaries(
                 eq(recipe.getAuthorSubject()),
-                eq(0),
-                eq(10),
-                eq("id=asc")
+                eq(PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "id")))
         )).willReturn(new PageImpl<>(
                 List.of(RecipeSummaryDTO.fromEntity(recipe, List.of()))
         ));
 
         performAuthenticatedRequest(
                 get(RECIPE_API_URL)
-                        .param("paginationStart", "0")
-                        .param("paginationLength", "10")
-                        .param("paginationSortOrder", "id=asc"),
+                        .param("page", "0")
+                        .param("pageSize", "10")
+                        .param("sortBy", "id=asc"),
                 recipe.getAuthorSubject(),
                 "ROLE_VIEW-RECIPE"
         )
@@ -115,9 +116,7 @@ class RecipeControllerTests {
 
         then(recipeService).should().getAllSummaries(
                 recipe.getAuthorSubject(),
-                0,
-                10,
-                "id=asc"
+                PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "id"))
         );
     }
 

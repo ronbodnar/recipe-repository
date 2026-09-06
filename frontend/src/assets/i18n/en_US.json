@@ -164,14 +164,26 @@
       }
     },
     "list": {
-      "title": "My Recipes",
-      "viewRecipeButton": "View Recipe",
-      "loading": "Loading your recipes...",
-      "errorLoading": "Error loading recipes. Please try again.",
-      "noRecipes": {
-        "title": "Welcome to {{appName}}!",
-        "empty": "You haven't added any recipes yet.",
-        "clickToAdd": "Click on the \"+ Add Recipe\" button in the top right corner to create your first recipe."
+      "noDescription": "No description provided.",
+      "my-recipes": {
+        "title": "My Recipes",
+        "loading": "Loading your recipes...",
+        "errorLoading": "Error loading recipes. Please try again.",
+        "noRecipes": {
+          "title": "Welcome to {{appName}}!",
+          "empty": "You haven't added any recipes yet.",
+          "clickToAdd": "Click on the \"+ Add Recipe\" button in the top right corner to create your first recipe."
+        }
+      },
+
+      "discover": {
+        "title": "Discover Recipes",
+        "loading": "Loading discover recipes...",
+        "errorLoading": "Error loading discover recipes. Please try again.",
+        "noRecipes": {
+          "title": "No Recipes Found",
+          "message": "There are no discover recipes available at the moment. Please check back later."
+        }
       }
     },
     "details": {
@@ -226,7 +238,7 @@
         "existing": "Edit Recipe"
       },
       "subtitle": {
-        "new": "Fill out the form below to create a new recipe.",
+        "new": "Fill out the form below to create a new recipe. Fields marked with an asterisk (*) are required.",
         "existing": "Update the recipe details below."
       },
       "submitButton": {

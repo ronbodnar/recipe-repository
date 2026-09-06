@@ -38,7 +38,6 @@ export class GeneralSettingsHandler extends FormHandlerBase<Controls> {
   }
 
   onLanguageChange(language: string) {
-    console.log('Language changed to', language);
     if (!language) return;
     this.translateService.use(language);
   }

@@ -49,7 +49,7 @@ class RecipeServiceTests {
         )).willReturn(new PageImpl<>(List.of(recipe)));
 
         Page<RecipeSummaryDTO> allRecipes =
-                recipeService.getAllSummaries(authorId, 0, 10, null);
+                recipeService.getAllSummaries(authorId, PageRequest.of(0, 10));
 
         assertEquals(1, allRecipes.getContent().size());
     }
@@ -78,7 +78,7 @@ class RecipeServiceTests {
                 any(Pageable.class)
         )).willReturn(page);
 
-        Page<RecipeSummaryDTO> result = recipeService.getAllSummaries(authorId, 0, 10, null);
+        Page<RecipeSummaryDTO> result = recipeService.getAllSummaries(authorId, PageRequest.of(0, 10));
 
         assertEquals(10, result.getContent().size());
         assertEquals(11, result.getTotalElements());

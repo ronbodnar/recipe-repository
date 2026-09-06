@@ -1,5 +1,5 @@
 <div
-  class="mx-auto box-border min-h-full w-full flex flex-col px-4 py-0 pb-4 xl:py-6"
+  class="mx-auto box-border min-h-full w-full flex flex-col px-4 py-0 pb-4 sm:py-6"
   [class]="widthClass"
 >
   @if (backRoute(); as route) {
@@ -24,7 +24,7 @@
       <ng-content select="[subtitle]"></ng-content>
     </div>
 
-    <div class="flex gap-2">
+    <div class="flex gap-2 self-end sm:self-auto">
       <ng-content select="[actions]"></ng-content>
     </div>
   </div>

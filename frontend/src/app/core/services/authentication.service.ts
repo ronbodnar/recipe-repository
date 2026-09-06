@@ -5,6 +5,7 @@ import { environment } from '@env';
 import { FetchApiService } from './fetch-api.service';
 import { StorageService } from './storage.service';
 import { UserAccount } from '@features/users/user.types';
+import { logDebug } from '@shared/utils/logging';
 
 @Injectable({
   providedIn: 'root',
@@ -34,9 +35,7 @@ export class AuthenticationService {
           break;
 
         default:
-          if (!environment.production) {
-            console.log('Unhandled Keycloak event received:', event);
-          }
+          logDebug('Unhandled Keycloak event received:', event);
           break;
       }
     });
@@ -72,20 +71,20 @@ export class AuthenticationService {
     this.fetchApi.getData<UserAccount>('identity/me').subscribe({
       next: (user) => {
         if (!user) {
-          console.error('Authenticated UserAccount data is null or undefined.');
+          logDebug('Authenticated UserAccount data is null or undefined.');
           this.authUser.set(null);
           return;
         }
 
         const userAccount = this.createEnrichedUserAccount(user);
 
-        console.log('Received enriched authenticated user data:', userAccount);
+        logDebug('Received enriched authenticated user data:', userAccount);
 
         this.authUser.set(userAccount);
         this.storageService.setUserAccount(userAccount);
       },
       error: (error) => {
-        console.error('Error fetching authenticated user:', error);
+        logDebug('Error fetching authenticated user:', error);
         this.authUser.set(null);
       },
     });

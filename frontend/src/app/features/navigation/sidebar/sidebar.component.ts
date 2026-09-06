@@ -21,6 +21,7 @@ import { AuthenticationService } from '@core/services/authentication.service';
 import { MediaService } from '@core/services/media.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { getNavItems } from '../nav-menu.config';
+import { StorageService } from '@core/services/storage.service';
 
 @Component({
   selector: 'app-side-navbar',
@@ -41,30 +42,36 @@ import { getNavItems } from '../nav-menu.config';
 export class SidebarComponent implements OnDestroy {
   @ViewChild('snav') nav!: MatSidenav;
 
-  private router = inject(Router);
-  private authService = inject(AuthenticationService);
-  private mediaService = inject(MediaService);
-  private version = inject(AppVersionService);
-  private document = inject(DOCUMENT);
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthenticationService);
+  private readonly storageService = inject(StorageService);
+  private readonly mediaService = inject(MediaService);
+  private readonly version = inject(AppVersionService);
+  private readonly document = inject(DOCUMENT);
 
   readonly currentVersion = this.version.currentVersion;
-
   readonly isMobile = this.mediaService.isMobile;
+  readonly isAuthenticated = this.authService.isAuthenticated;
 
-  private _authLoading = signal<boolean>(false);
+  private readonly _isSidenavOpen = signal(
+    !this.isMobile() && this.storageService.getPreference('sidenav.isOpen') === true,
+  );
 
-  public authLoading = this._authLoading.asReadonly();
+  readonly isSidenavOpen = this._isSidenavOpen.asReadonly();
 
   readonly NAV_ITEMS = getNavItems();
 
-  private expandedSections = signal<string[]>(['recipes', 'groups']);
+  private expandedSections = signal<string[]>(
+    this.storageService.getPreference('sidenav.expandedSections') || ['recipes', 'groups'],
+  );
 
   toggleSection(section: string) {
-    this.expandedSections.update((current) =>
-      current.includes(section)
+    this.expandedSections.update((current) => {
+      return current.includes(section)
         ? current.filter((s) => s !== section)
-        : current.map((s) => s).concat(section),
-    );
+        : current.map((s) => s).concat(section);
+    });
+    this.storageService.setPreference('sidenav.expandedSections', this.expandedSections());
   }
 
   onNavigationClick(navItem: NavItem, childIdxClicked?: number) {
@@ -76,7 +83,9 @@ export class SidebarComponent implements OnDestroy {
       return;
     }
 
-    this.nav.close();
+    if (this.isMobile()) {
+      this.nav.close();
+    }
 
     if (!hasChildren && childIdxClicked === undefined) {
       if (route) {
@@ -127,25 +136,13 @@ export class SidebarComponent implements OnDestroy {
     return this.authService.authUser()?.roles.includes(requiredRole) || false;
   }
 
-  deauthenticate() {
-    this._authLoading.set(true);
-    this.authService.logout().then(() => {
-      this._authLoading.set(false);
-      this.router.navigateByUrl('/');
-      this.nav.close();
-    });
-  }
-
-  isAuthenticated() {
-    return this.authService.isAuthenticated();
-  }
-
   onSidenavOpenedChange(isOpened: boolean) {
-    if (!this.isMobile()) {
-      return;
-    }
+    this.storageService.setPreference('sidenav.isOpen', isOpened);
+    this._isSidenavOpen.set(isOpened);
 
-    this.document.body.classList.toggle('mobile-sidenav-open', isOpened);
+    if (this.isMobile()) {
+      this.document.body.classList.toggle('mobile-sidenav-open', isOpened);
+    }
   }
 
   ngOnDestroy() {

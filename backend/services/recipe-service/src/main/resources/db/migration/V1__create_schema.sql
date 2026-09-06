@@ -4,12 +4,13 @@
 CREATE TABLE `recipe` (
     `id` binary(16) NOT NULL,
     `author_subject` VARCHAR(255) NOT NULL,
+    `title` varchar(50) NOT NULL,
+    `description` varchar(500) DEFAULT NULL,
+    `source` varchar(255) DEFAULT NULL,
     `visibility` enum(
         'PUBLIC','GROUP','PRIVATE'
     ) NOT NULL,
     `created_at` datetime(6) NOT NULL,
-    `description` varchar(255) DEFAULT NULL,
-    `title` varchar(50) NOT NULL,
     `updated_at` datetime(6) DEFAULT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `chk_recipe_title_length` CHECK (CHAR_LENGTH(`title`) >= 0)

@@ -15,6 +15,7 @@ import {
 import { ProfileFactory } from './profile.factory';
 import { ProfileFormModel } from './profile.types';
 import { TranslatePipe } from '@ngx-translate/core';
+import { logError } from '@shared/utils/logging';
 
 @Component({
   selector: 'app-settings-profile',
@@ -45,7 +46,7 @@ export class SettingsProfileComponent {
       const user = this.authService.authUser();
 
       if (!user) {
-        console.error('No authenticated user found. Cannot populate profile form.');
+        logError('No authenticated user found. Cannot populate profile form.');
         return;
       }
 
@@ -115,7 +116,7 @@ export class SettingsProfileComponent {
           this.updateProfile(formData);
         },
         error: (error: ApiError) => {
-          console.error('Error uploading profile image:', error);
+          logError('Error uploading profile image:', error);
           this._status.set('error');
         },
       });
@@ -137,7 +138,7 @@ export class SettingsProfileComponent {
         this.form().markAsPristine();
       },
       error: (error: ApiError) => {
-        console.error('Error updating profile:', error);
+        logError('Error updating profile:', error);
         this._status.set('error');
         if (error.hasFormError()) {
           this.errorService.populateFormErrors(this.form(), error);

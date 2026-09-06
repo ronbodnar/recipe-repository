@@ -7,7 +7,7 @@ import { ErrorCode, TransportErrorCode } from '@core/interfaces/error-code.inter
 import { FetchApiService } from '@core/services/fetch-api.service';
 import { SnackbarService, SnackbarType } from '@shared/ui/snackbar.component';
 import { asCamelCase } from '@shared/utils/as-camel-case';
-import { environment } from '@env';
+import { logDebug } from '@shared/utils/logging';
 
 @Injectable({ providedIn: 'root' })
 export class ErrorService {
@@ -34,9 +34,7 @@ export class ErrorService {
   public populateFormErrors(form: FormGroup, error: ApiError): Observable<never> {
     error.fieldErrors = error.fieldErrors || [];
 
-    if (environment.production) {
-      console.log('Populating form errors', error);
-    }
+    logDebug('Populating form errors', error);
 
     if (error.fieldErrors.length === 0) {
       form.markAllAsTouched();

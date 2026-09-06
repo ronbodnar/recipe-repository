@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,25 +31,19 @@ public class RecipeService {
         this.imageServiceClient = imageServiceClient;
     }
 
-    public Page<RecipeSummaryDTO> getAllSummaries(
-            String authorId,
-            int paginationStart,
-            int paginationLength,
-            String paginationSortOrder
-    ) {
+    public Page<RecipeSummaryDTO> getAllSummaries(String authorId, Pageable pageable) {
         Page<Recipe> recipes = recipeRepository.findAllByAuthorKeyWithImages(
                 authorId,
-                PageRequest.of(paginationStart, paginationLength)
+                pageable
         );
 
-        return recipes.map(recipe ->
-                new RecipeSummaryDTO(
-                        recipe.getId(),
-                        recipe.getTitle(),
-                        recipe.getDescription(),
-                        recipe.getImageIds()
-                )
-        );
+        return toSummaryPage(recipes);
+    }
+
+    public Page<RecipeSummaryDTO> getDiscoverRecipes(Pageable pageable) {
+        Page<Recipe> recipes = recipeRepository.findAllPublicRecipes(pageable);
+
+        return toSummaryPage(recipes);
     }
 
     @Transactional(readOnly = true)
@@ -62,13 +58,17 @@ public class RecipeService {
     }
 
     public void deleteById(UUID id) {
-        // TODO: delete images
+        List<UUID> imageIds = recipeRepository.findAllImageIdsForRecipeId(id);
+
+        imageServiceClient.markForDeletion(Set.copyOf(imageIds));
+
         recipeRepository.deleteById(id);
     }
 
     @Transactional
     public RecipeDetailsDTO handleCreateRequest(RecipeRequest recipeRequest, String authorSubject) {
-        log.info("Attempting create a recipe titled {} with {} images from author {}", recipeRequest.title(), recipeRequest.imageIds().size(), authorSubject);
+        log.info("Attempting create a recipe titled {} with {} images from author {}",
+                recipeRequest.title(), recipeRequest.imageIds().size(), authorSubject);
 
         if (recipeRepository.existsByTitle(recipeRequest.title())) {
             log.info("Failed to create recipe: a recipe with title {} already exists!", recipeRequest.title());
@@ -106,7 +106,8 @@ public class RecipeService {
         );
 
         if (!Objects.equals(recipeRequest.id(), id)) {
-            log.warn("Recipe ID mismatch detected while updating recipe. Param: {}, request: {}", id, recipeRequest.id());
+            log.warn("Recipe ID mismatch detected while updating recipe. Param: {}, request: {}",
+                    id, recipeRequest.id());
             throw new BusinessException(
                     ErrorCode.RECIPE_MISMATCH,
                     "The recipe with ID %s does not match the provided ID %s.".formatted(id, recipeRequest.id())
@@ -141,6 +142,17 @@ public class RecipeService {
         log.info("Recipe with title {} has been updated", recipeRequest.title());
 
         return RecipeDetailsDTO.fromRecipe(existingRecipe);
+    }
+
+    private Page<RecipeSummaryDTO> toSummaryPage(Page<Recipe> recipes) {
+        return recipes.map(recipe ->
+                new RecipeSummaryDTO(
+                        recipe.getId(),
+                        recipe.getTitle(),
+                        recipe.getDescription(),
+                        recipe.getImageIds()
+                )
+        );
     }
 
 }

@@ -30,16 +30,20 @@ public class Recipe {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(name = "author_subject", nullable = false)
+    private String authorSubject;
+
     @Column(name = "title", nullable = false)
     @NotBlank
     @Size(max = 50)
     private String title;
 
     @Column(name = "description")
+    @Size(max = 500)
     private String description;
 
-    @Column(name = "author_subject", nullable = false)
-    private String authorSubject;
+    @Column(name = "source")
+    private String source;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "visibility", nullable = false)
@@ -116,6 +120,7 @@ public class Recipe {
     public Recipe(RecipeRequest recipeRequest) {
         this.title = recipeRequest.title();
         this.description = recipeRequest.description();
+        this.source = recipeRequest.source();
         this.visibility = recipeRequest.visibility();
         this.imageIds = recipeRequest.imageIds();
         this.cuisines = recipeRequest.cuisines();
@@ -142,27 +147,27 @@ public class Recipe {
             this.imageIds.addAll(patch.imageIds());
         }
 
-        if (patchVariants != null && !patchVariants.isEmpty()) {
+        if (patchVariants != null) {
             this.variants.clear();
             patchVariants.forEach(this::addVariant);
         }
 
-        if (patch.cuisines() != null && !patch.cuisines().isEmpty()) {
+        if (patch.cuisines() != null) {
             this.cuisines.clear();
             this.cuisines.addAll(patch.cuisines());
         }
 
-        if (patch.mealTypes() != null && !patch.mealTypes().isEmpty()) {
+        if (patch.mealTypes() != null) {
             this.mealTypes.clear();
             this.mealTypes.addAll(patch.mealTypes());
         }
 
-        if (patch.courses() != null && !patch.courses().isEmpty()) {
+        if (patch.courses() != null) {
             this.courses.clear();
             this.courses.addAll(patch.courses());
         }
 
-        if (patch.dietTypes() != null && !patch.dietTypes().isEmpty()) {
+        if (patch.dietTypes() != null) {
             this.dietTypes.clear();
             this.dietTypes.addAll(patch.dietTypes());
         }

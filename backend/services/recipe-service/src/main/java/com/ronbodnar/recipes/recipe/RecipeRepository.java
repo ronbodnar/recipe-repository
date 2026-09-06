@@ -7,15 +7,35 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
 
     @Query("""
-        SELECT r FROM Recipe r LEFT JOIN FETCH r.imageIds WHERE r.authorSubject = :authorSubject
+        SELECT r
+        FROM Recipe r
+        LEFT JOIN FETCH r.imageIds
+        WHERE r.authorSubject = :authorSubject
     """)
     Page<Recipe> findAllByAuthorKeyWithImages(@Param("authorSubject") String authorSubject, Pageable pageable);
+
+    @Query("""
+        SELECT r
+        FROM Recipe r
+        LEFT JOIN FETCH r.imageIds
+        WHERE r.visibility = 'PUBLIC'
+    """)
+    Page<Recipe> findAllPublicRecipes(Pageable pageable);
+
+    @Query("""
+        SELECT r.imageIds
+        FROM Recipe r
+        JOIN r.imageIds
+        WHERE r.id = :recipeId
+    """)
+    List<UUID> findAllImageIdsForRecipeId(@Param("recipeId") UUID recipeId);
 
     boolean existsByTitle(String title);
 

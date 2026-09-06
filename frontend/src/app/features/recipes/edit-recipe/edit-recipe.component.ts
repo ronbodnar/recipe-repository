@@ -26,6 +26,7 @@ import {
   DIET_TYPES,
   COURSE_TYPES,
   VISIBILITY_TYPES,
+  Recipe,
 } from '@features/recipes/recipe.types';
 import { ErrorService } from '@core/errors/error.service';
 import { MatCardModule } from '@angular/material/card';
@@ -49,6 +50,7 @@ import {
 import { RecipeNotFoundComponent } from '../components/recipe-not-found/recipe-not-found.component';
 import { redirectTo } from '@shared/utils/redirect-to';
 import { DialogService } from '@shared/ui/dialog/dialog.service';
+import { logDebug, logError } from '@shared/utils/logging';
 
 @Component({
   selector: 'app-edit-recipe',
@@ -88,21 +90,38 @@ export class EditRecipeComponent {
   private readonly mediaService = inject(MediaService);
   private readonly recipeService = inject(RecipeService);
   private readonly errorService = inject(ErrorService);
-  readonly imageService = inject(ImageService);
+  private readonly imageService = inject(ImageService);
 
-  form = signal<RecipeForm>(RecipeFormFactory.recipe());
-  loading = signal<boolean>(true);
-  validated = signal<boolean>(false);
-  status = signal<'idle' | 'submitting' | 'error'>('idle');
-  loadedRecipeId = signal<string | null>(null);
-  activeVariantIndex = signal<number | null>(0);
+  private _form = signal<RecipeForm>(RecipeFormFactory.recipe());
+  private _loading = signal<boolean>(true);
+  private _validated = signal<boolean>(false);
+  private _status = signal<'idle' | 'submitting' | 'error'>('idle');
+  private _loadedRecipeId = signal<string | null>(null);
+  private _activeVariantIndex = signal<number | null>(0);
+
+  readonly form = this._form.asReadonly();
+  readonly loading = this._loading.asReadonly();
+  readonly validated = this._validated.asReadonly();
+  readonly status = this._status.asReadonly();
+  readonly loadedRecipeId = this._loadedRecipeId.asReadonly();
+  readonly activeVariantIndex = this._activeVariantIndex.asReadonly();
 
   constructor() {
     const recipeId = this.route.snapshot.paramMap.get('id');
+    const state = this.router.currentNavigation()?.extras.state as { recipe?: Recipe } | undefined;
+
+    if (state?.recipe) {
+      logDebug('Using provided recipe from route state:', state);
+      this._loadedRecipeId.set(state.recipe.id);
+      this._form.set(RecipeFormFactory.recipe(state.recipe));
+      this._loading.set(false);
+      return;
+    }
+
     if (recipeId && recipeId !== 'new') {
       this.loadRecipe(recipeId);
     } else {
-      this.loading.set(false);
+      this._loading.set(false);
     }
   }
 
@@ -151,7 +170,7 @@ export class EditRecipeComponent {
   })).sort((a, b) => a.label.localeCompare(b.label));
 
   get variants(): FormArray<RecipeVariantForm> {
-    return this.form().get('variants') as FormArray<RecipeVariantForm>;
+    return this._form().get('variants') as FormArray<RecipeVariantForm>;
   }
 
   getVariantLabel(index: number) {
@@ -182,9 +201,13 @@ export class EditRecipeComponent {
     });
   }
 
+  setActiveVariantIndex(index: number) {
+    this._activeVariantIndex.set(index);
+  }
+
   removeVariant(index: number) {
     this.variants.removeAt(index);
-    this.activeVariantIndex.set(this.variants.length - 1);
+    this._activeVariantIndex.set(this.variants.length - 1);
   }
 
   addVariant() {
@@ -193,21 +216,21 @@ export class EditRecipeComponent {
     }
 
     this.variants.push(RecipeFormFactory.variant());
-    this.activeVariantIndex.set(this.variants.length - 1);
+    this._activeVariantIndex.set(this.variants.length - 1);
   }
 
   removeExistingImage(index: number) {
-    const control = this.form().controls.imageIds;
+    const control = this._form().controls.imageIds;
     control.setValue(control.value.filter((_, i) => i !== index));
   }
 
   removeImage(index: number) {
-    const control = this.form().controls.images;
+    const control = this._form().controls.images;
     control.setValue((control.value ?? []).filter((_, imageIndex) => imageIndex !== index));
   }
 
   getExistingRecipeImages(): ImageSelectorExistingImage[] {
-    return this.form().controls.imageIds.value.map((id, index) => ({
+    return this._form().controls.imageIds.value.map((id, index) => ({
       id,
       src: this.imageService.getImageUrl(id),
       alt: `Recipe image ${index + 1}`,
@@ -215,7 +238,7 @@ export class EditRecipeComponent {
   }
 
   onRecipeImagesSelected(images: File[]): void {
-    const control = this.form().controls.images;
+    const control = this._form().controls.images;
     control.setValue([...(control.value ?? []), ...images]);
   }
 
@@ -229,18 +252,18 @@ export class EditRecipeComponent {
   }
 
   submit() {
-    this.validated.set(true);
+    this._validated.set(true);
 
-    if (this.form().invalid) {
-      this.form().markAllAsTouched();
-      console.log('Form is invalid, cannot submit:', this.form());
+    if (this._form().invalid) {
+      this._form().markAllAsTouched();
+      logError('Form is invalid, cannot submit:', this._form());
       return;
     }
 
-    this.status.set('submitting');
-    this.form().disable();
+    this._status.set('submitting');
+    this._form().disable();
 
-    const request = this.form().getRawValue();
+    const request = this._form().getRawValue();
 
     if (request.images?.length) {
       this.imageService.uploadImages(request.images).subscribe({
@@ -249,9 +272,9 @@ export class EditRecipeComponent {
           this.saveRecipe(request);
         },
         error: (error: ApiError) => {
-          console.error('Error uploading images:', error);
-          this.form().enable();
-          this.status.set('error');
+          logError('Error uploading images:', error);
+          this._form().enable();
+          this._status.set('error');
         },
       });
     } else {
@@ -261,7 +284,7 @@ export class EditRecipeComponent {
 
   dropVariant(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.variants.controls, event.previousIndex, event.currentIndex);
-    this.activeVariantIndex.set(event.currentIndex);
+    this._activeVariantIndex.set(event.currentIndex);
   }
 
   redirectToNew() {
@@ -269,45 +292,45 @@ export class EditRecipeComponent {
   }
 
   private loadRecipe(recipeId: string) {
-    this.loadedRecipeId.set(recipeId);
+    this._loadedRecipeId.set(recipeId);
     this.recipeService.loadRecipe(recipeId!).subscribe({
       next: (recipe) => {
-        console.log('Loaded recipe:', recipe);
-        this.form.set(RecipeFormFactory.recipe(recipe));
-        this.loading.set(false);
+        logDebug('Loaded recipe:', recipe);
+        this._form.set(RecipeFormFactory.recipe(recipe));
+        this._loading.set(false);
       },
       error: (error: ApiError) => {
-        console.error('Error loading recipe:', error);
-        this.status.set('error');
+        logDebug('Error loading recipe:', error);
+        this._status.set('error');
       },
     });
   }
 
   private saveRecipe(recipeData: RecipeFormModel) {
-    this.recipeService.saveRecipe(recipeData, this.loadedRecipeId()).subscribe({
+    this.recipeService.saveRecipe(recipeData, this._loadedRecipeId()).subscribe({
       next: (recipe) => {
-        console.log('Recipe saved successfully:', recipe);
-        this.navigateToRecipe(recipe.id);
+        logDebug('Recipe saved successfully:', recipe);
+        this.navigateToRecipe(recipe);
       },
       error: (error: ApiError) => {
-        console.error('Error publishing recipe:', error);
+        logError('Error publishing recipe:', error);
 
-        this.form().enable();
+        this._form().enable();
 
         if (error.hasFormError()) {
-          console.log('Has a form error, so going idle..');
-          this.status.set('idle');
-          this.errorService.populateFormErrors(this.form(), error);
+          logDebug('Has a form error, so going idle..');
+          this._status.set('idle');
+          this.errorService.populateFormErrors(this._form(), error);
           return;
         }
 
-        this.status.set('error');
+        this._status.set('error');
       },
     });
   }
 
-  private navigateToRecipe(recipeId: string) {
-    const recipeUrl = `/app/recipes/details/${recipeId}`;
-    this.router.navigate([recipeUrl]);
+  private navigateToRecipe(recipe: Recipe) {
+    const recipeUrl = `/app/recipes/details/${recipe.id}`;
+    this.router.navigate([recipeUrl], { state: { recipe } });
   }
 }

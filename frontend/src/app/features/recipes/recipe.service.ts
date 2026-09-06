@@ -4,6 +4,7 @@ import { FetchApiService } from '@core/services/fetch-api.service';
 import { RecipeFormModel, RecipeFormRequest } from './edit-recipe/edit-recipe.types';
 import { Recipe, RecipeSummary } from './recipe.types';
 import { PaginatedResponse } from '@core/interfaces/paginated-response.interface';
+import { logDebug } from '@shared/utils/logging';
 
 @Injectable({
   providedIn: 'root',
@@ -13,15 +14,30 @@ export class RecipeService {
 
   loadPaginatedRecipes(
     page: number,
-    pageSize: number,
-    sortBy: string = 'id=desc',
+    size: number,
+    sort: string[] = ['id,desc'],
   ): Observable<PaginatedResponse<RecipeSummary>> {
     return this.fetchApi.fetchPaginatedData<RecipeSummary>('recipes', {
       method: 'GET',
       parameters: {
-        paginationStart: page,
-        paginationLength: pageSize,
-        paginationSortOrder: sortBy,
+        page,
+        size,
+        sort,
+      },
+    });
+  }
+
+  loadDiscoverRecipes(
+    page: number,
+    size: number,
+    sort: string[] = ['id,desc'],
+  ): Observable<PaginatedResponse<RecipeSummary>> {
+    return this.fetchApi.fetchPaginatedData<RecipeSummary>('recipes/discover', {
+      method: 'GET',
+      parameters: {
+        page,
+        size,
+        sort,
       },
     });
   }
@@ -53,7 +69,7 @@ export class RecipeService {
         notes: variant.notes === '' ? [] : variant.notes.split('\n'),
       })),
     };
-    console.log('Recipe data to be sent:', recipe);
+    logDebug('Recipe data to be sent:', recipe);
 
     return this.fetchApi.fetch<Recipe>(`recipes${recipeId ? `/${recipeId}` : ''}`, {
       method: recipeId ? 'PUT' : 'POST',

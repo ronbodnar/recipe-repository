@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { environment } from '../../../environments/environment.development';
 import { ErrorCode, TransportErrorCode } from '../interfaces/error-code.interface';
+import { logDebug } from '@shared/utils/logging';
 
 export type ApiErrorCode = ErrorCode | TransportErrorCode;
 
@@ -18,9 +18,7 @@ export class ApiError {
   fieldErrors: FieldError[];
 
   constructor(data: Partial<ApiError>) {
-    if (!environment.production) {
-      console.log('Deconstructing ApiError from data:', data);
-    }
+    logDebug('Deconstructing ApiError from data:', data);
 
     this.timestamp = data.timestamp ? new Date(data.timestamp) : new Date();
     this.status = data.status ?? 0;

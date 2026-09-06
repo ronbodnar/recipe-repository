@@ -1,6 +1,6 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
 import { MediaService } from './media.service';
-import { environment } from '../../../environments/environment';
+import { logDebug } from '@shared/utils/logging';
 
 export type Theme = 'dark' | 'light' | 'auto';
 
@@ -32,14 +32,10 @@ export class ThemeService {
     const localTheme = localStorage.getItem('theme') as Theme;
     if (localTheme) {
       this._theme.set(localTheme);
-      if (!environment.production) {
-        console.log('Theme set to', localTheme);
-      }
+      logDebug('Theme preference loaded from localStorage:', localTheme);
     } else {
       this._theme.set('auto');
-      if (!environment.production) {
-        console.log('Theme preference not found. Set to auto');
-      }
+      logDebug('Theme preference not found in localStorage. Defaulting to auto.');
     }
   }
 

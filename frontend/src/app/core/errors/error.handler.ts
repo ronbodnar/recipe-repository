@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ErrorService } from './error.service';
 import { AuthenticationService } from '../services/authentication.service';
 import { environment } from '@env';
+import { logError } from '@shared/utils/logging';
 
 export interface FrontendError {
   timestamp: string;
@@ -39,7 +40,7 @@ export class GlobalErrorHandler implements ErrorHandler {
       stackTrace: relevantStack.join('\n'),
     } as FrontendError;
 
-    console.error('Handling global error:', error);
+    logError('Handling global error:', error);
 
     if (environment.production) {
       this.errorService.logFrontendError(logPayload);

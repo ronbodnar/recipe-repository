@@ -13,11 +13,6 @@ import { ButtonComponent } from '@shared/ui/button/button.component';
 export class LandingComponent {
   private readonly authService = inject(AuthenticationService);
 
-  constructor() {
-    const authenticated = this.authService.isAuthenticated();
-    console.log('Authenticated:', authenticated);
-  }
-
   readonly cards = [
     {
       icon: 'lock',

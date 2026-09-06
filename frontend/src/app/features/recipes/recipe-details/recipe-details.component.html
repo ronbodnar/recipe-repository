@@ -3,7 +3,7 @@
     [message]="loading() ? 'recipes.details.loading' : 'recipes.details.deleting'"
   />
 } @else if (recipe(); as recipe) {
-  <app-fluid-container size="xl" [pageTitle]="recipe.title" [backRoute]="'/app/recipes/list'">
+  <app-fluid-container size="xl" [pageTitle]="recipe.title" [backRoute]="backRoute()">
     @if (recipe.description) {
       <p subtitle class="mt-0 lg:mb-6 text-muted">
         {{ recipe.description }}
@@ -19,6 +19,7 @@
           icon="edit"
           label="recipes.details.editButton"
           [routerLink]="'/app/recipes/edit/' + recipe.id"
+          [routerState]="{ recipe }"
         />
         <app-button
           color="background"
