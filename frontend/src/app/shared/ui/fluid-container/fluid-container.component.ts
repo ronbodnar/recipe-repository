@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { MediaService } from '@core/services/media.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '../button/button.component';
@@ -12,7 +12,9 @@ import { ButtonComponent } from '../button/button.component';
 export class FluidContainerComponent {
   pageTitle = input<string>('');
   size = input<'sm' | 'md' | 'lg' | 'xl' | 'full'>('md');
-  backRoute = input<string | null>(null);
+  showBackButton = input<boolean>(false);
+
+  backClicked = output<void>();
 
   private mediaService = inject(MediaService);
 

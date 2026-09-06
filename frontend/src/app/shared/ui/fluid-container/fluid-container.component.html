@@ -2,14 +2,14 @@
   class="mx-auto box-border min-h-full w-full flex flex-col px-4 py-0 pb-4 sm:py-6"
   [class]="widthClass"
 >
-  @if (backRoute(); as route) {
+  @if (showBackButton()) {
     <app-button
       color="background"
       size="xl"
-      [routerLink]="route"
       icon="arrow_back"
       [classList]="'p-0! -ml-2 mt-4 lg:mt-0'"
       [iconClassList]="'text-primary!'"
+      (click)="backClicked.emit()"
     />
   }
 

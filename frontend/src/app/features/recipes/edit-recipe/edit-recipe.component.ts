@@ -51,6 +51,8 @@ import { RecipeNotFoundComponent } from '../components/recipe-not-found/recipe-n
 import { redirectTo } from '@shared/utils/redirect-to';
 import { DialogService } from '@shared/ui/dialog/dialog.service';
 import { logDebug, logError } from '@shared/utils/logging';
+import { AuthenticationService } from '@core/services/authentication.service';
+import { SnackbarService, SnackbarType } from '@shared/ui/snackbar.component';
 
 @Component({
   selector: 'app-edit-recipe',
@@ -85,6 +87,8 @@ import { logDebug, logError } from '@shared/utils/logging';
 export class EditRecipeComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly snackbar = inject(SnackbarService);
+  private readonly authService = inject(AuthenticationService);
   private readonly dialogService = inject(DialogService);
   private readonly translate = inject(TranslateService);
   private readonly mediaService = inject(MediaService);
@@ -96,14 +100,14 @@ export class EditRecipeComponent {
   private _loading = signal<boolean>(true);
   private _validated = signal<boolean>(false);
   private _status = signal<'idle' | 'submitting' | 'error'>('idle');
-  private _loadedRecipeId = signal<string | null>(null);
+  private _loadedRecipe = signal<Recipe | null>(null);
   private _activeVariantIndex = signal<number | null>(0);
 
   readonly form = this._form.asReadonly();
   readonly loading = this._loading.asReadonly();
   readonly validated = this._validated.asReadonly();
   readonly status = this._status.asReadonly();
-  readonly loadedRecipeId = this._loadedRecipeId.asReadonly();
+  readonly loadedRecipe = this._loadedRecipe.asReadonly();
   readonly activeVariantIndex = this._activeVariantIndex.asReadonly();
 
   constructor() {
@@ -112,7 +116,7 @@ export class EditRecipeComponent {
 
     if (state?.recipe) {
       logDebug('Using provided recipe from route state:', state);
-      this._loadedRecipeId.set(state.recipe.id);
+      this._loadedRecipe.set(state.recipe);
       this._form.set(RecipeFormFactory.recipe(state.recipe));
       this._loading.set(false);
       return;
@@ -291,11 +295,30 @@ export class EditRecipeComponent {
     redirectTo(this.router, '/app/recipes/edit/new');
   }
 
+  goBack() {
+    if (this.loadedRecipe()) {
+      this.router.navigate(['/app/recipes/details', this.loadedRecipe()!.id], {
+        state: { recipe: this.loadedRecipe() },
+      });
+    } else {
+      this.router.navigate(['/app/recipes/list']);
+    }
+  }
+
   private loadRecipe(recipeId: string) {
-    this._loadedRecipeId.set(recipeId);
     this.recipeService.loadRecipe(recipeId!).subscribe({
       next: (recipe) => {
         logDebug('Loaded recipe:', recipe);
+
+        const currentSubject = this.authService.authUser()?.identityProviderSubject;
+        if (recipe.authorSubject !== currentSubject) {
+          logDebug('Current user is not the author of this recipe, redirecting to details page.');
+          this.router.navigate([`/app/recipes/details/${recipe.id}`], { state: { recipe } });
+          setTimeout(() => this.snackbar.openSnackBar(SnackbarType.ERROR, 'errors.notAuthorized'));
+          return;
+        }
+
+        this._loadedRecipe.set(recipe);
         this._form.set(RecipeFormFactory.recipe(recipe));
         this._loading.set(false);
       },
@@ -307,7 +330,7 @@ export class EditRecipeComponent {
   }
 
   private saveRecipe(recipeData: RecipeFormModel) {
-    this.recipeService.saveRecipe(recipeData, this._loadedRecipeId()).subscribe({
+    this.recipeService.saveRecipe(recipeData, this._loadedRecipe()!.id).subscribe({
       next: (recipe) => {
         logDebug('Recipe saved successfully:', recipe);
         this.navigateToRecipe(recipe);

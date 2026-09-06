@@ -2,10 +2,11 @@ import { Component, computed, effect, input, output } from '@angular/core';
 import { ButtonComponent } from '../button/button.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { SelectOption, InputSelectComponent } from '@ng-modular-forms/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-pagination',
-  imports: [ReactiveFormsModule, ButtonComponent, InputSelectComponent],
+  imports: [ReactiveFormsModule, ButtonComponent, InputSelectComponent, TranslatePipe],
   templateUrl: './pagination.component.html',
 })
 export class PaginationComponent {

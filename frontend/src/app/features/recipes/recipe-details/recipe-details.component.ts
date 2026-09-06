@@ -114,21 +114,18 @@ export class RecipeDetailsComponent {
     return currentUser?.identityProviderSubject === this.recipe()?.authorSubject;
   });
 
-  readonly backRoute = computed(() => {
-    const source = this.source();
-    if (source === 'discover') {
-      return '/app/recipes/discover';
-    }
-    return '/app/recipes/list';
-  });
-
   constructor() {
     const state = this.router.currentNavigation()?.extras.state as
-      | { source?: RecipeListSource }
+      | { source?: RecipeListSource; recipe?: Recipe }
       | undefined;
 
     if (state?.source) {
       this._source.set(state.source);
+    }
+
+    if (state?.recipe) {
+      this._recipe.set(state.recipe);
+      this.loadAuthor(state.recipe.authorSubject);
     }
   }
 
@@ -141,7 +138,9 @@ export class RecipeDetailsComponent {
       return;
     }
 
-    this.loadRecipe(recipeId);
+    if (!this.recipe()) {
+      this.loadRecipe(recipeId);
+    }
   }
 
   getVariantLabel(index: number) {
@@ -175,6 +174,7 @@ export class RecipeDetailsComponent {
     }
 
     this._deleting.set(true);
+
     this.recipeService.deleteRecipe(recipeId).subscribe({
       next: () => {
         this.router.navigate(['/app/recipes/list']);
@@ -185,6 +185,12 @@ export class RecipeDetailsComponent {
         this.snackbarService.openSnackBar(SnackbarType.ERROR, 'recipes.details.deleteError');
       },
     });
+  }
+
+  goBack(): void {
+    this.router.navigate(
+      this.source() === 'discover' ? ['/app/recipes/discover'] : ['/app/recipes/list'],
+    );
   }
 
   private loadRecipe(recipeId: string) {

@@ -9,14 +9,14 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { AppVersionService } from '@core/services/app-version.service';
-import { SidebarComponent } from '@features/navigation/sidebar/sidebar.component';
+import { SidenavComponent } from '@features/navigation/sidenav/sidenav.component';
 import { FullPageLoaderComponent } from '@shared/ui/full-page-loader.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FullPageLoaderComponent, SidebarComponent],
+  imports: [RouterOutlet, FullPageLoaderComponent, SidenavComponent],
   template: `
-    <app-side-navbar>
+    <app-side-nav>
       @if (loading()) {
         <app-full-page-loader />
       }
@@ -25,7 +25,7 @@ import { FullPageLoaderComponent } from '@shared/ui/full-page-loader.component';
       } @loading {
         <app-full-page-loader />
       }
-    </app-side-navbar>
+    </app-side-nav>
   `,
 })
 export class AppComponent {

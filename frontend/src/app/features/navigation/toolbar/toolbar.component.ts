@@ -12,7 +12,7 @@ import { ButtonComponent } from '@shared/ui/button/button.component';
 import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-toolbar',
   imports: [
     MatTooltipModule,
     MatIconModule,
@@ -24,10 +24,10 @@ import { MatSidenav } from '@angular/material/sidenav';
     MatSlideToggleModule,
     TranslatePipe,
   ],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.css',
+  templateUrl: './toolbar.component.html',
+  styleUrl: './toolbar.component.css',
 })
-export class HeaderComponent {
+export class ToolbarComponent {
   @Input() snav!: MatSidenav;
 
   private readonly mediaService = inject(MediaService);

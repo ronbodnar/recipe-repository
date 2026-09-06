@@ -1,4 +1,4 @@
-import { Router, CanActivateFn } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { SnackbarService, SnackbarType } from '@shared/ui/snackbar.component';
 import { AuthenticationService } from '@core/services/authentication.service';

@@ -3,7 +3,12 @@
     [message]="loading() ? 'recipes.details.loading' : 'recipes.details.deleting'"
   />
 } @else if (recipe(); as recipe) {
-  <app-fluid-container size="xl" [pageTitle]="recipe.title" [backRoute]="backRoute()">
+  <app-fluid-container
+    size="xl"
+    [pageTitle]="recipe.title"
+    [showBackButton]="true"
+    (backClicked)="goBack()"
+  >
     @if (recipe.description) {
       <p subtitle class="mt-0 lg:mb-6 text-muted">
         {{ recipe.description }}

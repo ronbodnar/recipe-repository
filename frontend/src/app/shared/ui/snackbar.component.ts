@@ -10,10 +10,10 @@ import {
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { ButtonColor, ButtonComponent } from './button/button.component';
 import { TranslatePipe } from '@ngx-translate/core';
+
+import { ButtonColor, ButtonComponent } from './button/button.component';
 
 export enum SnackbarType {
   SUCCESS = 'success',
@@ -21,18 +21,20 @@ export enum SnackbarType {
   INFO = 'info',
 }
 
+export interface SnackbarAction {
+  icon?: string;
+  label?: string;
+  action?: () => void;
+  color?: ButtonColor;
+  closeOnClick?: boolean;
+}
+
 export interface SnackbarData {
   type: SnackbarType;
-  duration?: number;
   message?: string;
   translateData?: Record<string, string | number>;
-  actions?: {
-    icon?: string;
-    label?: string;
-    action?: () => void;
-    color?: ButtonColor;
-    closeOnClick?: boolean;
-  }[];
+  duration?: number;
+  actions?: SnackbarAction[];
   classList?: string;
   horizontalPosition?: MatSnackBarHorizontalPosition;
   verticalPosition?: MatSnackBarVerticalPosition;
@@ -42,78 +44,70 @@ export interface SnackbarData {
   providedIn: 'root',
 })
 export class SnackbarService {
-  private _snackBar = inject(MatSnackBar);
+  private readonly snackBar = inject(MatSnackBar);
 
   openSnackBar(
     type: SnackbarType,
     data: string | SnackbarData,
     translateData: Record<string, string | number> = {},
   ): MatSnackBarRef<SnackbarComponent> {
-    if (typeof data === 'string') {
-      data = {
-        type: type,
-        message: data,
-        translateData: translateData,
-        actions: [
-          {
-            icon: 'close',
-            action: () => {
-              this._snackBar.dismiss();
-            },
-          },
-        ],
-      };
-    }
+    const snackbarData: SnackbarData =
+      typeof data === 'string'
+        ? {
+            type,
+            message: data,
+            translateData,
+            actions: [{ icon: 'close' }],
+          }
+        : {
+            ...data,
+            type: data.type ?? type,
+          };
 
-    if (!data.type) {
-      data.type = SnackbarType.INFO;
-    }
-
-    return this._snackBar.openFromComponent(SnackbarComponent, {
-      data: data,
-      duration: data.duration || 5000,
-      horizontalPosition: data.horizontalPosition || 'center',
-      verticalPosition: data.verticalPosition || 'bottom',
+    return this.snackBar.openFromComponent(SnackbarComponent, {
+      data: snackbarData,
+      duration: snackbarData.duration ?? 50000,
+      horizontalPosition: snackbarData.horizontalPosition ?? 'right',
+      verticalPosition: snackbarData.verticalPosition ?? 'bottom',
       panelClass: ['mt-[var(--mat-toolbar-standard-height)]!'],
     });
   }
 }
 
 @Component({
-  selector: 'snack-bar',
+  selector: 'app-snackbar',
   template: `
-    <div class="flex {{ data.classList }}">
-      <div class="self-center px-2">
-        <mat-icon
-          [ngClass]="{
-            'text-success!': data.type === 'success',
-            'text-label!': data.type === 'info',
-            'text-danger!': data.type === 'error',
-          }"
-        >
-          {{
-            data.type === 'success' ? 'check_circle' : data.type === 'info' ? 'info' : 'dangerous'
-          }}
-        </mat-icon>
-      </div>
-
-      <span matSnackBarLabel class="text-sm! px-0!">
+    <div
+      class="flex w-full p-2 pl-6 {{ data.classList }}"
+      [class.bg-success]="data.type === SnackbarType.SUCCESS"
+      [class.bg-label]="data.type === SnackbarType.INFO"
+      [class.bg-danger]="data.type === SnackbarType.ERROR"
+    >
+      <span
+        matSnackBarLabel
+        class="px-0! text-sm!"
+        [class.text-text!]="data.type === SnackbarType.INFO"
+        [class.text-white!]="data.type !== SnackbarType.INFO"
+      >
         {{ data.message | translate: data.translateData }}
       </span>
 
-      <div matSnackBarActions class="pl-4 pr-2 ml-auto">
-        @for (action of data.actions; track action) {
-          <app-button
-            matButton
-            matSnackBarAction
-            [icon]="action.icon"
-            [label]="action.label"
-            [size]="'sm'"
-            [color]="action.color || 'transparent'"
-            (click)="handleAction(action.action, action.closeOnClick !== false)"
-          />
-        }
-      </div>
+      @if (data.actions?.length) {
+        <div matSnackBarActions class="flex gap-1 pl-4 pr-2 ml-auto">
+          @for (action of data.actions; track $index) {
+            <app-button
+              matButton
+              matSnackBarAction
+              [icon]="action.icon"
+              [label]="action.label"
+              size="sm"
+              [color]="action.color ?? 'transparent'"
+              [iconClassList]="data.type === SnackbarType.INFO ? 'text-text!' : 'text-white!'"
+              (click)="handleAction(action)"
+            />
+          }
+        </div>
+      }
     </div>
   `,
   imports: [
@@ -123,21 +117,32 @@ export class SnackbarService {
     MatSnackBarAction,
     MatIconModule,
     ButtonComponent,
-    CommonModule,
     TranslatePipe,
   ],
 })
 export class SnackbarComponent {
-  data = inject<SnackbarData>(MAT_SNACK_BAR_DATA);
+  protected readonly SnackbarType = SnackbarType;
 
-  handleAction(action?: () => void, close: boolean = true) {
-    if (close) {
-      this.snackBarRef.dismiss();
-    }
-    if (typeof action === 'function') {
-      action();
+  readonly data = inject<SnackbarData>(MAT_SNACK_BAR_DATA);
+  private readonly snackBarRef = inject(MatSnackBarRef);
+
+  get icon(): string {
+    switch (this.data.type) {
+      case SnackbarType.SUCCESS:
+        return 'check_circle';
+      case SnackbarType.ERROR:
+        return 'dangerous';
+      case SnackbarType.INFO:
+      default:
+        return 'info';
     }
   }
 
-  snackBarRef = inject(MatSnackBarRef);
+  protected handleAction(action: SnackbarAction): void {
+    if (action.closeOnClick ?? true) {
+      this.snackBarRef.dismiss();
+    }
+
+    action.action?.();
+  }
 }

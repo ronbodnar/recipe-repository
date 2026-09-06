@@ -54,11 +54,13 @@ public class RecipeController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("@recipeSecurityService.isOwner(#id, authentication)")
     public RecipeDetailsDTO update(@PathVariable("id") UUID id, @RequestBody @Valid RecipeRequest recipeRequest) {
         return recipeService.handleUpdateRequest(id, recipeRequest);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('VIEW-RECIPE') and @recipeSecurityService.canView(#id, authentication)")
     public RecipeDetailsDTO getById(@PathVariable("id") UUID id) {
         return recipeService.getById(id);
     }

@@ -1,9 +1,6 @@
 <div class="relative mt-6 flex flex-col items-center justify-end gap-4 sm:flex-row">
   @if (totalPages() > 1) {
-    <nav
-      class="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center justify-center gap-1"
-      aria-label="Recipe pages"
-    >
+    <nav class="flex items-center justify-center gap-1 sm:absolute sm:left-1/2 sm:-translate-x-1/2">
       <app-button
         color="background"
         size="sm"
@@ -11,7 +8,7 @@
         icon="chevron_left"
         iconClassList="text-primary!"
         [disabled]="currentPage() === 0"
-        aria-label="Previous page"
+        [aria-label]="'ui.pagination.previousPage' | translate"
         (click)="changePage(currentPage() - 1)"
       />
 
@@ -26,7 +23,9 @@
             size="sm"
             [classList]="'border-border/40! ' + (page === currentPage() ? 'bg-primary!' : '')"
             [attr.aria-current]="page === currentPage() ? 'page' : null"
-            [attr.aria-label]="'Page ' + (page + 1)"
+            [attr.aria-label]="
+              'ui.pagination.page' | translate: { currentPage: page + 1, totalPages: totalPages() }
+            "
             (click)="changePage(page)"
           >
             {{ page + 1 }}
@@ -41,7 +40,7 @@
         icon="chevron_right"
         iconClassList="text-primary!"
         [disabled]="currentPage() === totalPages() - 1"
-        aria-label="Next page"
+        [aria-label]="'ui.pagination.nextPage' | translate"
         (click)="changePage(currentPage() + 1)"
       />
     </nav>
@@ -50,7 +49,7 @@
   @if (totalItems() > 10) {
     <nmf-select
       class="w-44 flex-none!"
-      label="Recipes per page"
+      label="ui.pagination.resultsPerPage"
       [formControl]="pageSizeControl"
       [options]="pageSizeSelectOptions()"
     />

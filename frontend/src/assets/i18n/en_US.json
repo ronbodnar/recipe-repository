@@ -17,6 +17,12 @@
       "selectImagesButton": "Select {{label}}",
       "replaceImage": "Replace Image",
       "deleteImage": "Delete Image"
+    },
+    "pagination": {
+      "page": "Page {{currentPage}} of {{totalPages}}",
+      "previousPage": "Previous Page",
+      "nextPage": "Next Page",
+      "resultsPerPage": "Results per page"
     }
   },
   "navigation": {

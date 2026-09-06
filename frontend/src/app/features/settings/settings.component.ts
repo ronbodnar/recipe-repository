@@ -43,4 +43,8 @@ export class SettingsComponent {
       }
     });
   }
+
+  goBack(): void {
+    this.router.navigate(['/app/recipes/list']);
+  }
 }

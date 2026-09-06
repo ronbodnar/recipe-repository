@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { HeaderComponent } from '../header/header.component';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NavItem } from '../nav-item.interface';
@@ -22,24 +21,25 @@ import { MediaService } from '@core/services/media.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { getNavItems } from '../nav-menu.config';
 import { StorageService } from '@core/services/storage.service';
+import { ToolbarComponent } from '../toolbar/toolbar.component';
 
 @Component({
-  selector: 'app-side-navbar',
+  selector: 'app-side-nav',
   imports: [
     CommonModule,
     MatSidenavModule,
     MatIconModule,
     MatListModule,
     MatTooltipModule,
-    HeaderComponent,
     TranslatePipe,
+    ToolbarComponent,
   ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css',
+  templateUrl: './sidenav.component.html',
+  styleUrl: './sidenav.component.css',
 })
-export class SidebarComponent implements OnDestroy {
+export class SidenavComponent implements OnDestroy {
   @ViewChild('snav') nav!: MatSidenav;
 
   private readonly router = inject(Router);

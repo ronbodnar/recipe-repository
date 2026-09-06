@@ -16,14 +16,13 @@
 } @else {
   <app-fluid-container
     size="lg"
-    [pageTitle]="loadedRecipeId() ? 'recipes.edit.title.existing' : 'recipes.edit.title.new'"
-    [backRoute]="
-      loadedRecipeId() ? '/app/recipes/details/' + loadedRecipeId() : '/app/recipes/list'
-    "
+    [pageTitle]="loadedRecipe() ? 'recipes.edit.title.existing' : 'recipes.edit.title.new'"
+    [showBackButton]="true"
+    (backClicked)="goBack()"
   >
     <p subtitle class="text-sm text-muted mt-0">
       {{
-        (loadedRecipeId() ? 'recipes.edit.subtitle.existing' : 'recipes.edit.subtitle.new')
+        (loadedRecipe() ? 'recipes.edit.subtitle.existing' : 'recipes.edit.subtitle.new')
           | translate
       }}
     </p>
@@ -270,7 +269,7 @@
             type="button"
             label="forms.cancel"
             [routerLink]="
-              loadedRecipeId() ? '/app/recipes/details/' + loadedRecipeId() : '/app/recipes/list'
+              loadedRecipe() ? '/app/recipes/details/' + loadedRecipe()!.id : '/app/recipes/list'
             "
           />
 
@@ -279,7 +278,7 @@
             size="md"
             type="submit"
             [label]="
-              loadedRecipeId()
+              loadedRecipe()
                 ? 'recipes.edit.submitButton.existing'
                 : 'recipes.edit.submitButton.new'
             "
