@@ -1,0 +1,58 @@
+<div class="relative mt-6 flex flex-col items-center justify-end gap-4 sm:flex-row">
+  @if (totalPages() > 1) {
+    <nav
+      class="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center justify-center gap-1"
+      aria-label="Recipe pages"
+    >
+      <app-button
+        color="background"
+        size="sm"
+        classList="border-border/40!"
+        icon="chevron_left"
+        iconClassList="text-primary!"
+        [disabled]="currentPage() === 0"
+        aria-label="Previous page"
+        (click)="changePage(currentPage() - 1)"
+      />
+
+      @for (page of pages(); track $index) {
+        @if (page === null) {
+          <span class="flex size-9 items-center justify-center text-muted" aria-hidden="true">
+            ...
+          </span>
+        } @else {
+          <app-button
+            color="background"
+            size="sm"
+            [classList]="'border-border/40! ' + (page === currentPage() ? 'bg-primary!' : '')"
+            [attr.aria-current]="page === currentPage() ? 'page' : null"
+            [attr.aria-label]="'Page ' + (page + 1)"
+            (click)="changePage(page)"
+          >
+            {{ page + 1 }}
+          </app-button>
+        }
+      }
+
+      <app-button
+        color="background"
+        size="sm"
+        classList="border-border/40!"
+        icon="chevron_right"
+        iconClassList="text-primary!"
+        [disabled]="currentPage() === totalPages() - 1"
+        aria-label="Next page"
+        (click)="changePage(currentPage() + 1)"
+      />
+    </nav>
+  }
+
+  @if (totalItems() > 10) {
+    <nmf-select
+      class="w-44 flex-none!"
+      label="Recipes per page"
+      [formControl]="pageSizeControl"
+      [options]="pageSizeSelectOptions()"
+    />
+  }
+</div>

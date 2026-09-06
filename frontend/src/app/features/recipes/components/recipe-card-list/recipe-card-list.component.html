@@ -1,76 +1,29 @@
-<div class="flex flex-col">
-  <ul class="grid grid-cols-2 gap-8 p-0 list-none sm:grid-cols-3 xl:grid-cols-5">
-    @for (recipe of recipes(); track recipe.id) {
-      <li>
-        <article
-          class="group flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border border-border/40 bg-background-alt shadow-sm transition-all duration-200 hover:border-primary/50 hover:-translate-y-1 hover:shadow-lg"
-          [routerLink]="'/app/recipes/details/' + recipe.id"
-          [state]="{ source: source() }"
-        >
-          <div class="aspect-4/3 w-full overflow-hidden">
-            <app-image-carousel
-              [images]="recipeImageUrls(recipe.imageIds)"
-              [alt]="recipe.title"
-              class="block h-full w-full transition-transform duration-300 group-hover:scale-[1.02]"
-            />
-          </div>
+<ul class="grid grid-cols-2 gap-8 p-0 list-none sm:grid-cols-3 xl:grid-cols-5">
+  @for (recipe of recipes(); track recipe.id) {
+    <li>
+      <article
+        class="group flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border border-border/40 bg-background-alt shadow-sm transition-all duration-200 hover:border-primary/50 hover:-translate-y-1 hover:shadow-lg"
+        [routerLink]="'/app/recipes/details/' + recipe.id"
+        [state]="{ source: source() }"
+      >
+        <div class="aspect-4/3 w-full overflow-hidden">
+          <app-image-carousel
+            [images]="recipeImageUrls(recipe.imageIds)"
+            [alt]="recipe.title"
+            class="block h-full w-full transition-transform duration-300 group-hover:scale-[1.02]"
+          />
+        </div>
 
-          <div class="flex flex-1 flex-col p-5">
-            <h2 class="my-0 line-clamp-2 text-xl font-semibold leading-tight tracking-tight">
-              {{ recipe.title }}
-            </h2>
+        <div class="flex flex-1 flex-col p-5">
+          <h2 class="my-0 line-clamp-2 text-xl font-semibold leading-tight tracking-tight">
+            {{ recipe.title }}
+          </h2>
 
-            <p class="mt-3 mb-0 line-clamp-3 text-sm leading-relaxed text-muted truncate">
-              {{ recipe.description || ('recipes.list.noDescription' | translate) }}
-            </p>
-          </div>
-        </article>
-      </li>
-    }
-  </ul>
-
-  @if (totalPages() > 1) {
-    <nav class="mt-6 flex items-center justify-center gap-1" aria-label="Recipe pages">
-      <app-button
-        color="background"
-        size="sm"
-        classList="border-border/40!"
-        icon="chevron_left"
-        iconClassList="text-primary!"
-        [disabled]="currentPage() === 0"
-        aria-label="Previous page"
-        (click)="changePage(currentPage() - 1)"
-      />
-
-      @for (page of pages(); track $index) {
-        @if (page === null) {
-          <span class="flex size-9 items-center justify-center text-muted" aria-hidden="true">
-            ...
-          </span>
-        } @else {
-          <app-button
-            color="background"
-            size="sm"
-            [classList]="'border-border/40! ' + (page === currentPage() ? 'bg-primary!' : '')"
-            [attr.aria-current]="page === currentPage() ? 'page' : null"
-            [attr.aria-label]="'Page ' + (page + 1)"
-            (click)="changePage(page)"
-          >
-            {{ page + 1 }}
-          </app-button>
-        }
-      }
-
-      <app-button
-        color="background"
-        size="sm"
-        classList="border-border/40!"
-        icon="chevron_right"
-        iconClassList="text-primary!"
-        [disabled]="currentPage() === totalPages() - 1"
-        aria-label="Next page"
-        (click)="changePage(currentPage() + 1)"
-      />
-    </nav>
+          <p class="mt-3 mb-0 line-clamp-3 text-sm leading-relaxed text-muted truncate">
+            {{ recipe.description || ('recipes.list.noDescription' | translate) }}
+          </p>
+        </div>
+      </article>
+    </li>
   }
-</div>
+</ul>

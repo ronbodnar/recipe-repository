@@ -11,6 +11,7 @@ import { RecipeCardListComponent } from '../components/recipe-card-list/recipe-c
 import { MatIconModule } from '@angular/material/icon';
 import { logDebug } from '@shared/utils/logging';
 import { PaginatedResponse } from '@core/interfaces/paginated-response.interface';
+import { PaginationComponent } from '@shared/ui/pagination/pagination.component';
 
 export type RecipeListSource = 'my-recipes' | 'discover';
 
@@ -25,6 +26,7 @@ export type RecipeListSource = 'my-recipes' | 'discover';
     TranslatePipe,
     FullPageLoaderComponent,
     RecipeCardListComponent,
+    PaginationComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './recipe-list.component.html',
@@ -71,23 +73,24 @@ export class RecipeListComponent {
     }
   });
 
-  pageSize = 1;
-  page = 0;
+  readonly pageSizeOptions = [10, 15, 25, 50];
+  pageSize = 15;
+  currentPage = 0;
 
   ngOnInit(): void {
     const source = this.route.snapshot.data['source'];
     this._source.set(source);
-    this.loadPage(this.page);
+    this.loadPage(this.currentPage);
   }
 
   loadPage(page: number): void {
-    this.page = page;
+    this.currentPage = page;
     this._isLoading.set(true);
 
     const recipes$ =
       this.source() === 'discover'
-        ? this.recipeService.loadDiscoverRecipes(this.page, this.pageSize)
-        : this.recipeService.loadPaginatedRecipes(this.page, this.pageSize);
+        ? this.recipeService.loadDiscoverRecipes(this.currentPage, this.pageSize)
+        : this.recipeService.loadPaginatedRecipes(this.currentPage, this.pageSize);
 
     recipes$.subscribe({
       next: (data) => {
@@ -102,5 +105,10 @@ export class RecipeListComponent {
         this._isLoading.set(false);
       },
     });
+  }
+
+  changePageSize(pageSize: number): void {
+    this.pageSize = pageSize;
+    this.loadPage(0);
   }
 }
