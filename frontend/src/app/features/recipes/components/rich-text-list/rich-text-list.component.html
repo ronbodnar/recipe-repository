@@ -16,11 +16,11 @@
         {{ emptyListText() || 'recipes.details.noItems' | translate }}
       </p>
     } @else {
-      @for (ingredientGroup of listGroups(); track ingredientGroup.name) {
+      @for (group of listGroups(); track group.name) {
         <div>
-          @if (ingredientGroup.name !== 'base') {
+          @if (group.name !== 'base') {
             <h4 class="m-0 text-base font-medium uppercase tracking-wide">
-              {{ ingredientGroup.name }}
+              {{ group.name }}
             </h4>
           }
 
@@ -34,7 +34,7 @@
             >
               <ng-container
                 [ngTemplateOutlet]="listContents"
-                [ngTemplateOutletContext]="{ ingredientGroup: ingredientGroup.items }"
+                [ngTemplateOutletContext]="{ group: group.items }"
               ></ng-container>
             </ol>
           } @else {
@@ -47,7 +47,7 @@
             >
               <ng-container
                 [ngTemplateOutlet]="listContents"
-                [ngTemplateOutletContext]="{ ingredientGroup: ingredientGroup.items }"
+                [ngTemplateOutletContext]="{ group: group.items }"
               ></ng-container>
             </ul>
           }
@@ -57,8 +57,8 @@
   </div>
 </div>
 
-<ng-template #listContents let-ingredientGroup="ingredientGroup">
-  @for (ingredient of ingredientGroup; track ingredient; let index = $index) {
+<ng-template #listContents let-group="group">
+  @for (ingredient of group; track ingredient; let index = $index) {
     @if (useCheckboxes()) {
       <li class="flex items-center gap-2">
         <mat-checkbox [checked]="false">

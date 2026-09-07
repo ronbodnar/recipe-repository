@@ -62,7 +62,7 @@ export class SidenavComponent implements OnDestroy {
   readonly NAV_ITEMS = getNavItems();
 
   private expandedSections = signal<string[]>(
-    this.storageService.getPreference('sidenav.expandedSections') || ['recipes', 'groups'],
+    this.storageService.getPreference('sidenav.expandedSections') || [],
   );
 
   toggleSection(section: string) {

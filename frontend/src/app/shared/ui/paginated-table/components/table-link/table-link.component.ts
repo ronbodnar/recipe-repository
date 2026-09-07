@@ -19,7 +19,7 @@ export class TableLinkComponent {
   @Input() routerLink?: string;
   @Input() routerState?: Record<string, unknown>;
   @Input() target: '_blank' | '_self' | '_parent' | '_top' = '_self';
-  @Input() clamp: number = 2;
+  @Input() clamp: number | null = null;
   @Input() applyOpacity: boolean = false;
   @Input() reloadOnClick: boolean = false;
 

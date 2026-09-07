@@ -45,4 +45,8 @@ public class Group {
             orphanRemoval = true
     )
     private List<GroupMember> members = new ArrayList<>();
+
+    public void addMember(GroupMember member) {
+        members.add(member);
+    }
 }

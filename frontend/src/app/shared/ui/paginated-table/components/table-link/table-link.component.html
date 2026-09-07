@@ -2,7 +2,9 @@
   <a
     [routerLink]="routerLink"
     (click)="handleClick($event)"
-    class="line-clamp-{{ clamp }} block cursor-pointer {{ applyOpacity ? 'opacity-50' : '' }}"
+    class="{{ clamp ? 'block line-clamp-' + clamp : 'inline' }} cursor-pointer {{
+      applyOpacity ? 'opacity-50' : ''
+    }}"
     [matTooltip]="transformedLabel"
     [matTooltipPosition]="'above'"
   >

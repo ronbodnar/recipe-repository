@@ -24,7 +24,7 @@ export class RecipeFormFactory {
         nonNullable: true,
       }),
       source: new FormControl(v?.source ?? null),
-      visibility: new FormControl(v?.visibility ?? 'GROUP', {
+      visibility: new FormControl(v?.visibility ?? 'PRIVATE', {
         validators: [Validators.required],
         nonNullable: true,
       }),

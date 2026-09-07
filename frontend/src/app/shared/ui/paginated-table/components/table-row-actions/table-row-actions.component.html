@@ -1,5 +1,5 @@
 <div class="flex justify-center gap-x-2">
-  @if (actions.length === 1 || (expandActions && !isSmallScreen())) {
+  @if (actions.length <= 3 || (expandActions && !isSmallScreen())) {
     @for (action of visibleActions(); track action) {
       <app-button
         size="sm"
@@ -25,6 +25,7 @@
       size="sm"
       icon="more_vert"
       color="transparent"
+      iconClassList="text-text!"
       [matTooltip]="
         (hasActions() ? 'ui.tables.moreActions' : 'ui.tables.moreActionsDisabled') | translate
       "

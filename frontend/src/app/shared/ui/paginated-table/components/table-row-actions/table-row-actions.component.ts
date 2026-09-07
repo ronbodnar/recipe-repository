@@ -22,6 +22,7 @@ export const EDIT: RowAction = {
   label: 'ui.tables.actions.edit',
   icon: 'edit',
   buttonColor: 'light',
+  iconClasses: 'text-text!',
   tooltipLabel: 'ui.tables.actions.edit',
   onClick: () => {},
 };

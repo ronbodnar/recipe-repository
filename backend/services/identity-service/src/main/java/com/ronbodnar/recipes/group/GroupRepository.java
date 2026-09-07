@@ -10,7 +10,12 @@ import org.springframework.data.jpa.repository.Query;
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
     @Query("""
-        SELECT g
+        SELECT new com.ronbodnar.recipes.group.dto.GroupDTO(
+            g.name,
+            COUNT(g.members),
+            g.createdAt,
+            g.lastModifiedAt
+        )
         FROM Group g
         WHERE g.name LIKE CONCAT('%', :searchValue, '%')
     """)

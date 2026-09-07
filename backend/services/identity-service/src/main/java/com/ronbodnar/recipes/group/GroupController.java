@@ -6,6 +6,8 @@ import com.ronbodnar.recipes.group.dto.GroupRequest;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +23,8 @@ public class GroupController {
     }
 
     @GetMapping
-    public Page<GroupDTO> getGroups(SearchQuery searchQuery, Pageable pageable) {
+    public Page<GroupDTO> getGroups(SearchQuery searchQuery, Pageable pageable, @AuthenticationPrincipal Jwt jwt) {
+        String ownerId = jwt.getSubject();
         return groupService.getGroups(searchQuery, pageable);
     }
 

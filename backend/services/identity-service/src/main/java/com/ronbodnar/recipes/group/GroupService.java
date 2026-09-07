@@ -32,7 +32,7 @@ public class GroupService {
 
         Group saved = groupRepository.save(group);
 
-        return new GroupDTO(saved.getName(), saved.getCreatedAt(), saved.getLastModifiedAt());
+        return new GroupDTO(saved.getName(), 1, saved.getCreatedAt(), saved.getLastModifiedAt());
     }
 
 }

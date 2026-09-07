@@ -1,9 +1,11 @@
 import { AuthenticationService } from '@core/services/authentication.service';
 import { NavItem } from './nav-item.interface';
 import { inject } from '@angular/core';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 export const getNavItems = (): NavItem[] => {
   const authService = inject(AuthenticationService);
+  const featureFlags = inject(FeatureFlagService);
 
   return [
     {
@@ -18,18 +20,29 @@ export const getNavItems = (): NavItem[] => {
       label: 'navigation.addRecipe',
       route: '/app/recipes/edit/new',
     },
-    {
-      sectionName: 'discoverRecipes',
-      icon: 'explore',
-      label: 'navigation.discoverRecipes',
-      route: '/app/recipes/discover',
-    },
-    {
-      sectionName: 'myGroups',
-      icon: 'group',
-      label: 'navigation.myGroups',
-      route: '/app/groups/list',
-    },
+
+    ...(featureFlags.isFeatureEnabled('discover')
+      ? [
+          {
+            sectionName: 'discoverRecipes',
+            icon: 'explore',
+            label: 'navigation.discoverRecipes',
+            route: '/app/recipes/discover',
+          },
+        ]
+      : []),
+
+    ...(featureFlags.isFeatureEnabled('groups')
+      ? [
+          {
+            sectionName: 'myGroups',
+            icon: 'group',
+            label: 'navigation.myGroups',
+            route: '/app/groups/list',
+          },
+        ]
+      : []),
+
     {
       sectionName: 'settings',
       icon: 'settings',

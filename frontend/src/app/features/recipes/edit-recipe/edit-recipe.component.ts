@@ -54,6 +54,7 @@ import { DialogService } from '@shared/ui/dialog/dialog.service';
 import { logDebug, logError } from '@shared/utils/logging';
 import { AuthenticationService } from '@core/services/authentication.service';
 import { SnackbarService, SnackbarType } from '@shared/ui/snackbar.component';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
   selector: 'app-edit-recipe',
@@ -90,6 +91,7 @@ export class EditRecipeComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly snackbar = inject(SnackbarService);
   private readonly authService = inject(AuthenticationService);
+  private readonly featureFlags = inject(FeatureFlagService);
   private readonly dialogService = inject(DialogService);
   private readonly translate = inject(TranslateService);
   private readonly mediaService = inject(MediaService);
@@ -169,10 +171,14 @@ export class EditRecipeComponent {
     ),
   })).sort((a, b) => a.label.localeCompare(b.label));
 
-  visibilityOptions = VISIBILITY_TYPES.map((visibility) => ({
-    value: visibility,
-    label: this.translate.instant(`recipes.visibility.${visibility.toLowerCase()}`),
-  })).sort((a, b) => a.label.localeCompare(b.label));
+  visibilityOptions = VISIBILITY_TYPES.filter(
+    (visibility) => this.featureFlags.isFeatureEnabled('groups') || visibility !== 'GROUP',
+  )
+    .map((visibility) => ({
+      value: visibility,
+      label: this.translate.instant(`recipes.visibility.${visibility.toLowerCase()}`),
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
 
   get variants(): FormArray<RecipeVariantForm> {
     return this._form().get('variants') as FormArray<RecipeVariantForm>;
@@ -331,7 +337,7 @@ export class EditRecipeComponent {
   }
 
   private saveRecipe(recipeData: RecipeFormModel) {
-    this.recipeService.saveRecipe(recipeData, this._loadedRecipe()!.id).subscribe({
+    this.recipeService.saveRecipe(recipeData, this._loadedRecipe()?.id ?? null).subscribe({
       next: (recipe) => {
         logDebug('Recipe saved successfully:', recipe);
         this.navigateToRecipe(recipe);
