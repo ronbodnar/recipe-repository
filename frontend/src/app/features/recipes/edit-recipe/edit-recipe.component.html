@@ -35,26 +35,27 @@
   <form class="mt-6" [formGroup]="form()" (ngSubmit)="submit()">
     <!-- Recipe Details -->
     <div class="col-span-3 flex flex-col min-w-0 gap-4">
-      <nmf-text
+      <nmf-mat-text
         formControlName="title"
         label="recipes.labels.title"
         placeholder="recipes.edit.placeholders.title"
       />
 
-      <nmf-textarea
+      <nmf-mat-textarea
         formControlName="description"
         label="recipes.labels.description"
         placeholder="recipes.edit.placeholders.description"
         [rows]="4"
       />
 
-      <nmf-text
+      <nmf-mat-text
         formControlName="source"
         label="recipes.labels.source"
         placeholder="recipes.edit.placeholders.source"
       />
 
-      <nmf-select
+      <nmf-mat-select
+        class="flex-none!"
         formControlName="visibility"
         label="recipes.labels.visibility"
         [options]="visibilityOptions"
@@ -155,53 +156,53 @@
             class="flex-1 grid grid-cols-1 xl:grid-cols-2 gap-4 min-w-0 border border-border/40 rounded-md p-4"
             [formGroup]="variants.at(activeVariantIndex()!)"
           >
-            <nmf-text
+            <nmf-mat-text
               class="col-span-full"
               formControlName="name"
               label="recipes.edit.fields.variantName"
               placeholder="recipes.edit.placeholders.variantName"
             />
-            <nmf-select
+            <nmf-mat-select
               formControlName="cookingMethod"
               label="recipes.labels.cookingMethod"
               [options]="cookingMethodOptions"
             />
 
-            <nmf-text
+            <nmf-mat-text
               formControlName="yield"
               label="recipes.labels.yield"
               placeholder="recipes.edit.placeholders.yield"
             />
 
-            <nmf-number
+            <nmf-mat-number
               formControlName="prepTime"
               label="recipes.labels.prepTime"
               placeholder="recipes.edit.placeholders.prepTime"
               [min]="0"
             />
 
-            <nmf-number
+            <nmf-mat-number
               formControlName="cookTime"
               label="recipes.labels.cookTime"
               placeholder="recipes.edit.placeholders.cookTime"
               [min]="0"
             />
 
-            <nmf-textarea
+            <nmf-mat-textarea
               class="col-span-full"
               formControlName="ingredients"
               label="recipes.labels.ingredients"
               placeholder="recipes.edit.placeholders.ingredients"
             />
 
-            <nmf-textarea
+            <nmf-mat-textarea
               class="col-span-full"
               formControlName="instructions"
               label="recipes.labels.instructions"
               placeholder="recipes.edit.placeholders.instructions"
             />
 
-            <nmf-textarea
+            <nmf-mat-textarea
               class="col-span-full"
               formControlName="notes"
               label="recipes.labels.notes"

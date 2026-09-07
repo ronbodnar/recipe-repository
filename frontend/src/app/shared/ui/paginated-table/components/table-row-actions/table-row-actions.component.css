@@ -1,0 +1,9 @@
+.button.small {
+  font-size: 0.7rem;
+  padding: 0.2 0.4rem;
+  padding-bottom: 0;
+}
+
+.button.small > i {
+  font-size: 0.8rem;
+}

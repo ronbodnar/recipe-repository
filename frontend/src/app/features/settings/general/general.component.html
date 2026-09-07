@@ -1,12 +1,14 @@
 <form class="flex flex-col gap-6" [formGroup]="form()">
-  <nmf-select
+  <nmf-mat-select
+    class="flex-none!"
     [label]="'settings.general.themeLabel' | translate"
     type="text"
     formControlName="theme"
     [options]="themeOptions()"
   />
 
-  <nmf-select
+  <nmf-mat-select
+    class="flex-none!"
     [label]="'settings.general.languageLabel' | translate"
     type="text"
     formControlName="language"

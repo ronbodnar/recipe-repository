@@ -1,0 +1,41 @@
+package com.ronbodnar.recipes.group;
+
+import com.ronbodnar.recipes.group.dto.GroupDTO;
+import com.ronbodnar.recipes.group.dto.GroupRequest;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/identity/groups")
+public class GroupController {
+
+    private final GroupService groupService;
+
+    public GroupController(GroupService groupService) {
+        this.groupService = groupService;
+    }
+
+    @GetMapping
+    public Page<GroupDTO> getGroups(Pageable pageable) {
+        return groupService.getGroups(pageable);
+    }
+
+    // Add Groups
+    @PostMapping
+    public GroupDTO create(@RequestBody GroupRequest request) {
+        return groupService.createGroup(request);
+    }
+
+    // Update Groups
+    // Remove Groups
+
+    // Add Group Member
+    // Change Group Member Role
+    // Delete Group Member
+
+    // Check Group Membership
+}

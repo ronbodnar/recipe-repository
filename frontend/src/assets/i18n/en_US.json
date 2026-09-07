@@ -23,6 +23,28 @@
       "previousPage": "Previous Page",
       "nextPage": "Next Page",
       "resultsPerPage": "Results per page"
+    },
+    "tables": {
+      "noData": "No results found for the current filters",
+      "resultsFound": "Results found",
+      "resetFilter": "Reset Filter",
+      "paginator": {
+        "itemsPerPage": "Items per page:",
+        "firstPage": "First page",
+        "lastPage": "Last page",
+        "nextPage": "Next page",
+        "previousPage": "Previous page",
+        "of": "of",
+        "page": "Page"
+      },
+      "actions": {
+        "label": "Actions",
+        "edit": "Edit",
+        "delete": "Delete",
+        "details": "View Details"
+      },
+      "moreActions": "More Actions",
+      "moreActionsDisabled": "No actions are available for this record."
     }
   },
   "navigation": {

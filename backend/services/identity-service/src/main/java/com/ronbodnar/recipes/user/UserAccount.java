@@ -1,7 +1,8 @@
 package com.ronbodnar.recipes.user;
 
-import jakarta.persistence.*;
+import com.ronbodnar.recipes.group.member.GroupMember;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -14,6 +15,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -52,6 +55,9 @@ public class UserAccount {
     @LastModifiedDate
     @Column(name = "last_modified_at", nullable = false)
     private LocalDateTime lastModifiedAt;
+
+    @OneToMany(mappedBy = "userAccount")
+    private List<GroupMember> groupMemberships = new ArrayList<>();
 
     @Override
     public String toString() {

@@ -1,0 +1,76 @@
+.mat-mdc-table {
+  display: table;
+  border-collapse: collapse;
+  border-radius: 5px;
+}
+
+:host ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+:host ::ng-deep .mdc-text-field--outlined {
+  background-color: var(--background-color);
+}
+
+mat-header-cell.text-center {
+  justify-content: center !important;
+}
+
+.mat-mdc-header-cell:first-of-type {
+  border-top-left-radius: 5px;
+}
+
+.mat-mdc-header-cell:last-of-type {
+  border-top-right-radius: 5px;
+}
+
+.mat-mdc-row:nth-of-type(odd) {
+  background-color: var(--table-odd-row-color);
+}
+
+/*
+Use the same background as the even row to maintain uniform highlight colors.
+If this is removed then highlighted alternating rows will have different shades.
+*/
+.mat-mdc-row:nth-of-type(odd).status-highlight {
+  background-color: var(--background-secondary-color);
+}
+
+.mat-mdc-row:nth-of-type(even) {
+  background-color: var(--background-secondary-color);
+}
+
+mat-header-row,
+.mat-mdc-header-row {
+  border-top-left-radius: 25px;
+  border-top-right-radius: 5px;
+}
+
+.mat-mdc-paginator {
+  background-color: var(--background-secondary-color) !important;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+/*
+ * Individual column widths.. doesnt seem to work outside of this file, it will be overwritten
+ * by the mdc-data-table__cell class.
+ */
+@media screen and (max-width: 768px) {
+  .mdc-data-table__cell,
+  .mdc-data-table__header-cell {
+    min-width: 100px !important;
+  }
+  :host ::ng-deep .mat-column-c-fullName,
+  :host ::ng-deep .mat-column-clientFullName {
+    min-width: 175px !important;
+    max-width: 175px !important;
+    width: 175px !important;
+  }
+  :host ::ng-deep .mat-column-billingAddress,
+  :host ::ng-deep .mat-column-client-billingAddress {
+    min-width: 300px !important;
+    max-width: 300px !important;
+    width: 300px !important;
+  }
+}

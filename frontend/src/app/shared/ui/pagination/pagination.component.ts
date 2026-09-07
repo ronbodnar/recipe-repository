@@ -1,12 +1,13 @@
 import { Component, computed, effect, input, output } from '@angular/core';
 import { ButtonComponent } from '../button/button.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { SelectOption, InputSelectComponent } from '@ng-modular-forms/core';
+import { SelectOption } from '@ng-modular-forms/core';
+import { MatInputSelectComponent } from '@ng-modular-forms/material';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-pagination',
-  imports: [ReactiveFormsModule, ButtonComponent, InputSelectComponent, TranslatePipe],
+  imports: [ReactiveFormsModule, ButtonComponent, MatInputSelectComponent, TranslatePipe],
   templateUrl: './pagination.component.html',
 })
 export class PaginationComponent {

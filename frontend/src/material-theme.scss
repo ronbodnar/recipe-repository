@@ -7,9 +7,46 @@
 @use 'custom-theme' as theme;
 
 :root {
-  @include mat.tabs-overrides(
+  @include mat.toolbar-overrides(
     (
-      label-text-size: 0.75rem,
+      container-text-color: rgba(var(--text-color-rgb), 1),
+    )
+  );
+
+  @include mat.sidenav-overrides(
+    (
+      container-background-color: rgba(var(--background-secondary-color-rgb), 1),
+      content-text-color: rgba(var(--text-color-rgb), 1),
+    )
+  );
+
+  @include mat.table-overrides(
+    (
+      background-color: rgba(var(--background-secondary-color-rgb), 0.5),
+      header-headline-color: rgba(var(--text-color-rgb), 1),
+    )
+  );
+
+  @include mat.sort-overrides(
+    (
+      arrow-color: rgba(var(--text-color-rgb), 1),
+    )
+  );
+
+  @include mat.form-field-overrides(
+    (
+      outlined-caret-color: rgba(var(--primary-color-rgb), 0.8),
+      outlined-input-text-placeholder-color: rgba(var(--text-color-rgb), 0.4),
+      outlined-focus-outline-color: rgba(var(--primary-color-rgb), 0.8),
+      outlined-focus-label-text-color: rgba(var(--primary-color-rgb), 1),
+      outlined-error-outline-color: rgba(var(--danger-color-rgb), 0.8),
+      outlined-error-caret-color: rgba(var(--danger-color-rgb), 0.8),
+      outlined-error-focus-outline-color: rgba(var(--danger-color-rgb), 0.8),
+      outlined-error-focus-label-text-color: rgba(var(--danger-color-rgb), 1),
+      outlined-error-label-text-color: rgba(var(--danger-color-rgb), 0.8),
+      outlined-error-hover-outline-color: rgba(var(--danger-color-rgb), 1),
+      outlined-error-hover-label-text-color: rgba(var(--danger-color-rgb), 1),
+      error-text-color: rgba(var(--danger-color-rgb), 0.8),
     )
   );
 }
@@ -27,6 +64,21 @@ html {
       density: -1,
     )
   );
+
+  @include mat.form-field-density(-3);
+
+  @include mat.toolbar-overrides(
+    (
+      container-background-color: rgba(var(--primary-color-rgb), 1),
+    )
+  );
+
+  @include mat.form-field-overrides(
+    (
+      outlined-outline-color: rgba(var(--border-color-rgb), 0.5),
+      outlined-hover-outline-color: rgba(var(--border-color-rgb), 1),
+    )
+  );
 }
 
 html.dark {
@@ -42,6 +94,21 @@ html.dark {
       density: -1,
     )
   );
+
+  @include mat.form-field-density(-3);
+
+  @include mat.toolbar-overrides(
+    (
+      container-background-color: rgba(var(--primary-color-rgb), 0.2),
+    )
+  );
+
+  @include mat.form-field-overrides(
+    (
+      outlined-outline-color: rgba(var(--border-color-rgb), 0.2),
+      outlined-hover-outline-color: rgba(var(--border-color-rgb), 0.6),
+    )
+  );
 }
 
 .white-spinner {
@@ -50,4 +117,8 @@ html.dark {
       active-indicator-color: #f4f3f2,
     )
   );
+}
+
+.small-field {
+  @include mat.form-field-density(-5);
 }

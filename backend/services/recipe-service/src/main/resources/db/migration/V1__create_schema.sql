@@ -2,16 +2,16 @@
 -- Table structure for table `recipe`
 --
 CREATE TABLE `recipe` (
-    `id` binary(16) NOT NULL,
+    `id` BINARY(16) NOT NULL,
     `author_subject` VARCHAR(255) NOT NULL,
-    `title` varchar(50) NOT NULL,
-    `description` varchar(500) DEFAULT NULL,
-    `source` varchar(255) DEFAULT NULL,
-    `visibility` enum(
+    `title` VARCHAR(50) NOT NULL,
+    `description` VARCHAR(500) DEFAULT NULL,
+    `source` VARCHAR(255) DEFAULT NULL,
+    `visibility` ENUM(
         'PUBLIC','GROUP','PRIVATE'
     ) NOT NULL,
-    `created_at` datetime(6) NOT NULL,
-    `updated_at` datetime(6) DEFAULT NULL,
+    `created_at` DATETIME(6) NOT NULL,
+    `updated_at` DATETIME(6) DEFAULT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `chk_recipe_title_length` CHECK (CHAR_LENGTH(`title`) >= 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -20,8 +20,8 @@ CREATE TABLE `recipe` (
 -- Table structure for table `recipe_course`
 --
 CREATE TABLE `recipe_course` (
-    `recipe_id` binary(16) NOT NULL,
-    `course` enum(
+    `recipe_id` BINARY(16) NOT NULL,
+    `course` ENUM(
         'APPETIZER','BEVERAGE','DESSERT','MAIN_COURSE','SIDE_DISH'
     ) DEFAULT NULL,
     UNIQUE KEY `uk_recipe_course_recipe_id_course` (`recipe_id`,`course`),
@@ -32,8 +32,8 @@ CREATE TABLE `recipe_course` (
 -- Table structure for table `recipe_cuisine`
 --
 CREATE TABLE `recipe_cuisine` (
-    `recipe_id` binary(16) NOT NULL,
-    `cuisine` enum(
+    `recipe_id` BINARY(16) NOT NULL,
+    `cuisine` ENUM(
         'AMERICAN','CHINESE','FRENCH','GERMAN','GREEK','INDIAN',
         'ITALIAN','JAPANESE','KOREAN','MEDITERRANEAN','MEXICAN',
         'SALVADORAN','SPANISH'
@@ -46,8 +46,8 @@ CREATE TABLE `recipe_cuisine` (
 -- Table structure for table `recipe_diet_type`
 --
 CREATE TABLE `recipe_diet_type` (
-    `recipe_id` binary(16) NOT NULL,
-    `diet_type` enum(
+    `recipe_id` BINARY(16) NOT NULL,
+    `diet_type` ENUM(
         'DAIRY_FREE','GLUTEN_FREE','KETO','LOW_CARB','VEGAN','VEGETARIAN'
     ) DEFAULT NULL,
     UNIQUE KEY `uk_recipe_diet_type_recipe_id_diet_type` (`recipe_id`,`diet_type`),
@@ -58,8 +58,8 @@ CREATE TABLE `recipe_diet_type` (
 -- Table structure for table `recipe_meal_type`
 --
 CREATE TABLE `recipe_meal_type` (
-    `recipe_id` binary(16) NOT NULL,
-    `meal_type` enum(
+    `recipe_id` BINARY(16) NOT NULL,
+    `meal_type` ENUM(
         'BREAKFAST','BRUNCH','DINNER','LUNCH','SNACK'
     ) DEFAULT NULL,
     UNIQUE KEY `uk_recipe_meal_type_recipe_id_meal_type` (`recipe_id`,`meal_type`),
@@ -70,9 +70,9 @@ CREATE TABLE `recipe_meal_type` (
 -- Table structure for table `recipe_image`
 --
 CREATE TABLE `recipe_image` (
-    `id` bigint NOT NULL AUTO_INCREMENT,
-    `recipe_id` binary(16) NOT NULL,
-    `image_id` binary(16) NOT NULL,
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `recipe_id` BINARY(16) NOT NULL,
+    `image_id` BINARY(16) NOT NULL,
     `display_order` INT NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_recipe_image_recipe` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`)
@@ -82,18 +82,18 @@ CREATE TABLE `recipe_image` (
 -- Table structure for table `recipe_variant`
 --
 CREATE TABLE `recipe_variant` (
-    `id` binary(16) NOT NULL,
+    `id` BINARY(16) NOT NULL,
     `name` VARCHAR(50) DEFAULT NULL,
-    `cook_time` int DEFAULT NULL,
-    `cooking_method` enum(
+    `cook_time` INT DEFAULT NULL,
+    `cooking_method` ENUM(
         'AIR_FRYER','BARBECUE','GRILL','MICROWAVE','NO_COOK','OVEN',
         'PRESSURE_COOKER','SLOW_COOKER','SMOKER','STOVETOP'
     ) NOT NULL,
-    `prep_time` int DEFAULT NULL,
+    `prep_time` INT DEFAULT NULL,
     `yield` VARCHAR(50) DEFAULT NULL,
-    `total_time` int DEFAULT NULL,
-    `recipe_id` binary(16) NOT NULL,
-    `display_order` int DEFAULT NULL,
+    `total_time` INT DEFAULT NULL,
+    `recipe_id` BINARY(16) NOT NULL,
+    `display_order` INT DEFAULT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_recipe_variant_recipe` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`),
     CONSTRAINT `chk_recipe_variant_name_length` CHECK (CHAR_LENGTH(`name`) >= 0),
@@ -108,9 +108,7 @@ CREATE TABLE `recipe_variant_ingredient` (
     `text` TEXT NOT NULL,
     `display_order` INT NOT NULL,
     PRIMARY KEY (`recipe_variant_id`, `display_order`),
-    CONSTRAINT `fk_recipe_variant_ingredient_variant`
-    FOREIGN KEY (`recipe_variant_id`)
-    REFERENCES `recipe_variant` (`id`)
+    CONSTRAINT `fk_recipe_variant_ingredient_variant` FOREIGN KEY (`recipe_variant_id`) REFERENCES `recipe_variant` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -121,9 +119,7 @@ CREATE TABLE `recipe_variant_instruction` (
     `text` TEXT NOT NULL,
     `display_order` INT NOT NULL,
     PRIMARY KEY (`recipe_variant_id`, `display_order`),
-    CONSTRAINT `fk_recipe_variant_instruction_variant`
-    FOREIGN KEY (`recipe_variant_id`)
-    REFERENCES `recipe_variant` (`id`)
+    CONSTRAINT `fk_recipe_variant_instruction_variant` FOREIGN KEY (`recipe_variant_id`) REFERENCES `recipe_variant` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -134,7 +130,5 @@ CREATE TABLE `recipe_variant_note` (
     `text` TEXT NOT NULL,
     `display_order` INT NOT NULL,
     PRIMARY KEY (`recipe_variant_id`, `display_order`),
-    CONSTRAINT `fk_recipe_variant_note_variant`
-    FOREIGN KEY (`recipe_variant_id`)
-    REFERENCES `recipe_variant` (`id`)
+    CONSTRAINT `fk_recipe_variant_note_variant` FOREIGN KEY (`recipe_variant_id`) REFERENCES `recipe_variant` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

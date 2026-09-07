@@ -1,5 +1,5 @@
 <form [formGroup]="form()" (ngSubmit)="submit()">
-  <div class="flex flex-col gap-2">
+  <div class="flex flex-col gap-6">
     <app-image-selector
       class="self-center mb-6"
       [rounded]="true"
@@ -9,26 +9,26 @@
       (imageRemoved)="onProfileImageRemoved($event)"
     />
 
-    <nmf-text
+    <nmf-mat-text
       label="settings.profile.labels.displayName"
       formControlName="displayName"
       [loading]="form().get('displayName')?.value === ''"
     />
 
-    <nmf-text
+    <nmf-mat-text
       type="email"
       label="settings.profile.labels.email"
       formControlName="email"
       [loading]="form().get('email')?.value === ''"
     />
 
-    <nmf-text
+    <nmf-mat-text
       label="settings.profile.labels.givenName"
       formControlName="givenName"
       [loading]="form().get('givenName')?.value === ''"
     />
 
-    <nmf-text
+    <nmf-mat-text
       label="settings.profile.labels.familyName"
       formControlName="familyName"
       [loading]="form().get('familyName')?.value === ''"

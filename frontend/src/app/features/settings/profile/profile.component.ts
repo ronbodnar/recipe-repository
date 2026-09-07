@@ -5,7 +5,7 @@ import { ApiError } from '@core/models/api-error.model';
 import { AuthenticationService } from '@core/services/authentication.service';
 import { FetchApiService } from '@core/services/fetch-api.service';
 import { ImageService } from '@core/services/image.service';
-import { InputTextComponent } from '@ng-modular-forms/core';
+import { MatInputTextComponent } from '@ng-modular-forms/material';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 import {
   ImageSelectorComponent,
@@ -21,7 +21,7 @@ import { logError } from '@shared/utils/logging';
   selector: 'app-settings-profile',
   imports: [
     ReactiveFormsModule,
-    InputTextComponent,
+    MatInputTextComponent,
     ButtonComponent,
     ImageSelectorComponent,
     TranslatePipe,

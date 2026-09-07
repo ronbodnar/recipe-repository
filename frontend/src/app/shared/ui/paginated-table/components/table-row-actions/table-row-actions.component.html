@@ -1,0 +1,56 @@
+<div class="flex justify-center gap-x-2">
+  @if (actions.length === 1 || (expandActions && !isSmallScreen())) {
+    @for (action of visibleActions(); track action) {
+      <app-button
+        size="sm"
+        [icon]="action.icon"
+        [iconClassList]="action.iconClasses || []"
+        color="transparent"
+        [ngClass]="{
+          'cursor-not-allowed': isVisible(action) === false,
+          'cursor-pointer': isVisible(action) !== false,
+          'opacity-30': isVisible(action) === false,
+        }"
+        [matTooltip]="
+          isVisible(action) !== false
+            ? ((action.tooltipLabel || action.label) + '' | translate)
+            : (action.tooltipLabel || '' | translate)
+        "
+        (click)="isVisible(action) !== false ? action.onClick($event, rowData) : undefined"
+        [disabled]="isVisible(action) === false"
+      />
+    }
+  } @else {
+    <app-button
+      size="sm"
+      icon="more_vert"
+      color="transparent"
+      [matTooltip]="
+        (hasActions() ? 'ui.tables.moreActions' : 'ui.tables.moreActionsDisabled') | translate
+      "
+      [ngClass]="{
+        'cursor-pointer': hasActions(),
+        'cursor-not-allowed': !hasActions(),
+      }"
+      [disabled]="!hasActions()"
+      [matMenuTriggerFor]="hasActions() ? mainMenu : null"
+    ></app-button>
+
+    <!-- Main Menu -->
+    <mat-menu #mainMenu="matMenu">
+      @for (action of visibleActions(); track action) {
+        @if (isVisible(action)) {
+          <button
+            mat-menu-item
+            [id]="action.label"
+            (click)="action.onClick($event, rowData)"
+            color="transparent"
+          >
+            <mat-icon [ngClass]="action.iconClasses">{{ action.icon }}</mat-icon>
+            {{ action.label | translate }}
+          </button>
+        }
+      }
+    </mat-menu>
+  }
+</div>

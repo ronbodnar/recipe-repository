@@ -33,12 +33,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CheckboxGroupComponent } from '@features/recipes/components/checkbox-group/checkbox-group.component';
-import {
-  InputNumberComponent,
-  InputSelectComponent,
-  InputTextareaComponent,
-  InputTextComponent,
-} from '@ng-modular-forms/core';
 import { ApiError } from '@core/models/api-error.model';
 import { FullPageLoaderComponent } from '@shared/ui/full-page-loader.component';
 import { ImageService } from '@core/services/image.service';
@@ -47,6 +41,13 @@ import {
   ImageSelectorExistingImage,
   ImageSelectorRemovedImage,
 } from '@shared/ui/image-selector/image-selector.component';
+import {
+  MatInputNumberComponent,
+  MatInputSelectComponent,
+  MatInputTextareaComponent,
+  MatInputTextComponent,
+} from '@ng-modular-forms/material';
+
 import { RecipeNotFoundComponent } from '../components/recipe-not-found/recipe-not-found.component';
 import { redirectTo } from '@shared/utils/redirect-to';
 import { DialogService } from '@shared/ui/dialog/dialog.service';
@@ -69,10 +70,10 @@ import { SnackbarService, SnackbarType } from '@shared/ui/snackbar.component';
     CdkDropList,
     CdkDrag,
     CdkDragHandle,
-    InputTextComponent,
-    InputTextareaComponent,
-    InputNumberComponent,
-    InputSelectComponent,
+    MatInputTextComponent,
+    MatInputTextareaComponent,
+    MatInputNumberComponent,
+    MatInputSelectComponent,
     ButtonComponent,
     TranslatePipe,
     CheckboxGroupComponent,

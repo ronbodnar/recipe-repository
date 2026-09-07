@@ -13,6 +13,7 @@ import { routes } from './app.routes';
 import { GlobalErrorHandler } from '@core/errors/error.handler';
 import { AppTitleStrategy } from '@core/services/app-title.strategy';
 import { provideNmfConfigFactory, ValidationMessages } from '@ng-modular-forms/core';
+import { provideNmfMaterialConfig } from '@ng-modular-forms/material';
 import { ThemeService } from '@core/services/theme.service';
 import { provideKeycloakAngular } from './keycloak.config';
 import { includeBearerTokenInterceptor } from 'keycloak-angular';
@@ -61,6 +62,11 @@ export const appConfig: ApplicationConfig = {
           } as ValidationMessages,
         },
       };
+    }),
+
+    provideNmfMaterialConfig({
+      appearance: 'outline',
+      floatLabel: 'always',
     }),
 
     provideAppInitializer(async () => {

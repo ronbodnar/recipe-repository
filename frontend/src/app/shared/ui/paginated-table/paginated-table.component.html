@@ -1,0 +1,171 @@
+<!-- @if (!loaded()) {
+  <div class="flex flex-col items-center">
+    <app-scoped-loader></app-scoped-loader>
+  </div>
+} -->
+
+<div
+  class="relative mat-elevation-z{{ tableConfigSignal().elevation || 0 }}"
+  [hidden]="false && !loaded()"
+>
+  @if (reloading()) {
+    <div class="absolute w-full h-full flex items-end justify-center">
+      <mat-progress-bar mode="query"></mat-progress-bar>
+    </div>
+  }
+
+  <div class="block w-full overflow-x-auto">
+    <mat-table
+      [dataSource]="renderedData() ?? []"
+      matSort
+      [matSortActive]="'id'"
+      matSortDisableClear
+      matSortDirection="desc"
+      [ngClass]="{ 'opacity-50': reloading() }"
+    >
+      @for (column of visibleColumns(); track column.property; let i = $index) {
+        <ng-container
+          matColumnDef="{{ column.propertyPath || column.property }}"
+          [sticky]="column.sticky === true"
+          [stickyEnd]="column.stickyEnd === true"
+        >
+          <!-- Column Header -->
+          <mat-header-cell
+            *matHeaderCellDef
+            [mat-sort-header]="
+              filterValue()
+                ? column.propertyPath || column.property
+                : column.sortPropertyPath || column.propertyPath || column.property
+            "
+            disableClear
+            [disabled]="
+              column.orderable === false ||
+              (tableConfigSignal().orderable == false && column.orderable !== true)
+            "
+            [ngStyle]="
+              tableConfigSignal().autoSize !== true
+                ? {
+                    width: column.width || 'auto',
+                    minWidth: column.width || 'auto',
+                    maxWidth: column.width || 'none',
+                  }
+                : {}
+            "
+            [ngClass]="column.className"
+          >
+            {{ column.title | translate }}
+          </mat-header-cell>
+
+          <!-- Row Data -->
+          <mat-cell
+            *matCellDef="let row"
+            [ngStyle]="
+              tableConfigSignal().autoSize !== true
+                ? {
+                    width: column.width || 'auto',
+                    minWidth: column.width || 'auto',
+                    maxWidth: column.width || 'none',
+                  }
+                : {}
+            "
+            [ngClass]="{
+              'filter-row': renderFilterRow(row),
+            }"
+          >
+            <!-- Rendered content (non-component) -->
+            @if (renderFilterRow(row)) {
+              @if (column.filterable !== false) {
+                <mat-form-field appearance="outline" class="small-field">
+                  @if (column.filterSelectOptions) {
+                    <mat-select
+                      [value]="
+                        filterColumn() === (column.propertyPath || column.property)
+                          ? filterValue()
+                          : ''
+                      "
+                      (selectionChange)="filter($event, column)"
+                    >
+                      @for (option of column.filterSelectOptions; track option) {
+                        <mat-option [value]="option.value">
+                          {{ option.label | toString | translate }}
+                        </mat-option>
+                      }
+                      <mat-divider></mat-divider>
+                      <mat-option [value]="null">
+                        {{ 'ui.tables.resetFilter' | translate }}
+                      </mat-option>
+                    </mat-select>
+                  } @else {
+                    <input
+                      matInput
+                      [value]="
+                        filterColumn() === (column.propertyPath || column.property)
+                          ? filterValue()
+                          : ''
+                      "
+                      [type]="column.type || 'text'"
+                      (input)="filter($event, column)"
+                    />
+                  }
+                </mat-form-field>
+              }
+            } @else {
+              @if (column.angularComponent) {
+                <app-component-wrapper
+                  class="w-full! {{ column.componentWrapperClassList }}"
+                  [component]="column.angularComponent!"
+                  [inputs]="row.__componentInputs__[i]"
+                  [outputs]="row.__componentOutputs__[i]"
+                />
+              } @else {
+                <span
+                  class="line-clamp-2 block"
+                  [innerHTML]="
+                    row.__rendered__
+                      ? sanitizeHtmlContent(row.__rendered__[i])
+                      : getPropertyValue(row, column.property) || ''
+                  "
+                ></span>
+              }
+            }
+          </mat-cell>
+        </ng-container>
+      }
+
+      <mat-header-row *matHeaderRowDef="visibleColumnNames()"></mat-header-row>
+
+      <mat-row
+        *matRowDef="let row; columns: visibleColumnNames()"
+        (click)="handleRowClick($event, row)"
+      ></mat-row>
+
+      <!-- Row shown when there is no matching data that will be provided to the wrapper table. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell py-6! px-2! font-medium!">
+          {{ 'ui.tables.noData' | translate }}
+        </td>
+      </tr>
+    </mat-table>
+  </div>
+
+  @if (pagination()) {
+    <mat-paginator
+      [hidden]="totalItems() === 0"
+      [length]="totalItems()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[10, 25, 50, 100, 500]"
+      (page)="handlePageChange($event)"
+      [showFirstLastButtons]="true"
+      [disabled]="reloading()"
+      class="py-2"
+    ></mat-paginator>
+  }
+  @if (pagination() && tableConfigSignal().info !== false) {
+    <div
+      [hidden]="totalItems() === 0"
+      class="absolute w-10 md:w-50 bottom-5 left-3 mat-mdc-paginator"
+    >
+      {{ 'ui.tables.resultsFound' | translate }}: {{ totalItems().toLocaleString() }}
+    </div>
+  }
+</div>

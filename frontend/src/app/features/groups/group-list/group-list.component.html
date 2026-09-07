@@ -1,0 +1,14 @@
+<app-fluid-container pageTitle="groups.list.title" size="xl">
+  <div actions class="flex items-center gap-2">
+    <app-button
+      color="primary"
+      size="sm"
+      classList="border-border/40!"
+      icon="add"
+      label="groups.list.addButton"
+      [routerLink]="'/app/groups/edit/new'"
+    />
+  </div>
+
+  <app-paginated-table [tableConfigSignal]="tableConfig" />
+</app-fluid-container>

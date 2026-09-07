@@ -1,0 +1,13 @@
+@if (transformedLabel !== EM_DASH && routerLink) {
+  <a
+    [routerLink]="routerLink"
+    (click)="handleClick($event)"
+    class="line-clamp-{{ clamp }} block cursor-pointer {{ applyOpacity ? 'opacity-50' : '' }}"
+    [matTooltip]="transformedLabel"
+    [matTooltipPosition]="'above'"
+  >
+    {{ transformedLabel | translate }}
+  </a>
+} @else {
+  {{ transformedLabel | translate }}
+}

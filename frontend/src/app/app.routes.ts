@@ -10,6 +10,11 @@ export const routes: Routes = [
     canActivate: [landingGuard],
   },
   {
+    path: 'app/groups',
+    canActivate: [authGuard],
+    loadChildren: () => import('./features/groups/group.routes').then((m) => m.routes),
+  },
+  {
     path: 'app/users',
     canActivate: [authGuard],
     loadChildren: () => import('./features/users/user.routes').then((m) => m.routes),

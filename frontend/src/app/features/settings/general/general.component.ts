@@ -1,7 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ThemeService } from '@core/services/theme.service';
-import { FormOrchestrator, SelectOption, InputSelectComponent } from '@ng-modular-forms/core';
+import { FormOrchestrator, SelectOption } from '@ng-modular-forms/core';
+import { MatInputSelectComponent } from '@ng-modular-forms/material';
 import { TranslatePipe } from '@ngx-translate/core';
 import { GeneralSettingsHandler } from './general.handler';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,7 +14,7 @@ const VALID_LANGUAGES: Record<string, string> = {
 
 @Component({
   selector: 'app-settings-general',
-  imports: [ReactiveFormsModule, InputSelectComponent, TranslatePipe],
+  imports: [ReactiveFormsModule, MatInputSelectComponent, TranslatePipe],
   providers: [GeneralSettingsHandler],
   templateUrl: './general.component.html',
   styleUrl: './general.component.css',
