@@ -37,6 +37,7 @@ export class GroupListComponent {
           title: 'Created At',
           property: 'createdAt',
           type: 'date',
+          filterable: false,
         },
       ],
     };

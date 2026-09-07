@@ -13,7 +13,7 @@ import { logDebug } from '@shared/utils/logging';
 import { PaginatedResponse } from '@core/interfaces/paginated-response.interface';
 import { PaginationComponent } from '@shared/ui/pagination/pagination.component';
 
-export type RecipeListSource = 'my-recipes' | 'discover';
+export type RecipeListSource = 'myRecipes' | 'discover';
 
 @Component({
   selector: 'app-recipe-list',
@@ -37,7 +37,7 @@ export class RecipeListComponent {
   private translate = inject(TranslateService);
   private route = inject(ActivatedRoute);
 
-  private _source = signal<RecipeListSource>('my-recipes');
+  private _source = signal<RecipeListSource>('myRecipes');
   private _recipeResponse = signal<PaginatedResponse<RecipeSummary> | null>(null);
   private _isLoading = signal(true);
   private _hasError = signal(false);
@@ -62,8 +62,8 @@ export class RecipeListComponent {
     }
 
     switch (source) {
-      case 'my-recipes':
-        return 'recipes.list.my-recipes.title';
+      case 'myRecipes':
+        return 'recipes.list.myRecipes.title';
 
       case 'discover':
         return 'recipes.list.discover.title';

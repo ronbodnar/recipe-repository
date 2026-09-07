@@ -7,25 +7,25 @@ export const getNavItems = (): NavItem[] => {
 
   return [
     {
-      sectionName: 'my-recipes',
+      sectionName: 'myRecipes',
       icon: 'menu_book',
       label: 'navigation.myRecipes',
       route: '/app/recipes/list',
     },
     {
-      sectionName: 'add-recipe',
+      sectionName: 'addRecipe',
       icon: 'add',
       label: 'navigation.addRecipe',
       route: '/app/recipes/edit/new',
     },
     {
-      sectionName: 'discover-recipes',
+      sectionName: 'discoverRecipes',
       icon: 'explore',
       label: 'navigation.discoverRecipes',
       route: '/app/recipes/discover',
     },
     {
-      sectionName: 'my-groups',
+      sectionName: 'myGroups',
       icon: 'group',
       label: 'navigation.myGroups',
       route: '/app/groups/list',

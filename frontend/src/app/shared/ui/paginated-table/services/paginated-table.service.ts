@@ -178,11 +178,11 @@ export class PaginatedTableService<T> {
         searchColumn: triggeredFromSearch ? this.store.filterColumn() : '',
         page: pageIndex * pageSize,
         pageSize: pageSize,
-        sortBy: ['createdAt,desc'],
+        sort: ['createdAt,desc'],
       };
 
       if (active && direction) {
-        params.sortBy = [active + ',' + direction];
+        params.sort = [active + ',' + direction];
       }
 
       config

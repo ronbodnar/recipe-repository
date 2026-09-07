@@ -9,7 +9,7 @@ export interface PaginatedTableFetchParams {
   searchColumn: string;
   page: number;
   pageSize: number;
-  sortBy: string[];
+  sort: string[];
 }
 
 export interface TableColumn<T> {

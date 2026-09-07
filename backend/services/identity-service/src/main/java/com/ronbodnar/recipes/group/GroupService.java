@@ -1,12 +1,12 @@
 package com.ronbodnar.recipes.group;
 
+import com.ronbodnar.recipes.group.domain.SearchQuery;
 import com.ronbodnar.recipes.group.dto.GroupDTO;
 import com.ronbodnar.recipes.group.dto.GroupRequest;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class GroupService {
@@ -17,10 +17,13 @@ public class GroupService {
         this.groupRepository = groupRepository;
     }
 
-    public Page<GroupDTO> getGroups(Pageable pageable) {
-        Page<Group> groups = groupRepository.findAll(pageable);
-
-        return groups.map(group -> new GroupDTO(group.getName(), group.getCreatedAt(), group.getLastModifiedAt()));
+    public Page<GroupDTO> getGroups(
+            SearchQuery searchQuery,
+            Pageable pageable
+    ) {
+        String searchValue = searchQuery.searchValue() == null ? "" : searchQuery.searchValue();
+        System.out.println("searchValue: " + searchValue);
+        return groupRepository.getGroupsWithNameLike(searchValue, pageable);
     }
 
     public GroupDTO createGroup(GroupRequest request) {

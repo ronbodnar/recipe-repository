@@ -1,5 +1,6 @@
 package com.ronbodnar.recipes.group;
 
+import com.ronbodnar.recipes.group.domain.SearchQuery;
 import com.ronbodnar.recipes.group.dto.GroupDTO;
 import com.ronbodnar.recipes.group.dto.GroupRequest;
 
@@ -20,8 +21,8 @@ public class GroupController {
     }
 
     @GetMapping
-    public Page<GroupDTO> getGroups(Pageable pageable) {
-        return groupService.getGroups(pageable);
+    public Page<GroupDTO> getGroups(SearchQuery searchQuery, Pageable pageable) {
+        return groupService.getGroups(searchQuery, pageable);
     }
 
     // Add Groups

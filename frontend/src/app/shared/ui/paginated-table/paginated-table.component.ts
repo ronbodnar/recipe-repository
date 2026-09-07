@@ -37,7 +37,6 @@ import { ToStringPipe } from '@shared/pipes/to-string.pipe';
 import { MatDividerModule } from '@angular/material/divider';
 import { ComponentWrapperComponent } from '../dialog/components/component-wrapper.component';
 import { ScopedLoaderComponent } from '../scoped-loader.component';
-import { InputSelectComponent, InputTextComponent } from '@ng-modular-forms/core';
 
 @Component({
   selector: 'app-paginated-table',
@@ -55,8 +54,6 @@ import { InputSelectComponent, InputTextComponent } from '@ng-modular-forms/core
     ScopedLoaderComponent,
     TranslatePipe,
     ToStringPipe,
-    InputSelectComponent,
-    InputTextComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './paginated-table.component.css',

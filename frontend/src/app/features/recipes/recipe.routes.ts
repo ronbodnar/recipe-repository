@@ -4,11 +4,11 @@ import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: 'list',
-    title: 'recipes.list.my-recipes.title',
+    title: 'recipes.list.myRecipes.title',
     loadComponent: () =>
       import('./recipe-list/recipe-list.component').then((m) => m.RecipeListComponent),
     data: {
-      source: 'my-recipes',
+      source: 'myRecipes',
     },
   },
   {

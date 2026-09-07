@@ -98,7 +98,7 @@ class RecipeControllerTests {
                 get(RECIPE_API_URL)
                         .param("page", "0")
                         .param("pageSize", "10")
-                        .param("sortBy", "id=asc"),
+                        .param("sort", "id,asc"),
                 recipe.getAuthorSubject(),
                 "ROLE_VIEW-RECIPE"
         )

@@ -193,7 +193,7 @@
     },
     "list": {
       "noDescription": "No description provided.",
-      "my-recipes": {
+      "myRecipes": {
         "title": "My Recipes",
         "loading": "Loading your recipes...",
         "errorLoading": "Error loading recipes. Please try again.",
@@ -209,8 +209,9 @@
         "loading": "Loading discover recipes...",
         "errorLoading": "Error loading discover recipes. Please try again.",
         "noRecipes": {
-          "title": "No Recipes Found",
-          "message": "There are no discover recipes available at the moment. Please check back later."
+          "title": "No Public Recipes Found",
+          "empty": "There are no discover recipes available at the moment.",
+          "clickToAdd": "Click on the \"+ Add Recipe\" button in the top right corner and set the visibility to 'Public' to create a public recipe."
         }
       }
     },
@@ -290,6 +291,19 @@
       "loading": "Loading recipe details...",
       "errorLoading": "An error occurred while loading the recipe. Please try again later.",
       "errorSubmitting": "An error occurred while submitting the recipe. Please try again later."
+    }
+  },
+  "groups": {
+    "list": {
+      "title": "My Groups",
+      "loading": "Loading your groups...",
+      "errorLoading": "Error loading groups. Please try again.",
+      "addButton": "Add Group",
+      "noGroups": {
+        "title": "Welcome to {{appName}}!",
+        "empty": "You haven't created or joined any groups yet.",
+        "clickToAdd": "Click on the \"+ Add Group\" button in the top right corner to create your first group."
+      }
     }
   },
   "settings": {

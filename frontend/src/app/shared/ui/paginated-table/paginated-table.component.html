@@ -1,13 +1,10 @@
-<!-- @if (!loaded()) {
+@if (!loaded()) {
   <div class="flex flex-col items-center">
     <app-scoped-loader></app-scoped-loader>
   </div>
-} -->
+}
 
-<div
-  class="relative mat-elevation-z{{ tableConfigSignal().elevation || 0 }}"
-  [hidden]="false && !loaded()"
->
+<div class="relative mat-elevation-z{{ tableConfigSignal().elevation || 0 }}" [hidden]="!loaded()">
   @if (reloading()) {
     <div class="absolute w-full h-full flex items-end justify-center">
       <mat-progress-bar mode="query"></mat-progress-bar>
@@ -163,7 +160,7 @@
   @if (pagination() && tableConfigSignal().info !== false) {
     <div
       [hidden]="totalItems() === 0"
-      class="absolute w-10 md:w-50 bottom-5 left-3 mat-mdc-paginator"
+      class="absolute w-10 md:w-50 bottom-7 left-3 mat-mdc-paginator"
     >
       {{ 'ui.tables.resultsFound' | translate }}: {{ totalItems().toLocaleString() }}
     </div>
