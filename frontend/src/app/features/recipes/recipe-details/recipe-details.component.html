@@ -1,261 +1,20 @@
-@if (loading() || deleting()) {
-  <app-full-page-loader
-    [message]="loading() ? 'recipes.details.loading' : 'recipes.details.deleting'"
-  />
-} @else if (recipe(); as recipe) {
-  <app-fluid-container
-    size="xl"
-    [pageTitle]="recipe.title"
-    [showBackButton]="true"
-    (backClicked)="goBack()"
-  >
-    @if (recipe.description) {
-      <p subtitle class="mt-0 lg:mb-6 text-muted">
-        {{ recipe.description }}
-      </p>
-    }
+@switch (true) {
+  @case (loading() || deleting()) {
+    <app-full-page-loader
+      [message]="loading() ? 'recipes.details.loading' : 'recipes.details.deleting'"
+    />
+  }
 
-    @if (isRecipeOwner()) {
-      <div actions class="flex items-center gap-2">
-        <app-button
-          color="background"
-          size="sm"
-          classList="border-border/40!"
-          icon="edit"
-          label="recipes.details.editButton"
-          [routerLink]="'/app/recipes/edit/' + recipe.id"
-          [routerState]="{ recipe }"
-        />
-        <app-button
-          color="background"
-          size="sm"
-          classList="border-border/40!"
-          icon="delete"
-          label="recipes.details.deleteButton"
-          (click)="promptDeleteRecipe()"
-        />
-      </div>
-    }
+  @case (recipe() === null) {
+    <ng-container *ngTemplateOutlet="recipeNotFound"></ng-container>
+  }
 
-    <!-- Recipe Overview -->
-    <section class="mt-10 lg:mt-0 mb-10 grid gap-8 lg:grid-cols-12 lg:items-center">
-      <!-- Media -->
-      <div
-        class="aspect-video w-full overflow-hidden rounded-2xl border border-border/40 shadow-sm lg:col-span-7"
-      >
-        <app-image-carousel
-          [images]="recipe.images.map(image => imageService.getImageUrl(image))"
-          [alt]="recipe.title"
-        />
-      </div>
+  @default {
+    <ng-container *ngTemplateOutlet="recipeDetails"></ng-container>
+  }
+}
 
-      <!-- Metadata -->
-      <div class="flex flex-col justify-center gap-10 lg:col-span-5">
-        @if (author(); as author) {
-          <div class="flex items-center gap-3">
-            @if (author.profileImageId) {
-              <img
-                [src]="imageService.getImageUrl(author.profileImageId, 'PROFILE')"
-                [alt]="
-                  'recipes.details.profilePictureAlt' | translate: { author: author.displayName }
-                "
-                class="h-15 w-15 shrink-0 rounded-full border border-border/40 object-cover"
-              />
-            } @else {
-              <div
-                class="flex h-15 w-15 shrink-0 items-center justify-center rounded-full border border-border/40 bg-background-alt"
-              >
-                <mat-icon class="text-xl text-muted">person</mat-icon>
-              </div>
-            }
-
-            <div class="flex flex-col leading-tight">
-              <span class="text-lg font-semibold text-foreground">
-                {{ author.displayName || 'Unknown' }}
-              </span>
-              <span class="text-sm text-muted">{{ 'recipes.details.author' | translate }}</span>
-            </div>
-          </div>
-        } @else {
-          <div class="flex items-center gap-3">
-            <div class="h-15 w-15 shrink-0 animate-pulse rounded-full bg-background-alt"></div>
-            <div class="h-4 w-28 animate-pulse rounded-md bg-background-alt"></div>
-          </div>
-        }
-
-        <div
-          class="flex items-center justify-evenly border-y border-border/40 py-3 text-xs text-muted"
-        >
-          @if (isRecipeOwner()) {
-            <div class="flex flex-col gap-0.5">
-              <span class="uppercase tracking-wider">
-                {{ 'recipes.labels.visibility' | translate }}
-              </span>
-              <span class="inline-flex items-center gap-1 font-medium text-muted">
-                <mat-icon class="text-base! size-4! leading-none!">
-                  @switch (recipe.visibility) {
-                    @case ('PUBLIC') {
-                      public
-                    }
-                    @case ('PRIVATE') {
-                      lock
-                    }
-                    @case ('GROUP') {
-                      group
-                    }
-                  }
-                </mat-icon>
-                {{ 'recipes.visibility.' + recipe.visibility | lowercase | translate }}
-              </span>
-            </div>
-
-            <div class="h-7 w-px bg-border/40"></div>
-          }
-
-          <div class="flex flex-col gap-0.5">
-            <span class="uppercase tracking-wider">
-              {{ 'recipes.details.createdAt' | translate }}
-            </span>
-            <span class="font-medium text-foreground">
-              {{ recipe.createdAt | date: 'mediumDate' }}
-            </span>
-          </div>
-
-          <div class="h-7 w-px bg-border/40"></div>
-
-          <div class="flex flex-col gap-0.5">
-            <span class="uppercase tracking-wider">
-              {{ 'recipes.details.updatedAt' | translate }}
-            </span>
-            <span class="font-medium text-foreground">
-              {{ recipe.updatedAt | date: 'mediumDate' }}
-            </span>
-          </div>
-        </div>
-
-        <!-- Tags / Attributes -->
-        @if (recipeAttributes().length) {
-          <div class="space-y-3">
-            @for (attribute of recipeAttributes(); track attribute.label) {
-              <div class="grid grid-cols-12 items-center gap-1 text-sm">
-                <div class="col-span-3 flex gap-1">
-                  <mat-icon class="text-lg! size-5! text-primary! leading-none!">
-                    {{ attribute.icon }}
-                  </mat-icon>
-                  <span class="text-muted">{{ attribute.label | translate }}</span>
-                </div>
-                <span class="col-span-9 font-medium text-text">
-                  {{ attribute.values.join(', ') }}
-                </span>
-              </div>
-            }
-          </div>
-        }
-      </div>
-    </section>
-
-    <!-- Variant Navigation -->
-    @if (recipe.variants.length) {
-      <section class="mb-10">
-        <nav mat-tab-nav-bar [tabPanel]="variantTabPanel" class="border-b border-border/40">
-          @for (item of recipe.variants; track item.id; let index = $index) {
-            <a
-              mat-tab-link
-              [active]="selectedVariantIndex() === index"
-              (click)="$event.preventDefault(); selectVariant(index)"
-            >
-              {{ item.name || getVariantLabel(index) | translate }}
-            </a>
-          }
-        </nav>
-        <mat-tab-nav-panel #variantTabPanel>
-          <!-- Variant Content -->
-          @if (selectedVariant(); as variant) {
-            <!-- Cooking information -->
-            <div
-              class="flex items-center w-1/2 mx-auto mt-6 justify-evenly border-y border-border/40 py-3 text-xs text-muted"
-            >
-              <div class="flex flex-col gap-0.5">
-                <span class="uppercase tracking-wider">
-                  {{ 'recipes.details.cookTime' | translate }}
-                </span>
-                <span class="font-medium text-foreground">
-                  {{
-                    variant.cookTime
-                      ? variant.cookTime + ' ' + ('recipes.labels.minutes' | translate)
-                      : '-'
-                  }}
-                </span>
-              </div>
-
-              <div class="h-7 w-px bg-border/40"></div>
-
-              <div class="flex flex-col gap-0.5">
-                <span class="uppercase tracking-wider">
-                  {{ 'recipes.details.prepTime' | translate }}
-                </span>
-                <span class="font-medium text-foreground">
-                  {{
-                    variant.prepTime
-                      ? variant.prepTime + ' ' + ('recipes.labels.minutes' | translate)
-                      : '-'
-                  }}
-                </span>
-              </div>
-
-              <div class="h-7 w-px bg-border/40"></div>
-
-              <div class="flex flex-col gap-0.5">
-                <span class="uppercase tracking-wider">
-                  {{ 'recipes.labels.yield' | translate }}
-                </span>
-                <span class="font-medium text-foreground">
-                  {{ variant.yield ? variant.yield : '-' }}
-                </span>
-              </div>
-            </div>
-
-            <section class="grid gap-12 pt-8 lg:grid-cols-12">
-              <!-- Ingredients -->
-              <div class="min-w-0 lg:col-span-5 lg:sticky lg:top-6 lg:self-start">
-                <app-rich-text-list
-                  headerText="recipes.labels.ingredients"
-                  headerIcon="restaurant_menu"
-                  emptyListText="recipes.details.noIngredients"
-                  [listItems]="variant.ingredients"
-                  [useCheckboxes]="true"
-                />
-              </div>
-              <!-- Instructions -->
-              <div class="flex flex-col gap-12 lg:col-span-7">
-                <app-rich-text-list
-                  headerText="recipes.labels.instructions"
-                  headerIcon="format_list_numbered"
-                  emptyListText="recipes.details.noInstructions"
-                  [listItems]="variant.instructions"
-                  [ordered]="true"
-                />
-                <!-- Notes -->
-                @if (variant.notes.length) {
-                  <app-rich-text-list
-                    headerText="recipes.labels.notes"
-                    headerIcon="sticky_note_2"
-                    [listItems]="variant.notes"
-                    [ordered]="false"
-                  />
-                }
-              </div>
-            </section>
-          } @else {
-            <p class="pt-8 text-sm text-muted">{{ 'recipes.details.noVariants' | translate }}</p>
-          }
-        </mat-tab-nav-panel>
-      </section>
-    } @else {
-      <p class="text-sm text-muted">{{ 'recipes.details.noVariants' | translate }}</p>
-    }
-  </app-fluid-container>
-} @else {
+<ng-template #recipeNotFound>
   <app-recipe-not-found>
     <ng-container backAction>
       <app-button
@@ -267,4 +26,287 @@
       />
     </ng-container>
   </app-recipe-not-found>
-}
+</ng-template>
+
+<ng-template #recipeDetails>
+  @if (recipe(); as recipe) {
+    <app-fluid-container
+      size="xl"
+      [pageTitle]="recipe.title"
+      [showBackButton]="true"
+      (backClicked)="goBack()"
+    >
+      @if (recipe.description) {
+        <p subtitle class="mt-0 lg:mb-6 text-muted">
+          {{ recipe.description }}
+        </p>
+      }
+
+      @if (isRecipeOwner()) {
+        <div actions class="flex items-center gap-2">
+          <app-button
+            color="background"
+            size="sm"
+            classList="border-border/40!"
+            icon="edit"
+            label="recipes.details.editButton"
+            [routerLink]="'/app/recipes/edit/' + recipe.id"
+            [routerState]="{ recipe }"
+          />
+          <app-button
+            color="background"
+            size="sm"
+            classList="border-border/40!"
+            icon="delete"
+            label="recipes.details.deleteButton"
+            (click)="promptDeleteRecipe()"
+          />
+        </div>
+      }
+
+      <!-- Recipe Overview -->
+      <section class="mt-10 lg:mt-0 mb-10 grid gap-8 lg:grid-cols-12 lg:items-center">
+        <!-- Media -->
+        <div
+          class="aspect-video w-full overflow-hidden rounded-2xl border border-border/40 shadow-sm lg:col-span-7"
+        >
+          <app-image-carousel
+            [images]="recipe.images.map(image => imageService.getImageUrl(image))"
+            [alt]="recipe.title"
+          />
+        </div>
+
+        <!-- Metadata -->
+        <div class="flex flex-col justify-center gap-10 lg:col-span-5">
+          @if (author(); as author) {
+            <div class="flex items-center gap-3">
+              @if (author.profileImageId) {
+                <img
+                  [src]="imageService.getImageUrl(author.profileImageId, 'PROFILE')"
+                  [alt]="
+                    'recipes.details.profilePictureAlt' | translate: { author: author.displayName }
+                  "
+                  class="h-15 w-15 shrink-0 rounded-full border border-border/40 object-cover"
+                />
+              } @else {
+                <div
+                  class="flex h-15 w-15 shrink-0 items-center justify-center rounded-full border border-border/40 bg-background-alt"
+                >
+                  <mat-icon class="text-xl text-muted">person</mat-icon>
+                </div>
+              }
+
+              <div class="flex flex-col leading-tight">
+                <span class="text-lg font-semibold text-foreground">
+                  {{ author.displayName || 'Unknown' }}
+                </span>
+                <span class="text-sm text-muted">{{ 'recipes.details.author' | translate }}</span>
+              </div>
+            </div>
+          } @else {
+            <div class="flex items-center gap-3">
+              <div class="h-15 w-15 shrink-0 animate-pulse rounded-full bg-background-alt"></div>
+              <div class="h-4 w-28 animate-pulse rounded-md bg-background-alt"></div>
+            </div>
+          }
+
+          <div
+            class="flex items-center justify-evenly border-y border-border/40 py-3 text-xs text-muted"
+          >
+            @if (isRecipeOwner()) {
+              <div class="flex flex-col gap-0.5">
+                <span class="uppercase tracking-wider">
+                  {{ 'recipes.labels.visibility' | translate }}
+                </span>
+                <span class="inline-flex items-center gap-1 font-medium text-muted">
+                  <mat-icon class="text-base! size-4! leading-none!">
+                    @switch (recipe.visibility) {
+                      @case ('PUBLIC') {
+                        public
+                      }
+                      @case ('PRIVATE') {
+                        lock
+                      }
+                      @case ('GROUP') {
+                        group
+                      }
+                    }
+                  </mat-icon>
+                  {{ 'recipes.visibility.' + recipe.visibility | lowercase | translate }}
+                </span>
+              </div>
+
+              <div class="h-7 w-px bg-border/40"></div>
+            }
+
+            <div class="flex flex-col gap-0.5">
+              <span class="uppercase tracking-wider">
+                {{ 'recipes.details.createdAt' | translate }}
+              </span>
+              <span class="font-medium text-foreground">
+                {{ recipe.createdAt | date: 'mediumDate' }}
+              </span>
+            </div>
+
+            <div class="h-7 w-px bg-border/40"></div>
+
+            <div class="flex flex-col gap-0.5">
+              <span class="uppercase tracking-wider">
+                {{ 'recipes.details.updatedAt' | translate }}
+              </span>
+              <span class="font-medium text-foreground">
+                {{ recipe.updatedAt | date: 'mediumDate' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Tags / Attributes -->
+          @if (recipeAttributes().length) {
+            <div class="space-y-3">
+              @for (attribute of recipeAttributes(); track attribute.label) {
+                <div class="grid grid-cols-12 items-center gap-1 text-sm">
+                  <div class="col-span-3 flex items-center gap-1">
+                    <mat-icon class="text-lg! size-5! text-primary! leading-none!">
+                      {{ attribute.icon }}
+                    </mat-icon>
+                    <span class="text-muted">{{ attribute.label | translate }}</span>
+                  </div>
+                  <span class="col-span-9 font-medium text-text">
+                    {{ attribute.values.join(', ') }}
+                  </span>
+                </div>
+              }
+            </div>
+          }
+
+          @if (recipe.source; as source) {
+            <div class="grid grid-cols-12 items-center gap-1 text-sm">
+              <div class="col-span-3 flex gap-1">
+                <mat-icon class="text-lg! size-5! text-primary! leading-none!">
+                  {{ sourceUrl() ? 'link' : 'source' }}
+                </mat-icon>
+                <span class="text-muted">{{ 'recipes.labels.source' | translate }}</span>
+              </div>
+
+              @if (sourceUrl()) {
+                <a
+                  [href]="source"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="col-span-9 font-medium text-primary line-clamp-2 hover:underline"
+                  [title]="sourceUrl()"
+                >
+                  {{ source }}
+                </a>
+              } @else {
+                <span class="col-span-9 font-medium text-text">{{ source }}</span>
+              }
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- Variant Navigation -->
+      @if (recipe.variants.length) {
+        <section class="mb-10">
+          <nav mat-tab-nav-bar [tabPanel]="variantTabPanel" class="border-b border-border/40">
+            @for (item of recipe.variants; track item.id; let index = $index) {
+              <a
+                mat-tab-link
+                [active]="selectedVariantIndex() === index"
+                (click)="$event.preventDefault(); selectVariant(index)"
+              >
+                {{ item.name || getVariantLabel(index) | translate }}
+              </a>
+            }
+          </nav>
+          <mat-tab-nav-panel #variantTabPanel>
+            <!-- Variant Content -->
+            @if (selectedVariant(); as variant) {
+              <!-- Cooking information -->
+              <div
+                class="flex items-center sm:w-1/2 mx-auto mt-6 justify-evenly border-y border-border/40 py-3 text-xs text-muted"
+              >
+                <div class="flex flex-col gap-0.5">
+                  <span class="uppercase tracking-wider">
+                    {{ 'recipes.labels.cookTime' | translate }}
+                  </span>
+                  <span class="font-medium text-foreground">
+                    {{
+                      variant.cookTime
+                        ? variant.cookTime + ' ' + ('recipes.labels.minutes' | translate)
+                        : '-'
+                    }}
+                  </span>
+                </div>
+
+                <div class="h-7 w-px bg-border/40"></div>
+
+                <div class="flex flex-col gap-0.5">
+                  <span class="uppercase tracking-wider">
+                    {{ 'recipes.labels.prepTime' | translate }}
+                  </span>
+                  <span class="font-medium text-foreground">
+                    {{
+                      variant.prepTime
+                        ? variant.prepTime + ' ' + ('recipes.labels.minutes' | translate)
+                        : '-'
+                    }}
+                  </span>
+                </div>
+
+                <div class="h-7 w-px bg-border/40"></div>
+
+                <div class="flex flex-col gap-0.5">
+                  <span class="uppercase tracking-wider">
+                    {{ 'recipes.labels.yield' | translate }}
+                  </span>
+                  <span class="font-medium text-foreground">
+                    {{ variant.yield ? variant.yield : '-' }}
+                  </span>
+                </div>
+              </div>
+
+              <section class="grid gap-12 pt-8 lg:grid-cols-12">
+                <!-- Ingredients -->
+                <div class="min-w-0 lg:col-span-5 lg:sticky lg:top-6 lg:self-start">
+                  <app-rich-text-list
+                    headerText="recipes.labels.ingredients"
+                    headerIcon="restaurant_menu"
+                    emptyListText="recipes.details.noIngredients"
+                    [listItems]="variant.ingredients"
+                    [useCheckboxes]="true"
+                  />
+                </div>
+                <!-- Instructions -->
+                <div class="flex flex-col gap-12 lg:col-span-7">
+                  <app-rich-text-list
+                    headerText="recipes.labels.instructions"
+                    headerIcon="format_list_numbered"
+                    emptyListText="recipes.details.noInstructions"
+                    [listItems]="variant.instructions"
+                    [ordered]="true"
+                  />
+                  <!-- Notes -->
+                  @if (variant.notes.length) {
+                    <app-rich-text-list
+                      headerText="recipes.labels.notes"
+                      headerIcon="sticky_note_2"
+                      [listItems]="variant.notes"
+                      [listClassList]="['space-y-3', 'list-none', '-ml-5']"
+                      [ordered]="false"
+                    />
+                  }
+                </div>
+              </section>
+            } @else {
+              <p class="pt-8 text-sm text-muted">{{ 'recipes.details.noVariants' | translate }}</p>
+            }
+          </mat-tab-nav-panel>
+        </section>
+      } @else {
+        <p class="text-sm text-muted">{{ 'recipes.details.noVariants' | translate }}</p>
+      }
+    </app-fluid-container>
+  }
+</ng-template>

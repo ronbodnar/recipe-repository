@@ -1,6 +1,23 @@
-@if (loading() && status() !== 'error') {
+@if (loading()) {
   <app-full-page-loader message="recipes.edit.loading" />
-} @else if (status() === 'error') {
+}
+
+@switch (status()) {
+  @case ('notFound') {
+    <ng-container *ngTemplateOutlet="recipeNotFound"></ng-container>
+  }
+
+  @case ('loadFailed') {
+    <ng-container *ngTemplateOutlet="loadFailed"></ng-container>
+  }
+
+  @default {
+    <ng-container *ngTemplateOutlet="formTemplate"></ng-container>
+  }
+}
+
+<!-- Templates -->
+<ng-template #recipeNotFound>
   <app-recipe-not-found>
     <ng-container backAction>
       <app-button
@@ -8,12 +25,27 @@
         classList="border-border/40!"
         icon="arrow_back"
         label="recipes.edit.notFound.backAction"
-        routerLink="/app/recipes/edit/new"
         (click)="redirectToNew()"
       />
     </ng-container>
   </app-recipe-not-found>
-} @else {
+</ng-template>
+
+<ng-template #loadFailed>
+  <section class="h-full flex flex-col justify-center items-center space-y-6">
+    <span class="text-danger">{{ 'recipes.edit.errorLoading' | translate }}</span>
+
+    <app-button
+      color="background"
+      classList="border-border/40!"
+      icon="arrow_back"
+      label="recipes.edit.loadFailed.backAction"
+      routerLink="/app/recipes/list"
+    />
+  </section>
+</ng-template>
+
+<ng-template #formTemplate>
   <app-fluid-container
     size="lg"
     [pageTitle]="loadedRecipe() ? 'recipes.edit.title.existing' : 'recipes.edit.title.new'"
@@ -26,267 +58,317 @@
           | translate
       }}
     </p>
-
-    <ng-container *ngTemplateOutlet="formTemplate"></ng-container>
-  </app-fluid-container>
-}
-
-<ng-template #formTemplate>
-  <form class="mt-6" [formGroup]="form()" (ngSubmit)="submit()">
-    <!-- Recipe Details -->
-    <div class="col-span-3 flex flex-col min-w-0 gap-4">
-      <nmf-mat-text
-        formControlName="title"
-        label="recipes.labels.title"
-        placeholder="recipes.edit.placeholders.title"
-      />
-
-      <nmf-mat-textarea
-        formControlName="description"
-        label="recipes.labels.description"
-        placeholder="recipes.edit.placeholders.description"
-        [rows]="4"
-      />
-
-      <nmf-mat-text
-        formControlName="source"
-        label="recipes.labels.source"
-        placeholder="recipes.edit.placeholders.source"
-      />
-
-      <nmf-mat-select
-        class="flex-none!"
-        formControlName="visibility"
-        label="recipes.labels.visibility"
-        [options]="visibilityOptions"
-      />
-
-      @switch (form().controls.visibility.value) {
-        @case ('PUBLIC') {
-          <p class="text-sm font-semibold text-muted my-0">
-            {{ 'recipes.edit.visibility.publicDescription' | translate }}
-          </p>
-        }
-        @case ('PRIVATE') {
-          <p class="text-sm font-semibold text-muted my-0">
-            {{ 'recipes.edit.visibility.privateDescription' | translate }}
-          </p>
-        }
-        @case ('GROUP') {
-          <p class="text-sm font-semibold text-muted my-0">
-            {{ 'recipes.edit.visibility.groupDescription' | translate }}
-          </p>
-        }
-      }
-
-      <div class="flex flex-col gap-2">
-        <h3>{{ 'recipes.edit.fields.images' | translate }}</h3>
-        <app-image-selector
-          [size]="30"
-          [multiple]="true"
-          [existingImages]="getExistingRecipeImages()"
-          (imagesSelected)="onRecipeImagesSelected($event)"
-          (imageRemoved)="onRecipeImageRemoved($event)"
+    <form class="mt-6" [formGroup]="form()" (ngSubmit)="submit()">
+      <!-- Recipe Details -->
+      <div class="col-span-3 flex flex-col min-w-0 gap-4">
+        <nmf-mat-text
+          formControlName="title"
+          label="recipes.labels.title"
+          placeholder="recipes.edit.placeholders.title"
         />
-      </div>
 
-      @if (form().controls.images.errors; as errors) {
-        @if (errors['maxlength']) {
-          <p class="text-sm text-danger my-0">
-            {{
-              'recipes.edit.errors.maxImages'
-                | translate: { maxImages: errors['maxlength'].requiredLength }
-            }}
-          </p>
+        <nmf-mat-textarea
+          formControlName="description"
+          label="recipes.labels.description"
+          placeholder="recipes.edit.placeholders.description"
+          [rows]="4"
+        />
+
+        <nmf-mat-text
+          formControlName="source"
+          label="recipes.labels.source"
+          placeholder="recipes.edit.placeholders.source"
+        />
+
+        <nmf-mat-select
+          class="flex-none!"
+          formControlName="visibility"
+          label="recipes.labels.visibility"
+          [options]="visibilityOptions"
+        />
+
+        @switch (form().controls.visibility.value) {
+          @case ('PUBLIC') {
+            <p class="text-sm font-semibold text-muted my-0">
+              {{ 'recipes.edit.visibility.publicDescription' | translate }}
+            </p>
+          }
+          @case ('PRIVATE') {
+            <p class="text-sm font-semibold text-muted my-0">
+              {{ 'recipes.edit.visibility.privateDescription' | translate }}
+            </p>
+          }
+          @case ('GROUP') {
+            <p class="text-sm font-semibold text-muted my-0">
+              {{ 'recipes.edit.visibility.groupDescription' | translate }}
+            </p>
+          }
         }
-      }
 
-      <h3>{{ 'recipes.labels.variants' | translate }}</h3>
+        <div class="flex flex-col gap-2">
+          <h3>{{ 'recipes.edit.fields.images' | translate }}</h3>
+          <app-image-selector
+            [size]="30"
+            [multiple]="true"
+            [existingImages]="getExistingRecipeImages()"
+            (imagesSelected)="onRecipeImagesSelected($event)"
+            (imageRemoved)="onRecipeImageRemoved($event)"
+          />
+        </div>
 
-      <div class="flex flex-col xl:flex-row gap-4">
-        <div
-          cdkDropList
-          class="flex flex-col gap-4 basis-1/4 border border-border/40 rounded-md p-4"
-          (cdkDropListDropped)="dropVariant($event)"
-        >
-          @for (variant of variants.controls; track variant; let index = $index) {
-            <div
-              cdkDrag
-              class="relative flex items-center justify-between rounded-md px-4 py-2 gap-4 cursor-pointer"
-              [ngClass]="{
-                'bg-background-alt': activeVariantIndex() === index,
-                'font-semibold': activeVariantIndex() === index,
-              }"
-              (click)="setActiveVariantIndex(index)"
-            >
-              @if (validated() && variants.at(index).invalid) {
-                <mat-icon class="text-danger! absolute -left-3">error</mat-icon>
-              }
+        @if (form().controls.images.errors; as errors) {
+          @if (errors['maxlength']) {
+            <p class="text-sm text-danger my-0">
+              {{
+                'recipes.edit.errors.maxImages'
+                  | translate: { maxImages: errors['maxlength'].requiredLength }
+              }}
+            </p>
+          }
+        }
 
-              <mat-icon cdkDragHandle>drag_indicator</mat-icon>
+        <h3>{{ 'recipes.labels.variants' | translate }}</h3>
 
-              <span>
-                {{ variant.get('name')?.value ?? (getVariantLabel(index) | translate) }}
-              </span>
+        <div class="flex flex-col xl:flex-row gap-4">
+          <div
+            cdkDropList
+            class="flex flex-col gap-4 basis-1/4 border border-border/40 rounded-md p-4"
+            (cdkDropListDropped)="dropVariant($event)"
+          >
+            @for (variant of variants.controls; track variant; let index = $index) {
+              <div
+                cdkDrag
+                class="relative flex items-center justify-between rounded-md px-4 py-2 gap-4 cursor-pointer"
+                [ngClass]="{
+                  'bg-background-alt': activeVariantIndex() === index,
+                  'font-semibold': activeVariantIndex() === index,
+                }"
+                (click)="setActiveVariantIndex(index)"
+              >
+                @if (validated() && variants.at(index).invalid) {
+                  <mat-icon class="text-danger! absolute -left-3">error</mat-icon>
+                }
 
+                <mat-icon cdkDragHandle>drag_indicator</mat-icon>
+
+                <span>
+                  {{ variant.get('name')?.value ?? (getVariantLabel(index) | translate) }}
+                </span>
+
+                <app-button
+                  color="danger"
+                  size="xs"
+                  icon="delete"
+                  (click)="promptConfirmDeleteVariant(index)"
+                />
+              </div>
+            }
+
+            @if (variants.length < MAX_VARIANTS) {
               <app-button
-                color="danger"
-                size="xs"
-                icon="delete"
-                (click)="promptConfirmDeleteVariant(index)"
+                color="background"
+                size="md"
+                icon="add"
+                label="recipes.edit.addVariantButton"
+                [classList]="'w-full border-border/40!'"
+                [iconClassList]="'text-primary!'"
+                (click)="addVariant()"
+              />
+            }
+          </div>
+
+          @if (variants.length > 0) {
+            <div
+              class="flex-1 grid grid-cols-1 xl:grid-cols-2 gap-4 min-w-0 border border-border/40 rounded-md p-4"
+              [formGroup]="variants.at(activeVariantIndex()!)"
+            >
+              <nmf-mat-text
+                class="col-span-full"
+                formControlName="name"
+                label="recipes.edit.fields.variantName"
+                placeholder="recipes.edit.placeholders.variantName"
+              />
+              <nmf-mat-select
+                formControlName="cookingMethod"
+                label="recipes.labels.cookingMethod"
+                [options]="cookingMethodOptions"
+              />
+
+              <nmf-mat-text
+                formControlName="yield"
+                label="recipes.labels.yield"
+                placeholder="recipes.edit.placeholders.yield"
+              />
+
+              <nmf-mat-number
+                formControlName="prepTime"
+                label="recipes.labels.prepTime"
+                placeholder="recipes.edit.placeholders.prepTime"
+                [min]="0"
+              />
+
+              <nmf-mat-number
+                formControlName="cookTime"
+                label="recipes.labels.cookTime"
+                placeholder="recipes.edit.placeholders.cookTime"
+                [min]="0"
+              />
+
+              <ng-container *ngTemplateOutlet="formattingGuide"></ng-container>
+
+              <nmf-mat-textarea
+                class="col-span-full"
+                formControlName="ingredients"
+                label="recipes.labels.ingredients"
+                placeholder="recipes.edit.placeholders.ingredients"
+              />
+
+              <nmf-mat-textarea
+                class="col-span-full"
+                formControlName="instructions"
+                label="recipes.labels.instructions"
+                placeholder="recipes.edit.placeholders.instructions"
+              />
+
+              <nmf-mat-textarea
+                class="col-span-full"
+                formControlName="notes"
+                label="recipes.labels.notes"
+                placeholder="recipes.edit.placeholders.notes"
               />
             </div>
-          }
-
-          @if (variants.length < MAX_VARIANTS) {
-            <app-button
-              color="background"
-              size="md"
-              icon="add"
-              label="recipes.edit.addVariantButton"
-              [classList]="'w-full border-border/40!'"
-              [iconClassList]="'text-primary!'"
-              (click)="addVariant()"
-            />
+          } @else {
+            <div class="flex items-center">
+              <p>{{ 'recipes.edit.noVariantsMessage' | translate }}</p>
+            </div>
           }
         </div>
 
-        @if (variants.length > 0) {
-          <div
-            class="flex-1 grid grid-cols-1 xl:grid-cols-2 gap-4 min-w-0 border border-border/40 rounded-md p-4"
-            [formGroup]="variants.at(activeVariantIndex()!)"
-          >
-            <nmf-mat-text
-              class="col-span-full"
-              formControlName="name"
-              label="recipes.edit.fields.variantName"
-              placeholder="recipes.edit.placeholders.variantName"
-            />
-            <nmf-mat-select
-              formControlName="cookingMethod"
-              label="recipes.labels.cookingMethod"
-              [options]="cookingMethodOptions"
+        <mat-accordion class="mt-6">
+          <mat-expansion-panel class="bg-background-alt!">
+            <mat-expansion-panel-header>
+              <mat-panel-title>{{ 'recipes.labels.attributes' | translate }}</mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <h3 class="text-sm">{{ 'recipes.labels.courses' | translate }}</h3>
+            <app-checkbox-group
+              [wrapperClass]="'grid grid-cols-5'"
+              [label]="'recipes.labels.courses' | translate"
+              [options]="courseOptions"
+              [control]="form().controls.courses"
             />
 
-            <nmf-mat-text
-              formControlName="yield"
-              label="recipes.labels.yield"
-              placeholder="recipes.edit.placeholders.yield"
+            <h3 class="text-sm">{{ 'recipes.labels.cuisines' | translate }}</h3>
+            <app-checkbox-group
+              [wrapperClass]="'grid grid-cols-5'"
+              [label]="'recipes.labels.cuisines' | translate"
+              [options]="cuisineOptions"
+              [control]="form().controls.cuisines"
             />
 
-            <nmf-mat-number
-              formControlName="prepTime"
-              label="recipes.labels.prepTime"
-              placeholder="recipes.edit.placeholders.prepTime"
-              [min]="0"
+            <h3 class="text-sm">{{ 'recipes.labels.dietTypes' | translate }}</h3>
+            <app-checkbox-group
+              [wrapperClass]="'grid grid-cols-5'"
+              [label]="'recipes.labels.dietTypes' | translate"
+              [options]="dietTypeOptions"
+              [control]="form().controls.dietTypes"
             />
 
-            <nmf-mat-number
-              formControlName="cookTime"
-              label="recipes.labels.cookTime"
-              placeholder="recipes.edit.placeholders.cookTime"
-              [min]="0"
+            <h3 class="text-sm">{{ 'recipes.labels.mealTypes' | translate }}</h3>
+            <app-checkbox-group
+              [wrapperClass]="'grid grid-cols-5'"
+              [label]="'recipes.labels.mealTypes' | translate"
+              [options]="mealTypeOptions"
+              [control]="form().controls.mealTypes"
+            />
+          </mat-expansion-panel>
+        </mat-accordion>
+
+        <div class="flex justify-between items-center">
+          <p class="text-sm text-danger">
+            @if (form().hasError('server')) {
+              {{ form().getError('server') | translate }}
+            } @else if (form().invalid && validated()) {
+              {{ 'forms.hasErrors' | translate }}
+            } @else if (status() === 'submitFailed') {
+              {{ 'recipes.edit.errorSubmitting' | translate }}
+            }
+          </p>
+
+          <div class="flex gap-4">
+            <app-button
+              color="secondary"
+              size="md"
+              type="button"
+              label="forms.cancel"
+              [routerLink]="
+                loadedRecipe() ? '/app/recipes/details/' + loadedRecipe()!.id : '/app/recipes/list'
+              "
+              [routerState]="loadedRecipe() ? { recipe: loadedRecipe() } : {}"
             />
 
-            <nmf-mat-textarea
-              class="col-span-full"
-              formControlName="ingredients"
-              label="recipes.labels.ingredients"
-              placeholder="recipes.edit.placeholders.ingredients"
-            />
-
-            <nmf-mat-textarea
-              class="col-span-full"
-              formControlName="instructions"
-              label="recipes.labels.instructions"
-              placeholder="recipes.edit.placeholders.instructions"
-            />
-
-            <nmf-mat-textarea
-              class="col-span-full"
-              formControlName="notes"
-              label="recipes.labels.notes"
-              placeholder="recipes.edit.placeholders.notes"
+            <app-button
+              color="primary"
+              size="md"
+              type="submit"
+              [label]="
+                loadedRecipe()
+                  ? 'recipes.edit.submitButton.existing'
+                  : 'recipes.edit.submitButton.new'
+              "
+              [loading]="status() === 'submitting'"
             />
           </div>
-        } @else {
-          <div class="flex items-center">
-            <p>{{ 'recipes.edit.noVariantsMessage' | translate }}</p>
-          </div>
-        }
+        </div>
       </div>
+    </form>
+  </app-fluid-container>
+</ng-template>
 
-      <mat-accordion class="mt-6">
-        <mat-expansion-panel class="bg-background-alt!">
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{ 'recipes.labels.attributes' | translate }}</mat-panel-title>
-          </mat-expansion-panel-header>
+<ng-template #formattingGuide>
+  <mat-accordion class="col-span-full mb-6 select-none">
+    <mat-expansion-panel class="bg-background-alt!">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="text-sm!">
+          {{ 'recipes.edit.formattingGuide.title' | translate }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
 
-          <h3 class="text-sm">{{ 'recipes.labels.courses' | translate }}</h3>
-          <app-checkbox-group
-            [label]="'recipes.labels.courses' | translate"
-            [options]="courseOptions"
-            [control]="form().controls.courses"
-          />
-
-          <h3 class="text-sm">{{ 'recipes.labels.cuisines' | translate }}</h3>
-          <app-checkbox-group
-            [label]="'recipes.labels.cuisines' | translate"
-            [options]="cuisineOptions"
-            [control]="form().controls.cuisines"
-          />
-
-          <h3 class="text-sm">{{ 'recipes.labels.dietTypes' | translate }}</h3>
-          <app-checkbox-group
-            [label]="'recipes.labels.dietTypes' | translate"
-            [options]="dietTypeOptions"
-            [control]="form().controls.dietTypes"
-          />
-
-          <h3 class="text-sm">{{ 'recipes.labels.mealTypes' | translate }}</h3>
-          <app-checkbox-group
-            [label]="'recipes.labels.mealTypes' | translate"
-            [options]="mealTypeOptions"
-            [control]="form().controls.mealTypes"
-          />
-        </mat-expansion-panel>
-      </mat-accordion>
-
-      <div class="flex justify-between items-center">
-        <p class="text-sm text-danger">
-          @if (form().hasError('server')) {
-            {{ form().getError('server') | translate }}
-          } @else if (form().invalid && validated()) {
-            {{ 'forms.hasErrors' | translate }}
-          } @else if (status() === 'error') {
-            {{ 'recipes.edit.errorSubmitting' | translate }}
-          }
+      <div class="flex flex-col gap-4 text-sm">
+        <p class="m-0 text-muted">
+          {{ 'recipes.edit.formattingGuide.description' | translate }}
         </p>
 
-        <div class="flex gap-4">
-          <app-button
-            color="secondary"
-            size="md"
-            type="button"
-            label="forms.cancel"
-            [routerLink]="
-              loadedRecipe() ? '/app/recipes/details/' + loadedRecipe()!.id : '/app/recipes/list'
-            "
-          />
+        <div class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-3 items-center">
+          <code class="font-medium">**{{ 'recipes.edit.formattingGuide.bold' | translate }}**</code>
+          <span>
+            <strong>{{ 'recipes.edit.formattingGuide.bold' | translate }}</strong>
+          </span>
 
-          <app-button
-            color="primary"
-            size="md"
-            type="submit"
-            [label]="
-              loadedRecipe()
-                ? 'recipes.edit.submitButton.existing'
-                : 'recipes.edit.submitButton.new'
-            "
-            [loading]="status() === 'submitting'"
-          />
+          <code class="font-medium">*{{ 'recipes.edit.formattingGuide.italic' | translate }}*</code>
+          <span>
+            <em>{{ 'recipes.edit.formattingGuide.italic' | translate }}</em>
+          </span>
+
+          <code class="font-medium">
+            _{{ 'recipes.edit.formattingGuide.underline' | translate }}_
+          </code>
+          <span>
+            <u>{{ 'recipes.edit.formattingGuide.underline' | translate }}</u>
+          </span>
+
+          <code class="font-medium">--</code>
+          <span>&mdash; ({{ 'recipes.edit.formattingGuide.emDash' | translate }})</span>
+
+          <code class="font-medium">\</code>
+          <span>{{ 'recipes.edit.formattingGuide.newLine' | translate }}</span>
         </div>
+
+        <p class="m-0 text-muted">
+          {{ 'recipes.edit.formattingGuide.example' | translate }}:
+          <code>{{ 'recipes.edit.formattingGuide.exampleText' | translate }}</code>
+        </p>
       </div>
-    </div>
-  </form>
+    </mat-expansion-panel>
+  </mat-accordion>
 </ng-template>

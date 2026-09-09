@@ -6,6 +6,9 @@
     "loadingMessage": "Almost there..."
   },
   "ui": {
+    "snackbar": {
+      "newVersion": "A new version of the app is available. Please refresh the page to update."
+    },
     "imageCarousel": {
       "previousButton": "Previous Image",
       "nextButton": "Next Image"
@@ -58,41 +61,10 @@
     "settings": "Settings",
     "logout": "Log Out"
   },
-  "dialogs": {
-    "confirm": {
-      "title": "Confirm Action",
-      "message": "Are you sure you want to proceed?"
-    }
-  },
   "forms": {
     "cancel": "Cancel",
     "confirm": "Confirm",
     "hasErrors": "There are errors in the form. Please correct them and try again."
-  },
-  "auth": {
-    "shared": {
-      "usernameLabel": "Username",
-      "passwordLabel": "Password",
-      "emailLabel": "Email"
-    },
-    "login": {
-      "title": "Account Login",
-      "submitButton": "Log in",
-      "noAccount": "Need to create an account?",
-      "registerLinkText": "Register"
-    },
-    "register": {
-      "title": "Create an Account",
-      "submitButton": "Register",
-      "firstNameLabel": "First Name",
-      "firstNamePlaceholder": "First name (optional)",
-      "lastNameLabel": "Last Name",
-      "lastNamePlaceholder": "Last name (optional)",
-      "confirmPasswordLabel": "Confirm Password",
-      "haveAccount": "Already have an account?",
-      "loginLinkText": "Log in",
-      "successMessage": "Registration successful! You can now log in."
-    }
   },
   "landing": {
     "subtitle": "Organize your private recipes for on-the-go cooking.",
@@ -203,7 +175,6 @@
           "clickToAdd": "Click on the \"+ Add Recipe\" button in the top right corner to create your first recipe."
         }
       },
-
       "discover": {
         "title": "Discover Recipes",
         "loading": "Loading discover recipes...",
@@ -260,7 +231,7 @@
       "visibility": {
         "groupDescription": "Visible to you and your group members only. This applies to any groups you belong to.",
         "privateDescription": "Visible only to you.",
-        "publicDescription": "Visible to everyone."
+        "publicDescription": "Visible to everyone in the community."
       },
       "title": {
         "new": "Add Recipe",
@@ -277,12 +248,26 @@
       "notFound": {
         "backAction": "Create a New Recipe"
       },
+      "loadFailed": {
+        "backAction": "Back to My Recipes"
+      },
       "errors": {
         "maxImages": "You can only upload up to {{maxImages}} images."
       },
       "deleteVariantConfirmation": {
         "title": "Delete Variant",
         "message": "Are you sure you want to delete this variant?<br /><br /><strong>This action is permanent and cannot be undone.</strong>"
+      },
+      "formattingGuide": {
+        "title": "Formatting Guide",
+        "description": "Use the following formatting syntax in ingredients, instructions, and notes.",
+        "bold": "bold",
+        "italic": "italic",
+        "underline": "underline",
+        "emDash": "em dash",
+        "newLine": "new line",
+        "example": "Example",
+        "exampleText": "**Chicken** breast with _fresh_ herbs"
       },
       "addButton": "Add Recipe",
       "addVariantButton": "Add Variant",
@@ -351,22 +336,7 @@
     "messageNotWritable": "The response could not be written.",
     "validationFailed": "Validation failed. Please check your input.",
     "notAuthorized": "You are not authorized to access this resource.",
-    "invalidAccessToken": "Your session has expired. Please log in again.",
-    "invalidRefreshToken": "Your session has expired. Please log in again.",
-    "invalidCredentials": "Username or password is invalid.",
-    "authUserBlocked": "Your account has been blocked.",
-    "authUserLocked": "Your account is locked.",
-    "authUserNotFound": "User not found.",
     "missingParameters": "Required parameters are missing.",
-    "invalidDateFormat": "The date format is invalid.",
-    "userNotFound": "User not found.",
-    "duplicateEmail": "This email is already in use.",
-    "duplicateUsername": "This username is already in use.",
-    "passwordMismatch": "Passwords do not match.",
-    "incorrectPassword": "The password is incorrect.",
-    "incorrectNewPassword": "The new password is invalid.",
-    "invalidEmail": "The email address is invalid.",
-    "fieldMessage": "There exists errors in one or more fields. Please correct them and try again.",
     "fields": {
       "required": "This field is required.",
       "minLength": "Must be at least {{requiredLength}} characters.",

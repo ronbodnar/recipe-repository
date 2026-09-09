@@ -39,7 +39,7 @@ public class UserAccountService {
     public UserAccountDTO getOrCreateUserAccount(IdentityUser identityUser) {
         UserAccount userAccount = userAccountRepository.findByIdentityProviderSubject(identityUser.subject())
                 .orElseGet(() -> {
-                    String displayName = identityUser.familyName() + " " + identityUser.givenName();
+                    String displayName = identityUser.givenName() + " " + identityUser.familyName();
 
                     UserAccount user = new UserAccount();
                     user.setIdentityProviderSubject(identityUser.subject());

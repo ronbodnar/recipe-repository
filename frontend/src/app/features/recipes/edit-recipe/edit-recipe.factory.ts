@@ -23,7 +23,7 @@ export class RecipeFormFactory {
         validators: [Validators.maxLength(500)],
         nonNullable: true,
       }),
-      source: new FormControl(v?.source ?? null),
+      source: new FormControl(v?.source ?? '', { nonNullable: true }),
       visibility: new FormControl(v?.visibility ?? 'PRIVATE', {
         validators: [Validators.required],
         nonNullable: true,

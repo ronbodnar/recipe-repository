@@ -11,7 +11,7 @@ export class AppVersionService {
   private readonly snackBar = inject(SnackbarService);
 
   private readonly versionUrl = './assets/version.json';
-  public readonly currentVersion = '0.0.1';
+  public readonly currentVersion = '0.1.0';
 
   checkVersionAndReload() {
     this.http
@@ -21,7 +21,7 @@ export class AppVersionService {
         if (res.version !== this.currentVersion) {
           const snackBarData: SnackbarData = {
             type: SnackbarType.INFO,
-            message: 'snackbars.newVersion',
+            message: 'ui.snackbar.newVersion',
             actions: [
               {
                 icon: 'refresh',

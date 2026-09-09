@@ -134,8 +134,12 @@ public class Recipe {
             this.title = patch.title();
         }
 
-        if (patch.description() != null && !patch.description().isBlank()) {
+        if (patch.description() != null) {
             this.description = patch.description();
+        }
+
+        if (patch.source() != null) {
+            this.source = patch.source();
         }
 
         if (patch.visibility() != null) {

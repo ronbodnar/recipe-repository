@@ -26,7 +26,7 @@
 
           @if (ordered()) {
             <ol
-              class="my-0 space-y-3 text-base"
+              class="my-0 space-y-3 text-base {{ listClasses() }}"
               [ngClass]="{
                 'pl-0': useCheckboxes(),
                 'pl-6': !useCheckboxes(),
@@ -39,7 +39,7 @@
             </ol>
           } @else {
             <ul
-              class="my-0 text-base"
+              class="my-0 text-base {{ listClasses() }}"
               [ngClass]="{
                 'pl-0': useCheckboxes(),
                 'pl-6': !useCheckboxes(),
@@ -66,7 +66,13 @@
         </mat-checkbox>
       </li>
     } @else {
-      <li [innerHTML]="parseText(ingredient)"></li>
+      <li
+        class="hover:bg-background rounded-md px-2 {{
+          lineThroughStates().get(index) ? 'line-through' : ''
+        }}"
+        [innerHTML]="parseText(ingredient)"
+        (click)="toggleLineThrough(index)"
+      ></li>
     }
   }
 </ng-template>

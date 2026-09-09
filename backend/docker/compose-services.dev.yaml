@@ -1,0 +1,25 @@
+services:
+  gateway:
+    container_name: gateway
+    build:
+      context: ../services/gateway/
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    volumes:
+      - ../secrets/gateway.properties:/secrets/gateway.properties:ro
+    networks:
+      - backend
+
+#  recipe-service:
+#    container_name: recipe-service
+#    image: ghcr.io/ronbodnar/rr-recipe-service:latest
+#    volumes:
+#      - ./secrets/document-service-env.properties:/app/env.properties:ro
+#    restart: always
+#    networks:
+#      - backend
+
+networks:
+  backend:
+    external: true

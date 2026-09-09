@@ -1,0 +1,53 @@
+name: Image Service CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/services/image-service/**'
+      - 'backend/services/common-core/**'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: Check out GitHub repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build Image Service
+        run: ./mvnw -pl services/image-service -am package -DskipTests
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Dockerfile and push to GHCR
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend/services/image-service
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/rr-image-service:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

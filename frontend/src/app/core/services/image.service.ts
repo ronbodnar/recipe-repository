@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { environment } from '@env/environment';
+import { environment } from '@env';
 import { FetchApiService } from './fetch-api.service';
 import { resizeImage } from '@shared/utils/resize-image';
 import { from, switchMap } from 'rxjs';

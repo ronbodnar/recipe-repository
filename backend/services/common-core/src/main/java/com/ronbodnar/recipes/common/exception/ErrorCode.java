@@ -13,6 +13,7 @@ public enum ErrorCode {
     VALIDATION_FAILED(HttpStatus.BAD_REQUEST, LogLevel.INFO),
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, LogLevel.INFO),
     MISSING_PARAMETERS(HttpStatus.BAD_REQUEST, LogLevel.WARN),
+    INCORRECT_PARAMETER(HttpStatus.BAD_REQUEST, LogLevel.WARN),
 
     // Validation
     FIELD_MIN_LENGTH(HttpStatus.BAD_REQUEST, LogLevel.INFO),

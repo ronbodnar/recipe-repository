@@ -1,9 +1,9 @@
 app:
   services:
-    image-service: http://localhost:8083
+    image-service: ${IMAGE_SERVICE_URI}
 
 server:
-  port: 8082
+  port: 8081
   forward-headers-strategy: native
 
 spring:

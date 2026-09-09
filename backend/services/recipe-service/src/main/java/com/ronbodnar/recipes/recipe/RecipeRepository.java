@@ -37,8 +37,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
     """)
     List<UUID> findAllImageIdsForRecipeId(@Param("recipeId") UUID recipeId);
 
-    boolean existsByTitle(String title);
+    boolean existsByTitleAndAuthorSubject(String title, String authorSubject);
 
-    boolean existsByTitleAndIdIsNot(String title, UUID id);
+    boolean existsByTitleAndAuthorSubjectAndIdIsNot(String title, String authorSubject, UUID id);
 
 }

@@ -34,3 +34,9 @@ spring:
         jwt:
           issuer-uri: ${APP_KEYCLOAK_ISSUER_URI}
           jwk-set-uri: ${APP_KEYCLOAK_JWK_SET_URI}
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.gateway.server.mvc: TRACE
+    org.springframework.web.servlet: DEBUG

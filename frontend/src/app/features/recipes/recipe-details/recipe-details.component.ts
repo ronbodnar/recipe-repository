@@ -11,7 +11,7 @@ import { DialogService } from '@shared/ui/dialog/dialog.service';
 import { RecipeService } from '../recipe.service';
 import { SnackbarService, SnackbarType } from '@shared/ui/snackbar.component';
 import { ImageService } from '@core/services/image.service';
-import { DatePipe, LowerCasePipe } from '@angular/common';
+import { CommonModule, DatePipe, LowerCasePipe } from '@angular/common';
 import { UserService } from '@features/users/user.service';
 import { UserAccountSummary } from '@features/users/user.types';
 import { AuthenticationService } from '@core/services/authentication.service';
@@ -24,6 +24,7 @@ import { logDebug } from '@shared/utils/logging';
 @Component({
   selector: 'app-recipe-details',
   imports: [
+    CommonModule,
     FluidContainerComponent,
     FullPageLoaderComponent,
     TranslatePipe,
@@ -109,6 +110,24 @@ export class RecipeDetailsComponent {
     ].filter((attribute) => attribute.values.length > 0);
   });
 
+  protected readonly sourceUrl = computed(() => {
+    const source = this.recipe()?.source;
+
+    if (!source) {
+      return null;
+    }
+
+    if (/^https?:\/\//i.test(source)) {
+      return source;
+    }
+
+    if (/^www\./i.test(source)) {
+      return `https://${source}`;
+    }
+
+    return null;
+  });
+
   readonly isRecipeOwner = computed(() => {
     const currentUser = this.authService.authUser();
     return currentUser?.identityProviderSubject === this.recipe()?.authorSubject;
@@ -119,13 +138,18 @@ export class RecipeDetailsComponent {
       | { source?: RecipeListSource; recipe?: Recipe }
       | undefined;
 
-    if (state?.source) {
-      this._source.set(state.source);
+    const { source, recipe } = state ?? {};
+
+    if (source) {
+      this._source.set(source);
     }
 
-    if (state?.recipe) {
-      this._recipe.set(state.recipe);
-      this.loadAuthor(state.recipe.authorSubject);
+    if (recipe) {
+      this._recipe.set(recipe);
+      if (recipe.variants.length > 0) {
+        this._selectedVariantIndex.set(0);
+      }
+      this.loadAuthor(recipe.authorSubject);
     }
   }
 

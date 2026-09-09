@@ -3,7 +3,7 @@
     "name": "Recipe Repository",
     "version": "Versión {{version}}",
     "copyright": "Todos los derechos reservados.",
-    "loadingMessage": "Casi terminamos..."
+    "loadingMessage": "Ya casi..."
   },
   "ui": {
     "imageCarousel": {
@@ -17,11 +17,44 @@
       "selectImagesButton": "Seleccionar {{label}}",
       "replaceImage": "Reemplazar imagen",
       "deleteImage": "Eliminar imagen"
+    },
+    "pagination": {
+      "page": "Página {{currentPage}} de {{totalPages}}",
+      "previousPage": "Página anterior",
+      "nextPage": "Página siguiente",
+      "resultsPerPage": "Resultados por página"
+    },
+    "tables": {
+      "noData": "No se encontraron resultados con los filtros actuales",
+      "resultsFound": "Resultados encontrados",
+      "resetFilter": "Restablecer filtro",
+      "paginator": {
+        "itemsPerPage": "Elementos por página:",
+        "firstPage": "Primera página",
+        "lastPage": "Última página",
+        "nextPage": "Página siguiente",
+        "previousPage": "Página anterior",
+        "of": "de",
+        "page": "Página"
+      },
+      "actions": {
+        "label": "Acciones",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "details": "Ver detalles"
+      },
+      "moreActions": "Más acciones",
+      "moreActionsDisabled": "No hay acciones disponibles para este registro."
     }
   },
   "navigation": {
+    "recipes": "Recetas",
     "myRecipes": "Mis recetas",
     "addRecipe": "Agregar receta",
+    "discoverRecipes": "Descubrir recetas",
+    "groups": "Grupos",
+    "myGroups": "Mis grupos",
+    "addGroup": "Agregar grupo",
     "settings": "Configuración",
     "logout": "Cerrar sesión"
   },
@@ -63,17 +96,21 @@
   },
   "landing": {
     "subtitle": "Organiza tus recetas privadas para cocinar dondequiera que estés.",
-    "comingSoon": "Muy pronto en tu cocina...",
+    "comingSoon": "Próximamente en tu cocina...",
     "privateRecipeTitle": "Recetas privadas",
     "privateRecipeSubtitle": "Mantén tus recetas personales privadas y organizadas.",
     "ingredientsTitle": "Encuentra recetas por ingredientes",
-    "ingredientsSubtitle": "Busca fácilmente recetas según los ingredientes que tengas.",
-    "scaleTitle": "Ajusta las porciones",
+    "ingredientsSubtitle": "Busca fácilmente recetas según los ingredientes que tengas disponibles.",
+    "scaleTitle": "Ajusta las recetas",
     "scaleSubtitle": "Ajusta las porciones sin tener que hacer las cuentas.",
     "primaryCtaButton": "Crear cuenta",
     "secondaryCtaButton": "Iniciar sesión"
   },
   "recipes": {
+    "notFound": {
+      "title": "Receta no encontrada",
+      "message": "La receta que buscas no existe, puede haber sido eliminada o es posible que no tengas permiso para verla."
+    },
     "attributes": {
       "courses": {
         "appetizer": "Entrada",
@@ -103,7 +140,7 @@
       "dietTypes": {
         "dairy-free": "Sin lácteos",
         "gluten-free": "Sin gluten",
-        "keto": "Keto",
+        "keto": "Cetogénica",
         "low-carb": "Baja en carbohidratos",
         "vegan": "Vegana",
         "vegetarian": "Vegetariana"
@@ -120,28 +157,31 @@
     "visibility": {
       "public": "Pública",
       "private": "Privada",
-      "group": "Familiar"
+      "group": "Grupo"
     },
     "labels": {
       "title": "Título",
       "description": "Descripción",
+      "source": "Fuente",
       "visibility": "Visibilidad",
       "variants": "Variantes",
       "cookingMethod": "Método de cocción",
-      "servings": "Porciones",
+      "yield": "Rendimiento",
       "prepTime": "Tiempo de preparación",
       "cookTime": "Tiempo de cocción",
       "ingredients": "Ingredientes",
       "instructions": "Instrucciones",
       "notes": "Notas",
+      "attributes": "Características",
       "courses": "Tipos de platillo",
       "cuisines": "Cocinas",
-      "dietTypes": "Tipos de dieta",
+      "dietTypes": "Dietas",
       "mealTypes": "Comidas",
+      "minutes": "min",
       "cookingMethods": {
         "air-fryer": "Freidora de aire",
-        "barbecue": "Parrilla",
-        "grill": "Asador",
+        "barbecue": "Barbacoa",
+        "grill": "Parrilla",
         "microwave": "Microondas",
         "no-cook": "Sin cocción",
         "oven": "Horno",
@@ -152,14 +192,26 @@
       }
     },
     "list": {
-      "title": "Mis recetas",
-      "viewRecipeButton": "Ver receta",
-      "loading": "Cargando tus recetas...",
-      "errorLoading": "Ocurrió un error al cargar las recetas. Inténtalo de nuevo.",
-      "noRecipes": {
-        "title": "¡Bienvenido a {{appName}}!",
-        "empty": "Aún no has agregado ninguna receta.",
-        "clickToAdd": "Haz clic en el botón \"+ Agregar receta\" en la esquina superior derecha para crear tu primera receta."
+      "noDescription": "No se proporcionó una descripción.",
+      "myRecipes": {
+        "title": "Mis recetas",
+        "loading": "Cargando tus recetas...",
+        "errorLoading": "Error al cargar las recetas. Inténtalo de nuevo.",
+        "noRecipes": {
+          "title": "¡Bienvenido a {{appName}}!",
+          "empty": "Todavía no has agregado ninguna receta.",
+          "clickToAdd": "Haz clic en el botón \"+ Agregar receta\" en la esquina superior derecha para crear tu primera receta."
+        }
+      },
+      "discover": {
+        "title": "Descubrir recetas",
+        "loading": "Cargando recetas para descubrir...",
+        "errorLoading": "Error al cargar las recetas. Inténtalo de nuevo.",
+        "noRecipes": {
+          "title": "No se encontraron recetas públicas",
+          "empty": "No hay recetas públicas disponibles en este momento.",
+          "clickToAdd": "Haz clic en el botón \"+ Agregar receta\" en la esquina superior derecha y establece la visibilidad en \"Pública\" para crear una receta pública."
+        }
       }
     },
     "details": {
@@ -171,7 +223,7 @@
       "noVariants": "No se encontraron variantes. Edita la receta para agregar variantes y ver los ingredientes, instrucciones y notas.",
       "noIngredients": "No se proporcionaron ingredientes.",
       "noInstructions": "No se proporcionaron instrucciones.",
-      "loading": "Cargando detalles de la receta...",
+      "loading": "Cargando los detalles de la receta...",
       "deleting": "Eliminando receta...",
       "deleteError": "No se pudo eliminar la receta. Inténtalo de nuevo más tarde.",
       "deleteButton": "Eliminar receta",
@@ -181,8 +233,6 @@
         "message": "¿Estás seguro de que deseas eliminar esta receta?<br /><br /><strong>Esta acción es permanente y no se puede deshacer.</strong>"
       },
       "notFound": {
-        "title": "Receta no encontrada",
-        "message": "La receta que buscas no existe, pudo haber sido eliminada o es posible que no tengas permiso para verla.",
         "backAction": "Volver a mis recetas"
       }
     },
@@ -196,9 +246,10 @@
       "placeholders": {
         "title": "Ingresa el título de la receta",
         "description": "Ingresa la descripción de la receta",
-        "variantName": "Ingresa el nombre de la variante (se usará el método de cocción como alternativa)",
+        "source": "Ingresa la fuente de la receta si corresponde (por ejemplo, libro de cocina, sitio web o familiar)",
+        "variantName": "Ingresa el nombre de la variante (el método de cocción se usará como alternativa)",
         "cookingMethod": "Ingresa el método de cocción",
-        "servings": "Ingresa el número de porciones",
+        "yield": "Ingresa el rendimiento (por ejemplo, 4 porciones, 2 panes)",
         "prepTime": "Ingresa el tiempo de preparación en minutos",
         "cookTime": "Ingresa el tiempo de cocción en minutos",
         "ingredients": "Ingresa los ingredientes, uno por línea",
@@ -206,8 +257,8 @@
         "notes": "Ingresa notas o consejos para la receta"
       },
       "visibility": {
-        "groupDescription": "Visible solo para ti y los miembros de tu grupo. Esto aplica a cualquier grupo al que pertenezcas.",
-        "privateDescription": "Visible solo para ti.",
+        "groupDescription": "Visible únicamente para ti y los miembros de tus grupos. Esto aplica a cualquier grupo al que pertenezcas.",
+        "privateDescription": "Visible únicamente para ti.",
         "publicDescription": "Visible para todos."
       },
       "title": {
@@ -215,20 +266,57 @@
         "existing": "Editar receta"
       },
       "subtitle": {
-        "new": "Completa el siguiente formulario para crear una nueva receta.",
+        "new": "Completa el siguiente formulario para crear una nueva receta. Los campos marcados con un asterisco (*) son obligatorios.",
         "existing": "Actualiza los detalles de la receta a continuación."
       },
       "submitButton": {
         "new": "Agregar receta",
         "existing": "Actualizar receta"
       },
+      "notFound": {
+        "backAction": "Crear una nueva receta"
+      },
+      "loadFailed": {
+        "backAction": "Volver a mis recetas"
+      },
+      "errors": {
+        "maxImages": "Solo puedes subir hasta {{maxImages}} imágenes."
+      },
+      "deleteVariantConfirmation": {
+        "title": "Eliminar variante",
+        "message": "¿Estás seguro de que deseas eliminar esta variante?<br /><br /><strong>Esta acción es permanente y no se puede deshacer.</strong>"
+      },
+      "formattingGuide": {
+        "title": "Guía de formato",
+        "description": "Usa la siguiente sintaxis de formato en los ingredientes, instrucciones y notas.",
+        "bold": "negritas",
+        "italic": "cursivas",
+        "underline": "subrayado",
+        "emDash": "raya",
+        "newLine": "nueva línea",
+        "example": "Ejemplo",
+        "exampleText": "**Pollo** con hierbas _frescas_"
+      },
       "addButton": "Agregar receta",
       "addVariantButton": "Agregar variante",
-      "noVariantsMessage": "No se han agregado variantes. Haz clic en el botón \"+ Agregar variante\" para comenzar.",
+      "noVariantsMessage": "No has agregado ninguna variante. Haz clic en el botón \"+ Agregar variante\" para comenzar.",
       "noCookingMethodSelected": "Sin especificar",
-      "loading": "Cargando detalles de la receta...",
+      "loading": "Cargando los detalles de la receta...",
       "errorLoading": "Ocurrió un error al cargar la receta. Inténtalo de nuevo más tarde.",
       "errorSubmitting": "Ocurrió un error al guardar la receta. Inténtalo de nuevo más tarde."
+    }
+  },
+  "groups": {
+    "list": {
+      "title": "Mis grupos",
+      "loading": "Cargando tus grupos...",
+      "errorLoading": "Error al cargar los grupos. Inténtalo de nuevo.",
+      "addButton": "Agregar grupo",
+      "noGroups": {
+        "title": "¡Bienvenido a {{appName}}!",
+        "empty": "Todavía no has creado ni te has unido a ningún grupo.",
+        "clickToAdd": "Haz clic en el botón \"+ Agregar grupo\" en la esquina superior derecha para crear tu primer grupo."
+      }
     }
   },
   "settings": {
@@ -245,12 +333,22 @@
       "languageLabel": "Idioma",
       "languageOptions": {
         "en_US": "Inglés",
-        "es_MX": "Español (Español)"
+        "es_MX": "Español (México)"
       }
     },
     "profile": {
       "title": "Configuración del perfil",
-      "label": "Perfil"
+      "label": "Perfil",
+      "saveButton": "Guardar cambios",
+      "successMessage": "El perfil se actualizó correctamente.",
+      "errorMessage": "Ocurrió un error al actualizar tu perfil. Inténtalo de nuevo más tarde.",
+      "labels": {
+        "profilePicture": "Foto de perfil",
+        "displayName": "Nombre para mostrar",
+        "email": "Correo electrónico",
+        "givenName": "Nombre",
+        "familyName": "Apellido"
+      }
     },
     "security": {
       "title": "Configuración de seguridad",
@@ -263,8 +361,8 @@
     "networkTimeout": "La solicitud tardó demasiado. Inténtalo de nuevo más tarde.",
     "internalError": "Ocurrió un error interno del servidor.",
     "messageNotReadable": "No se pudo leer la solicitud.",
-    "messageNotWritable": "No se pudo generar la respuesta.",
-    "validationFailed": "La validación falló. Revisa los datos ingresados.",
+    "messageNotWritable": "No se pudo escribir la respuesta.",
+    "validationFailed": "La validación falló. Verifica los datos ingresados.",
     "notAuthorized": "No tienes autorización para acceder a este recurso.",
     "invalidAccessToken": "Tu sesión ha expirado. Inicia sesión nuevamente.",
     "invalidRefreshToken": "Tu sesión ha expirado. Inicia sesión nuevamente.",
@@ -280,13 +378,13 @@
     "passwordMismatch": "Las contraseñas no coinciden.",
     "incorrectPassword": "La contraseña es incorrecta.",
     "incorrectNewPassword": "La nueva contraseña no es válida.",
-    "invalidEmail": "El correo electrónico no es válido.",
+    "invalidEmail": "La dirección de correo electrónico no es válida.",
     "fieldMessage": "Hay errores en uno o más campos. Corrígelos e inténtalo de nuevo.",
     "fields": {
       "required": "Este campo es obligatorio.",
       "minLength": "Debe tener al menos {{requiredLength}} caracteres.",
       "maxLength": "Debe tener menos de {{requiredLength}} caracteres.",
-      "min": "Debe ser al menos {{min}}.",
+      "min": "Debe ser como mínimo {{min}}.",
       "max": "No debe ser mayor que {{max}}.",
       "pattern": "Formato no válido.",
       "email": "Formato de correo electrónico no válido.",

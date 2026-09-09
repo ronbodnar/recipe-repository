@@ -1,26 +1,38 @@
-@if (isLoading()) {
-  <app-full-page-loader [message]="'recipes.list.' + source() + '.loading'" />
-} @else {
-  <app-fluid-container [pageTitle]="pageTitle()" [size]="'xl'">
-    @if (!hasError() && !isLoading()) {
-      <div actions class="flex gap-2 pb-4 sm:pb-0">
-        <app-button
-          color="primary"
-          size="sm"
-          [routerLink]="'/app/recipes/edit/new'"
-          label="recipes.edit.addButton"
-          icon="add"
-        />
-      </div>
-    }
+@switch (true) {
+  @case (isLoading()) {
+    <app-full-page-loader [message]="'recipes.list.' + source() + '.loading'" />
+  }
 
-    @if (hasError()) {
-      <section class="flex justify-center items-center h-64">
-        <span class="text-red-500">
-          {{ 'recipes.list.' + source() + '.errorLoading' | translate }}
-        </span>
-      </section>
-    } @else if (loadedRecipes().length === 0) {
+  @case (hasError()) {
+    <ng-container *ngTemplateOutlet="loadingError"></ng-container>
+  }
+
+  @default {
+    <ng-container *ngTemplateOutlet="recipeList"></ng-container>
+  }
+}
+
+<ng-template #loadingError>
+  <section class="h-full flex justify-center items-center">
+    <span class="text-red-500">
+      {{ 'recipes.list.' + source() + '.errorLoading' | translate }}
+    </span>
+  </section>
+</ng-template>
+
+<ng-template #recipeList>
+  <app-fluid-container [pageTitle]="pageTitle()" [size]="'xl'">
+    <div actions class="flex gap-2 pb-4 sm:pb-0">
+      <app-button
+        color="primary"
+        size="sm"
+        [routerLink]="'/app/recipes/edit/new'"
+        label="recipes.edit.addButton"
+        icon="add"
+      />
+    </div>
+
+    @if (loadedRecipes().length === 0) {
       <section class="flex flex-col flex-1 items-center text-center gap-4">
         <mat-icon class="size-18! text-7xl!">restaurant</mat-icon>
 
@@ -49,4 +61,4 @@
       </div>
     }
   </app-fluid-container>
-}
+</ng-template>

@@ -70,7 +70,7 @@ public class RecipeService {
         log.info("Attempting create a recipe titled {} with {} images from author {}",
                 recipeRequest.title(), recipeRequest.imageIds().size(), authorSubject);
 
-        if (recipeRepository.existsByTitle(recipeRequest.title())) {
+        if (recipeRepository.existsByTitleAndAuthorSubject(recipeRequest.title(), authorSubject)) {
             log.info("Failed to create recipe: a recipe with title {} already exists!", recipeRequest.title());
             throw new BusinessException(
                     ErrorCode.DUPLICATE_RECIPE,
@@ -114,7 +114,7 @@ public class RecipeService {
             );
         }
 
-        if (recipeRepository.existsByTitleAndIdIsNot(recipeRequest.title(), existingRecipe.getId())) {
+        if (recipeRepository.existsByTitleAndAuthorSubjectAndIdIsNot(recipeRequest.title(), existingRecipe.getAuthorSubject(), existingRecipe.getId())) {
             log.info("Failed to update recipe: a recipe with title {} already exists!", recipeRequest.title());
             throw new BusinessException(
                     ErrorCode.DUPLICATE_RECIPE,

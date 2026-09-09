@@ -44,10 +44,6 @@ frontend/typings
 frontend/.DS_Store
 frontend/Thumbs.db
 
-frontend/TODO
-frontend/src/environments/environment*.ts
-!frontend/src/environments/example.*.environment.ts
-
 ### BACK-END ###
 backend/HELP.md
 backend/target/

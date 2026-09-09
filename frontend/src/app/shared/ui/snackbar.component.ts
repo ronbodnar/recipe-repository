@@ -66,7 +66,7 @@ export class SnackbarService {
 
     return this.snackBar.openFromComponent(SnackbarComponent, {
       data: snackbarData,
-      duration: snackbarData.duration ?? 50000,
+      duration: snackbarData.duration ?? 5000,
       horizontalPosition: snackbarData.horizontalPosition ?? 'right',
       verticalPosition: snackbarData.verticalPosition ?? 'bottom',
       panelClass: ['mt-[var(--mat-toolbar-standard-height)]!'],
@@ -78,9 +78,9 @@ export class SnackbarService {
   selector: 'app-snackbar',
   template: `
     <div
-      class="flex w-full p-2 pl-6 {{ data.classList }}"
+      class="flex w-full py-2 px-6 gap-4 rounded-md {{ data.classList }}"
       [class.bg-success]="data.type === SnackbarType.SUCCESS"
-      [class.bg-label]="data.type === SnackbarType.INFO"
+      [class.bg-background-alt]="data.type === SnackbarType.INFO"
       [class.bg-danger]="data.type === SnackbarType.ERROR"
     >
       <span
@@ -93,7 +93,7 @@ export class SnackbarService {
       </span>
 
       @if (data.actions?.length) {
-        <div matSnackBarActions class="flex gap-1 pl-4 pr-2 ml-auto">
+        <div matSnackBarActions class="flex gap-1 ml-auto">
           @for (action of data.actions; track $index) {
             <app-button
               matButton
@@ -102,6 +102,7 @@ export class SnackbarService {
               [label]="action.label"
               size="sm"
               [color]="action.color ?? 'transparent'"
+              [classList]="'p-0!'"
               [iconClassList]="data.type === SnackbarType.INFO ? 'text-text!' : 'text-white!'"
               (click)="handleAction(action)"
             />

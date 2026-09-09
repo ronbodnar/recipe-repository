@@ -8,9 +8,10 @@
         <groupId>com.ronbodnar</groupId>
         <artifactId>reciperepo</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>image-service-client</artifactId>
+    <artifactId>identity-service-client</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>

@@ -38,7 +38,7 @@ export class AppComponent {
   private readonly appVersionService = inject(AppVersionService);
 
   ngOnInit(): void {
-    console.log('Checking for new version...');
+    console.log('Checking app version...');
     this.appVersionService.checkVersionAndReload();
 
     console.log('Subscribing to router events...');

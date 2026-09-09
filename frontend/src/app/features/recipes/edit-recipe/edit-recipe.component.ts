@@ -102,7 +102,9 @@ export class EditRecipeComponent {
   private _form = signal<RecipeForm>(RecipeFormFactory.recipe());
   private _loading = signal<boolean>(true);
   private _validated = signal<boolean>(false);
-  private _status = signal<'idle' | 'submitting' | 'error'>('idle');
+  private _status = signal<'idle' | 'submitting' | 'loadFailed' | 'submitFailed' | 'notFound'>(
+    'idle',
+  );
   private _loadedRecipe = signal<Recipe | null>(null);
   private _activeVariantIndex = signal<number | null>(0);
 
@@ -199,7 +201,7 @@ export class EditRecipeComponent {
       this.removeVariant(index);
       return;
     }
-    // Bug: when there is only 1 variant and the dialog shows to delete it, it does not trigger change detection.
+
     const dialog = this.dialogService.openConfirmationDialog(
       'recipes.edit.deleteVariantConfirmation.title',
       'recipes.edit.deleteVariantConfirmation.message',
@@ -285,7 +287,7 @@ export class EditRecipeComponent {
         error: (error: ApiError) => {
           logError('Error uploading images:', error);
           this._form().enable();
-          this._status.set('error');
+          this._status.set('submitFailed');
         },
       });
     } else {
@@ -320,7 +322,7 @@ export class EditRecipeComponent {
         const currentSubject = this.authService.authUser()?.identityProviderSubject;
         if (recipe.authorSubject !== currentSubject) {
           logDebug('Current user is not the author of this recipe, redirecting to details page.');
-          this.router.navigate([`/app/recipes/details/${recipe.id}`], { state: { recipe } });
+          this.router.navigate([`/app/recipes/details/${recipe.id}`]);
           setTimeout(() => this.snackbar.openSnackBar(SnackbarType.ERROR, 'errors.notAuthorized'));
           return;
         }
@@ -331,7 +333,29 @@ export class EditRecipeComponent {
       },
       error: (error: ApiError) => {
         logDebug('Error loading recipe:', error);
-        this._status.set('error');
+        switch (error.status) {
+          case 403:
+            logDebug(
+              'Current user is not authorized to edit this recipe, redirecting to my recipes.',
+            );
+            this.router.navigate([`/app/recipes/list`]);
+            setTimeout(() =>
+              this.snackbar.openSnackBar(SnackbarType.ERROR, 'errors.notAuthorized'),
+            );
+            return;
+
+          case 400:
+          case 404:
+            this._status.set('notFound');
+            this._loading.set(false);
+            return;
+
+          default:
+            logDebug('An unexpected error occurred while loading the recipe:', error);
+            this._loading.set(false);
+            this._status.set('loadFailed');
+            return;
+        }
       },
     });
   }
@@ -348,13 +372,12 @@ export class EditRecipeComponent {
         this._form().enable();
 
         if (error.hasFormError()) {
-          logDebug('Has a form error, so going idle..');
           this._status.set('idle');
           this.errorService.populateFormErrors(this._form(), error);
           return;
         }
 
-        this._status.set('error');
+        this._status.set('submitFailed');
       },
     });
   }

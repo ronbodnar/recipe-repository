@@ -3,10 +3,10 @@ app:
     s3:
       bucket-name: recipe-repository
   images:
-    cleanup-interval: 60000
+    cleanup-interval: 60000 # once per minute
 
 server:
-  port: 8083
+  port: 8082
   forward-headers-strategy: native
   tomcat:
     max-swallow-size: 100MB

@@ -19,6 +19,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.ArrayList;
@@ -38,6 +39,12 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleHttpMessageNotWritable(HttpMessageNotWritableException ex, HttpServletRequest request) {
         log.info("Message unwritable: {}", ex.getMessage());
         return ProblemDetailFactory.create(ErrorCode.MESSAGE_NOT_WRITABLE);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ProblemDetail handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
+        log.info("Method argument type mismatch: {}", ex.getMessage());
+        return ProblemDetailFactory.create(ErrorCode.INCORRECT_PARAMETER, "Parameter type mismatch: " + ex.getMessage());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

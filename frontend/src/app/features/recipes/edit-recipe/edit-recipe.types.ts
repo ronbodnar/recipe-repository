@@ -12,7 +12,7 @@ export type RecipeForm = FormGroup<{
   id: FormControl<string | null>;
   title: FormControl<string>;
   description: FormControl<string>;
-  source: FormControl<string | null>;
+  source: FormControl<string>;
   visibility: FormControl<RecipeVisibility>;
   imageIds: FormControl<string[]>; // Images from the backend (existing images)
   images: FormControl<File[] | null>;
@@ -39,7 +39,7 @@ export type RecipeFormModel = {
   id: string | null;
   title: string;
   description: string;
-  source: string | null;
+  source: string;
   visibility: RecipeVisibility;
   imageIds?: string[];
   images: File[] | null;
@@ -66,7 +66,7 @@ export type RecipeFormRequest = {
   id: string | null;
   title: string;
   description: string;
-  source: string | null;
+  source: string;
   visibility: RecipeVisibility;
   imageIds?: string[];
   cuisines: Cuisine[];

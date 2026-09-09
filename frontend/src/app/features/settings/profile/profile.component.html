@@ -43,9 +43,9 @@
       />
 
       @if (status() === 'success') {
-        <span class="text-success">{{ 'settings.profile.updateSuccess' | translate }}</span>
+        <span class="text-success">{{ 'settings.profile.successMessage' | translate }}</span>
       } @else if (status() === 'error') {
-        <span class="text-danger">{{ 'settings.profile.updateError' | translate }}</span>
+        <span class="text-danger">{{ 'settings.profile.errorMessage' | translate }}</span>
       }
     </div>
   </div>

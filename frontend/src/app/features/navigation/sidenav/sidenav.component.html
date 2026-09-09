@@ -7,14 +7,14 @@
   <mat-sidenav-container class="flex-1 min-h-0">
     <!-- Sidebar -->
     <mat-sidenav
-      class="rounded-none! border-r! border-border/40!"
+      class="rounded-none! border-r! border-border/10!"
       #snav
       [mode]="isMobile() ? 'over' : 'side'"
       [opened]="isSidenavOpen() && isAuthenticated()"
       (openedChange)="onSidenavOpenedChange($event)"
       [fixedInViewport]="isMobile()"
       [style.width]="isMobile() ? '100vw' : '250px'"
-      [fixedTopGap]="isMobile() ? 55 : 0"
+      [fixedTopGap]="isMobile() ? 52 : 0"
     >
       <div
         class="flex h-full max-h-full min-h-0 min-w-0 flex-col overflow-y-auto text-text select-none"
@@ -65,11 +65,13 @@
 
         <!-- Bottom Sticky Section -->
         <div class="flex flex-col mt-auto text-center">
-          <p class="text-xs my-0 pb-2">
+          <p class="text-xs text-muted">
             {{ 'app.version' | translate: { version: currentVersion } }}
           </p>
 
-          <p class="border-t border-border/40 pt-2 mt-0 text-sm">
+          <hr class="w-3/4 border-border/40" />
+
+          <p class="text-sm text-muted">
             © 2026
             <a href="https://ronbodnar.com" target="_blank">Ron Bodnar</a>
             <br />

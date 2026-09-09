@@ -1,0 +1,106 @@
+name: Deploy Application
+on:
+  workflow_run:
+    workflows: 
+      - "Gateway CI"
+      - "Image Service CI"
+      - "Recipe Service CI"
+      - "Identity Service CI"
+      - "Frontend CI"
+    types:
+      - completed
+
+permissions:
+  actions: read
+  contents: read
+  packages: read
+
+jobs:
+  deploy-backend:
+    if: ${{ github.event.workflow_run.name != 'Frontend CI' && github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Login to GHCR
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+
+      - name: Deploy Gateway
+        if: ${{ github.event.workflow_run.name == 'Gateway CI' }}
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          script: |
+            cd apps/recipe-repository
+            docker compose pull recipe-gateway
+            docker compose up -d recipe-gateway
+
+      - name: Deploy Recipe Service
+        if: ${{ github.event.workflow_run.name == 'Recipe Service CI' }}
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          script: |
+            cd apps/recipe-repository
+            docker compose pull recipe-recipe-service
+            docker compose up -d recipe-recipe-service
+
+      - name: Deploy Identity Service
+        if: ${{ github.event.workflow_run.name == 'Identity Service CI' }}
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          script: |
+            cd apps/recipe-repository
+            docker compose pull recipe-identity-service
+            docker compose up -d recipe-identity-service
+
+      - name: Deploy Image Service
+        if: ${{ github.event.workflow_run.name == 'Image Service CI' }}
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          script: |
+            cd apps/recipe-repository
+            docker compose pull recipe-image-service
+            docker compose up -d recipe-image-service
+
+  deploy-frontend:
+    if: ${{ github.event.workflow_run.name == 'Frontend CI' && github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend/dist/browser/
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p ${{ secrets.DEPLOY_PORT }} -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy via rsync
+        run: |
+          rsync -az --delete \
+            -e "ssh -p ${{ secrets.DEPLOY_PORT }} -o StrictHostKeyChecking=accept-new" \
+            frontend/dist/browser/ \
+            ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/home/${{ secrets.DEPLOY_USER }}/infrastructure/public/recipes.ronbodnar.com/

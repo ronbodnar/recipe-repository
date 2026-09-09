@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -14,9 +14,22 @@ export class RichTextListComponent {
   headerText = input.required<string>();
   headerIcon = input<string | null>(null);
   emptyListText = input<string | null>(null);
+  listClassList = input<string | string[] | null>(null);
   listItems = input.required<string[]>();
   ordered = input<boolean>(false);
   useCheckboxes = input<boolean>(false);
+
+  private _lineThroughStates = signal<Map<number, boolean>>(new Map());
+
+  public readonly lineThroughStates = this._lineThroughStates.asReadonly();
+
+  listClasses = computed(() => {
+    const classList = this.listClassList() ?? [];
+    if (Array.isArray(classList)) {
+      return classList.join(' ');
+    }
+    return classList;
+  });
 
   listGroups = computed(() => {
     const groups: { name: string; items: string[] }[] = [];
@@ -53,6 +66,16 @@ export class RichTextListComponent {
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.+?)\*/g, '<em>$1</em>')
       .replace(/_(.+?)_/g, '<u>$1</u>')
+      .replace(/--/g, '&mdash;')
       .replace(/\r?\\/g, '<br>');
+  }
+
+  toggleLineThrough(index: number): void {
+    this._lineThroughStates.update((states) => {
+      const newStates = new Map(states);
+      const currentState = newStates.get(index) || false;
+      newStates.set(index, !currentState);
+      return newStates;
+    });
   }
 }
