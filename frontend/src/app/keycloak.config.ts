@@ -20,6 +20,7 @@ export const provideKeycloakAngular = () =>
     config: environment.keycloak,
     initOptions: {
       onLoad: 'check-sso',
+      checkLoginIframe: false,
       silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
       redirectUri: window.location.origin + '/',
     },
