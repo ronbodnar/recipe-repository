@@ -14,17 +14,17 @@ spring:
         webmvc:
           routes:
             - id: recipe-service-route
-              uri: ${RECIPE_SERVICE_URL}
+              uri: ${RECIPE_SERVICE_URI}
               predicates:
                 - Path=/api/v1/recipes/**
 
             - id: identity-service-route
-              uri: ${IDENTITY_SERVICE_URL}
+              uri: ${IDENTITY_SERVICE_URI}
               predicates:
                 - Path=/api/v1/identity/**
 
             - id: image-service-route
-              uri: ${IMAGE_SERVICE_URL}
+              uri: ${IMAGE_SERVICE_URI}
               predicates:
                 - Path=/api/v1/images/**
 

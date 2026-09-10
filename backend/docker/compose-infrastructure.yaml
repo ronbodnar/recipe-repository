@@ -1,26 +1,19 @@
 services:
-  mysql_recipe_repository:
-    container_name: mysql_recipe_repository
+  recipe-repository-mysql:
+    container_name: recipe-repository-mysql
     image: mysql:8.0.40
     env_file: "../secrets/mysql.properties"
     ports:
-      - "33306:3306"
+      - "3306:3306"
     volumes:
-      - recipe_repository_data:/var/lib/mysql
+      - recipe_repository_mysql_data:/var/lib/mysql
       - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
       - ./mysql/init/:/docker-entrypoint-initdb.d/
     networks:
       - backend
 
-#  kafka:
-#    image: apache/kafka:latest
-#    ports:
-#      - "9092:9092"
-#    networks:
-#      - backend
-
-  keycloak:
-    container_name: keycloak
+  recipe-repository-keycloak:
+    container_name: recipe-repository-keycloak
     image: quay.io/keycloak/keycloak:latest
     env_file: "../secrets/keycloak.properties"
     ports:
@@ -30,22 +23,22 @@ services:
       - backend
 
 
-  postgres_keycloak:
-    container_name: postgres_keycloak
+  recipe-repository-postgres-keycloak:
+    container_name: recipe-repository-postgres-keycloak
     image: postgres:18.4-alpine
     env_file: "../secrets/postgres-keycloak.properties"
     ports:
       - "5432:5432"
     volumes:
       - ./postgres/postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql
-      - keycloak_data:/var/lib/postgresql
+      - recipe_repository_keycloak_data:/var/lib/postgresql
     command: postgres -c 'max_connections=500'
     networks:
       - backend
 
 volumes:
-  recipe_repository_data:
-  keycloak_data:
+  recipe_repository_mysql_data:
+  recipe_repository_keycloak_data:
 
 networks:
   backend:

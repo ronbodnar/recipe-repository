@@ -16,10 +16,10 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>services/common-core</module>
+		<module>libraries/common-core</module>
+		<module>libraries/image-service-client</module>
+		<module>libraries/identity-service-client</module>
 		<module>services/gateway</module>
-		<module>services/image-service-client</module>
-		<module>services/identity-service-client</module>
 		<module>services/recipe-service</module>
 		<module>services/identity-service</module>
 		<module>services/image-service</module>
