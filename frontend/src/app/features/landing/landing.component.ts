@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { AuthenticationService } from '@core/services/authentication.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 
@@ -11,8 +10,6 @@ import { ButtonComponent } from '@shared/ui/button/button.component';
   styleUrl: './landing.component.css',
 })
 export class LandingComponent {
-  private readonly authService = inject(AuthenticationService);
-
   readonly cards = [
     {
       icon: 'lock',
@@ -30,12 +27,4 @@ export class LandingComponent {
       subtitle: 'landing.scaleSubtitle',
     },
   ];
-
-  login() {
-    this.authService.login();
-  }
-
-  register() {
-    this.authService.register();
-  }
 }

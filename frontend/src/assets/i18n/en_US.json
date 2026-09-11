@@ -78,6 +78,31 @@
     "primaryCtaButton": "Create Account",
     "secondaryCtaButton": "Log In"
   },
+  "auth": {
+    "shared": {
+      "usernameLabel": "Username",
+      "passwordLabel": "Password",
+      "emailLabel": "Email"
+    },
+    "login": {
+      "title": "Account Login",
+      "submitButton": "Log in",
+      "noAccount": "Need to create an account?",
+      "registerLinkText": "Register"
+    },
+    "register": {
+      "title": "Create an Account",
+      "submitButton": "Register",
+      "givenNameLabel": "First Name",
+      "givenNamePlaceholder": "First name (optional)",
+      "familyNameLabel": "Last Name",
+      "familyNamePlaceholder": "Last name (optional)",
+      "confirmPasswordLabel": "Confirm Password",
+      "haveAccount": "Already have an account?",
+      "loginLinkText": "Log in",
+      "successMessage": "Registration successful! You can now log in."
+    }
+  },
   "recipes": {
     "notFound": {
       "title": "Recipe Not Found",
@@ -316,7 +341,7 @@
       "errorMessage": "An error occurred while updating your profile. Please try again later.",
       "labels": {
         "profilePicture": "Profile Picture",
-        "displayName": "Display Name",
+        "username": "Username",
         "email": "Email",
         "givenName": "Given Name",
         "familyName": "Family Name"
@@ -337,6 +362,8 @@
     "validationFailed": "Validation failed. Please check your input.",
     "notAuthorized": "You are not authorized to access this resource.",
     "missingParameters": "Required parameters are missing.",
+    "invalidCredentials": "Invalid username or password.",
+    "passwordMismatch": "Passwords do not match.",
     "fields": {
       "required": "This field is required.",
       "minLength": "Must be at least {{requiredLength}} characters.",
@@ -348,7 +375,7 @@
       "invalid": "Invalid value.",
       "duplicateRecipe": "A recipe with this name already exists.",
       "emailAlreadyInUse": "This email is already in use.",
-      "displayNameAlreadyInUse": "This display name is already in use."
+      "usernameAlreadyInUse": "This username is already in use."
     }
   }
 }

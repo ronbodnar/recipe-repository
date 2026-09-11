@@ -53,7 +53,7 @@ export const getNavItems = (): NavItem[] => {
       sectionName: 'logout',
       icon: 'logout',
       label: 'navigation.logout',
-      onClick: async () => await authService.logout(),
+      onClick: () => authService.logout().subscribe(),
     },
   ];
 };

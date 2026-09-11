@@ -1,0 +1,20 @@
+services:
+  recipe-repository-mysql:
+    container_name: recipe-repository-mysql
+    image: mysql:8.0.40
+    env_file: "../secrets/mysql.properties"
+    ports:
+      - "3306:3306"
+    volumes:
+      - recipe_repository_mysql_data:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/init/:/docker-entrypoint-initdb.d/
+    networks:
+      - backend
+
+volumes:
+  recipe_repository_mysql_data:
+
+networks:
+  backend:
+    driver: bridge

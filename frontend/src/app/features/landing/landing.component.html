@@ -13,13 +13,18 @@
     </div>
 
     <div class="flex justify-center gap-3">
-      <app-button color="primary" size="lg" label="landing.primaryCtaButton" (click)="register()" />
+      <app-button
+        color="primary"
+        size="lg"
+        label="landing.primaryCtaButton"
+        routerLink="/app/auth/register"
+      />
 
       <app-button
         color="secondary"
         size="lg"
         label="landing.secondaryCtaButton"
-        (click)="login()"
+        routerLink="/app/auth/login"
       />
     </div>
 

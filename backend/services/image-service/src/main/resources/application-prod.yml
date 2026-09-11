@@ -1,6 +1,0 @@
-app:
-  images:
-    cleanup-interval: 3600000 # once per hour
-
-server:
-  port: 9082

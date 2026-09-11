@@ -8,19 +8,28 @@ export const authGuard: CanActivateFn = (route, _state) => {
   const snackBar = inject(SnackbarService);
   const authService = inject(AuthenticationService);
 
-  if (!authService.isAuthenticated()) {
+  console.log('is authenticated? ', authService.isAuthenticated());
+  console.log('authenticated roles: ', authService.authenticatedRoles());
+
+  if (!authService.isAuthenticated() || !authService.authenticatedRoles()) {
+    console.log('user is not authenticated or has no roles');
     return redirectWithSnackbar(router, snackBar);
   }
 
   if (route.data['requiredRole'] == null) {
+    console.log('no required role specified');
     return true;
   }
 
   const hasRequiredRole = authService
-    .authUser()
-    ?.roles.some((r) => r.toLowerCase() === route.data['requiredRole']?.toLowerCase());
+    .authenticatedRoles()
+    .some((r) => r.toLowerCase() === route.data['requiredRole']?.toLowerCase());
 
   if (!hasRequiredRole) {
+    console.log(
+      'user does not have the required role. user roles:',
+      authService.authenticatedRoles(),
+    );
     return redirectWithSnackbar(router, snackBar);
   }
 

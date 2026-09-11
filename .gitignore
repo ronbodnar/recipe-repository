@@ -85,5 +85,5 @@ backend/recipe_repository.*.db
 
 ### Environment Properties ###
 backend/secrets/*.properties
-!backend/secrets/example.*.properties
+!backend/secrets/*-example.properties
 backend/*.properties

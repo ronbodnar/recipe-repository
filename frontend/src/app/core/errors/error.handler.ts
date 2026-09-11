@@ -8,7 +8,7 @@ import { logError } from '@shared/utils/logging';
 export interface FrontendError {
   timestamp: string;
   route: string;
-  userId: string;
+  userId: number;
   userAgent: string;
   message: string;
   stackTrace: string;

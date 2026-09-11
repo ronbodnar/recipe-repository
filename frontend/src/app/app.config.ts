@@ -6,7 +6,7 @@ import {
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideRouter, TitleStrategy, withViewTransitions } from '@angular/router';
-import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { httpInterceptorProviders } from './core/interceptors/http.interceptor';
 import { errorInterceptorProviders } from '@core/errors/error.interceptor';
 import { routes } from './app.routes';
@@ -15,14 +15,14 @@ import { AppTitleStrategy } from '@core/services/app-title.strategy';
 import { provideNmfConfigFactory, ValidationMessages } from '@ng-modular-forms/core';
 import { provideNmfMaterialConfig } from '@ng-modular-forms/material';
 import { ThemeService } from '@core/services/theme.service';
-import { provideKeycloakAngular } from './keycloak.config';
-import { includeBearerTokenInterceptor } from 'keycloak-angular';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { AuthenticationService } from '@core/services/authentication.service';
+import { firstValueFrom, take } from 'rxjs';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(withInterceptorsFromDi(), withInterceptors([includeBearerTokenInterceptor])),
+    provideHttpClient(withInterceptorsFromDi()),
 
     httpInterceptorProviders,
     errorInterceptorProviders,
@@ -30,7 +30,6 @@ export const appConfig: ApplicationConfig = {
     { provide: TitleStrategy, useClass: AppTitleStrategy },
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
 
-    provideKeycloakAngular(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withViewTransitions()),
 
@@ -71,8 +70,11 @@ export const appConfig: ApplicationConfig = {
 
     provideAppInitializer(async () => {
       const themeService = inject(ThemeService);
+      const authService = inject(AuthenticationService);
 
       themeService.loadTheme();
+
+      await firstValueFrom(authService.checkAuthentication().pipe(take(1)));
     }),
   ],
 };

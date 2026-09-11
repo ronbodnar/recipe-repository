@@ -1,6 +1,0 @@
-IDENTITY_SERVICE_URI: http://localhost:8081
-IMAGE_SERVICE_URI: http://localhost:8082
-RECIPE_SERVICE_URI: http://localhost:8083
-
-APP_KEYCLOAK_ISSUER_URI: http://localhost:8080/realms/test
-APP_KEYCLOAK_JWK_SET_URI: http://localhost:8080/realms/test/protocol/openid-connect/certs

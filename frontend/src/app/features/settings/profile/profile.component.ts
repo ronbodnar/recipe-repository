@@ -125,14 +125,14 @@ export class SettingsProfileComponent {
   private updateProfile(formData: ProfileFormModel) {
     this.fetchApi.putData('identity/me', formData).subscribe({
       next: () => {
-        this.authService.update({
+        /*         this.authService.update({
           ...this.authService.authUser()!,
           displayName: formData.displayName!,
           email: formData.email!,
           givenName: formData.givenName!,
           familyName: formData.familyName!,
           profileImageId: formData.profileImageId ?? null,
-        });
+        }); */
         this._status.set('success');
         setTimeout(() => this._status.set('idle'), 3000);
         this.form().markAsPristine();

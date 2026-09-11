@@ -1,0 +1,87 @@
+<div class="min-h-full flex flex-col items-center justify-center px-4 py-12">
+  <img src="assets/images/full-logo.png" width="190" height="190" alt="Recipe Repository" />
+
+  <div
+    class="w-full max-w-2xl rounded-2xl border border-border/40 bg-background-alt p-6 shadow-sm sm:p-8"
+  >
+    <div class="mb-8 text-center">
+      <h1 class="m-0 text-2xl font-semibold">
+        {{ 'auth.register.title' | translate }}
+      </h1>
+    </div>
+
+    <form
+      [formGroup]="form()"
+      (ngSubmit)="onSubmit()"
+      class="flex w-full flex-col gap-x-4 gap-y-3 lg:grid lg:grid-cols-2"
+    >
+      <nmf-text
+        label="auth.register.givenNameLabel"
+        type="text"
+        formControlName="givenName"
+        placeholder="auth.register.givenNamePlaceholder"
+      />
+
+      <nmf-text
+        label="auth.register.familyNameLabel"
+        type="text"
+        formControlName="familyName"
+        placeholder="auth.register.familyNamePlaceholder"
+      />
+
+      <nmf-text
+        label="auth.shared.emailLabel"
+        type="email"
+        formControlName="email"
+        placeholder="auth.shared.emailLabel"
+      />
+
+      <nmf-text
+        label="auth.shared.usernameLabel"
+        type="text"
+        formControlName="username"
+        placeholder="auth.shared.usernameLabel"
+      />
+
+      <nmf-text
+        label="auth.shared.passwordLabel"
+        type="password"
+        formControlName="password"
+        placeholder="auth.shared.passwordLabel"
+      />
+
+      <nmf-text
+        label="auth.register.confirmPasswordLabel"
+        type="password"
+        formControlName="confirmPassword"
+        placeholder="auth.register.confirmPasswordLabel"
+      />
+
+      <p class="col-span-full m-0 min-h-5 text-center text-sm text-danger">
+        @if (form().hasError('custom')) {
+          {{ form().getError('custom') | translate }}
+        }
+
+        @if (form().hasError('passwordMismatch')) {
+          {{ 'errors.passwordMismatch' | translate }}
+        }
+      </p>
+
+      <app-button
+        class="col-span-full text-center"
+        color="primary"
+        size="lg"
+        type="submit"
+        [label]="'auth.register.submitButton' | translate"
+        [loading]="isSubmitting()"
+      ></app-button>
+    </form>
+
+    <p class="mt-6 mb-0 text-center text-sm text-muted">
+      {{ 'auth.register.haveAccount' | translate }}
+      <a routerLink="/app/auth/login" class="font-medium hover:underline">
+        {{ 'auth.register.loginLinkText' | translate }}
+      </a>
+    </p>
+  </div>
+</div>

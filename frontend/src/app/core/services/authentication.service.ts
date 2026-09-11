@@ -1,110 +1,134 @@
-import { effect, inject, Injectable, signal } from '@angular/core';
-import { KEYCLOAK_EVENT_SIGNAL, KeycloakEventType } from 'keycloak-angular';
-import Keycloak from 'keycloak-js';
-import { environment } from '@env';
-import { FetchApiService } from './fetch-api.service';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { StorageService } from './storage.service';
+import { Observable, catchError, finalize, of, shareReplay, tap, throwError } from 'rxjs';
+import { FetchApiService } from './fetch-api.service';
+import { ApiError } from '../models/api-error.model';
+import { DeviceService } from './device.service';
+import { CanActivateFn, Router } from '@angular/router';
+import { authGuard } from '@core/guards/auth.guard';
 import { UserAccount } from '@features/users/user.types';
-import { logDebug } from '@shared/utils/logging';
+import { UserRegistrationRequest } from '@features/auth/auth.types';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
-  private readonly fetchApi = inject(FetchApiService);
+  private authRequest$?: Observable<UserAccount | null>;
+
+  private _authUser = signal<UserAccount | undefined | null>(undefined);
+
+  public readonly authUser = this._authUser.asReadonly();
+
+  private readonly router = inject(Router);
+  private readonly deviceService = inject(DeviceService);
   private readonly storageService = inject(StorageService);
+  private readonly fetchApiService = inject(FetchApiService);
 
-  private readonly keycloak = inject(Keycloak);
-  private readonly keycloakSignal = inject(KEYCLOAK_EVENT_SIGNAL);
+  readonly isAuthenticated = computed(() => this.authUser() != null);
 
-  readonly isAuthenticated = signal(this.keycloak.authenticated ?? false);
+  readonly authenticatedRoles = computed(() => this.authUser()?.roles || []);
 
-  readonly authUser = signal<UserAccount | null>(this.storageService.getUserAccount());
-
-  constructor() {
-    effect(() => {
-      const event = this.keycloakSignal();
-
-      switch (event.type) {
-        case KeycloakEventType.Ready:
-        case KeycloakEventType.AuthSuccess:
-        case KeycloakEventType.AuthRefreshSuccess:
-        case KeycloakEventType.AuthLogout:
-        case KeycloakEventType.AuthRefreshError:
-          this.syncUser();
-          break;
-
-        default:
-          logDebug('Unhandled Keycloak event received:', event);
-          break;
-      }
-    });
-  }
-
-  login(): Promise<void> {
-    return this.keycloak.login();
-  }
-
-  register(): Promise<void> {
-    return this.keycloak.register();
-  }
-
-  async logout(): Promise<void> {
-    await this.keycloak.logout();
-  }
-
-  update(user: UserAccount): void {
-    this.authUser.set(user);
-    this.storageService.setUserAccount(user);
-  }
-
-  private syncUser(): void {
-    const authenticated = this.keycloak.authenticated ?? false;
-
-    this.isAuthenticated.set(authenticated);
-
-    if (!authenticated) {
-      this.authUser.set(null);
-      return;
+  checkAuthentication(): Observable<UserAccount | null> {
+    const authUser = this._authUser();
+    if (authUser !== undefined) {
+      return of(authUser);
     }
 
-    this.fetchApi.getData<UserAccount>('identity/me').subscribe({
-      next: (user) => {
-        if (!user) {
-          logDebug('Authenticated UserAccount data is null or undefined.');
-          this.authUser.set(null);
-          return;
-        }
+    if (!this.authRequest$) {
+      this.authRequest$ = this.fetchApiService.getData<UserAccount>('auth/me').pipe(
+        tap((user) => {
+          console.log('Authentication check successful, user:', user);
+          this._authUser.set(user ?? null);
+        }),
+        catchError((error) => {
+          console.log('Authentication check produced an error:', error);
+          this.clearAuthentication();
+          this._authUser.set(null);
+          return of(null);
+        }),
+        shareReplay(1),
+      );
+    }
 
-        const userAccount = this.createEnrichedUserAccount(user);
-
-        logDebug('Received enriched authenticated user data:', userAccount);
-
-        this.authUser.set(userAccount);
-        this.storageService.setUserAccount(userAccount);
-      },
-      error: (error) => {
-        logDebug('Error fetching authenticated user:', error);
-        this.authUser.set(null);
-      },
-    });
+    return this.authRequest$;
   }
 
-  private createEnrichedUserAccount(user: UserAccount): UserAccount {
-    const token = this.keycloak.tokenParsed;
-
-    const resourceRoles =
-      token?.['resource_access']?.[environment.keycloak.clientId]?.['roles'] ?? [];
-
-    return {
-      ...user,
-      identityProviderSubject: token?.['sub'] ?? '',
-      username: token?.['preferred_username'],
-      email: token?.['email'],
-      givenName: token?.['given_name'],
-      familyName: token?.['family_name'],
-      name: token?.['name'],
-      roles: resourceRoles.map((role) => `permission:${role.toLowerCase()}`),
+  login(username: string, password: string) {
+    const body = {
+      username: username,
+      password: password,
+      deviceId: this.deviceService.getDeviceId(),
     };
+
+    return this.fetchApiService
+      .fetch<UserAccount>('auth/login', { method: 'POST', requestBody: body })
+      .pipe(
+        catchError((error: ApiError) => throwError(() => error)),
+        tap((response) => {
+          this._authUser.set(response);
+          this.storageService.setUserAccount(response);
+        }),
+      );
+  }
+
+  register(userData: UserRegistrationRequest) {
+    const body = {
+      ...userData,
+      givenName: userData.givenName || null,
+      familyName: userData.familyName || null,
+      deviceId: this.deviceService.getDeviceId(),
+    };
+
+    return this.fetchApiService.postData<UserAccount>('auth/register', body);
+  }
+
+  logout() {
+    return this.fetchApiService.fetch('auth/logout', { method: 'POST' }).pipe(
+      finalize(() => {
+        this.clearAuthentication();
+        this.storageService.clear();
+
+        const hasAuthGuard = this.routeHasGuard(authGuard);
+
+        if (hasAuthGuard) {
+          this.router.navigate(['/']);
+        }
+      }),
+    );
+  }
+
+  refreshToken() {
+    return this.fetchApiService.fetch<UserAccount>('auth/refresh', { method: 'GET' }).pipe(
+      catchError((error: ApiError) => {
+        this.clearAuthentication();
+        return throwError(() => error);
+      }),
+      tap((authUser) => {
+        if (!this._authUser() || authUser?.id !== this._authUser()?.id) {
+          this._authUser.set(authUser);
+        }
+      }),
+    );
+  }
+
+  clearAuthentication() {
+    this._authUser.set(null);
+  }
+
+  setAuthUser(user: UserAccount) {
+    this._authUser.set(user);
+  }
+
+  private routeHasGuard(guard: CanActivateFn): boolean {
+    let route = this.router.routerState.snapshot.root;
+
+    while (route) {
+      if (route.routeConfig?.canActivate?.includes(guard)) {
+        return true;
+      }
+      route = route.firstChild!;
+    }
+
+    return false;
   }
 }

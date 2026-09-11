@@ -1,0 +1,50 @@
+<div class="min-h-full flex flex-col items-center px-4 pt-12 sm:pt-16">
+  <img src="assets/images/full-logo.png" width="180" height="180" alt="Recipe Repository" />
+
+  <div
+    class="w-full max-w-sm rounded-xl border border-border/40 bg-background-alt p-6 sm:p-8 shadow-sm"
+  >
+    <div class="mb-8 text-center">
+      <h1 class="m-0 text-2xl font-semibold">
+        {{ 'auth.login.title' | translate }}
+      </h1>
+    </div>
+
+    <form [formGroup]="form()" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+      <nmf-text
+        formControlName="username"
+        [label]="'auth.shared.usernameLabel' | translate"
+        [placeholder]="'auth.shared.usernameLabel' | translate"
+      />
+
+      <nmf-text
+        type="password"
+        formControlName="password"
+        [label]="'auth.shared.passwordLabel' | translate"
+        [placeholder]="'auth.shared.passwordLabel' | translate"
+      />
+
+      @if (errorMessage() || form().hasError('custom')) {
+        <p class="m-0 text-center text-sm text-danger">
+          {{ errorMessage() || form().getError('custom') | translate }}
+        </p>
+      }
+
+      <app-button
+        class="text-center"
+        color="primary"
+        size="lg"
+        type="submit"
+        label="auth.login.submitButton"
+        [loading]="isSubmitting()"
+      ></app-button>
+    </form>
+
+    <p class="mt-6 mb-0 text-center text-sm text-muted">
+      {{ 'auth.login.noAccount' | translate }}
+      <a routerLink="/app/auth/register" class="font-medium hover:underline">
+        {{ 'auth.login.registerLinkText' | translate }}
+      </a>
+    </p>
+  </div>
+</div>

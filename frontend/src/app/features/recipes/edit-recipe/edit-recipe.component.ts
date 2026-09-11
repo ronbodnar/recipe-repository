@@ -319,8 +319,7 @@ export class EditRecipeComponent {
       next: (recipe) => {
         logDebug('Loaded recipe:', recipe);
 
-        const currentSubject = this.authService.authUser()?.identityProviderSubject;
-        if (recipe.authorSubject !== currentSubject) {
+        if (recipe.authorId !== this.authService.authUser()?.id) {
           logDebug('Current user is not the author of this recipe, redirecting to details page.');
           this.router.navigate([`/app/recipes/details/${recipe.id}`]);
           setTimeout(() => this.snackbar.openSnackBar(SnackbarType.ERROR, 'errors.notAuthorized'));

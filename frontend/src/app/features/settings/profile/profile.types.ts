@@ -1,7 +1,7 @@
 import { FormControl, FormGroup } from '@angular/forms';
 
 export type ProfileForm = FormGroup<{
-  displayName: FormControl<string>;
+  username: FormControl<string>;
   email: FormControl<string>;
   givenName: FormControl<string>;
   familyName: FormControl<string>;
@@ -10,7 +10,7 @@ export type ProfileForm = FormGroup<{
 }>;
 
 export type ProfileFormModel = {
-  displayName: string;
+  username: string;
   email: string;
   givenName: string;
   familyName: string;
@@ -19,7 +19,7 @@ export type ProfileFormModel = {
 };
 
 export type ProfileFormRequest = {
-  displayName: string;
+  username: string;
   email: string;
   givenName: string;
   familyName: string;

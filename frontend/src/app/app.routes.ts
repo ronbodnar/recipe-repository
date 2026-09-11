@@ -1,13 +1,17 @@
 import { Routes } from '@angular/router';
 import { LandingComponent } from './features/landing/landing.component';
-import { landingGuard } from '@core/guards/landing.guard';
+import { guestGuard } from '@core/guards/guest.guard';
 import { authGuard } from '@core/guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
     component: LandingComponent,
-    canActivate: [landingGuard],
+    canActivate: [guestGuard],
+  },
+  {
+    path: 'app/auth',
+    loadChildren: () => import('./features/auth/auth.routes').then((m) => m.routes),
   },
   {
     path: 'app/groups',

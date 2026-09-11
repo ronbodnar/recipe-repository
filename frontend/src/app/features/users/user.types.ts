@@ -1,22 +1,17 @@
 export interface UserAccount {
-  id: string;
-  displayName: string;
-  profileImageId: string | null;
-  createdAt: Date;
-  lastModifiedAt: Date;
-
-  // These fields are brought in by Keycloak (or other identity provider) and are not stored in the database
-  identityProviderSubject: string;
+  id: number;
   username: string;
   email: string;
   givenName: string;
   familyName: string;
-  name: string;
+  profileImageId: string | null;
   roles: string[];
+  createdAt: Date;
+  lastModifiedAt: Date;
 }
 
 export interface UserAccountSummary {
-  identityProviderSubject: string;
+  id: number;
   displayName: string;
   profileImageId: string | null;
 }

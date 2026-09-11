@@ -130,7 +130,7 @@ export class RecipeDetailsComponent {
 
   readonly isRecipeOwner = computed(() => {
     const currentUser = this.authService.authUser();
-    return currentUser?.identityProviderSubject === this.recipe()?.authorSubject;
+    return currentUser?.id === this.recipe()?.authorId;
   });
 
   constructor() {
@@ -149,7 +149,7 @@ export class RecipeDetailsComponent {
       if (recipe.variants.length > 0) {
         this._selectedVariantIndex.set(0);
       }
-      this.loadAuthor(recipe.authorSubject);
+      this.loadAuthor(recipe.authorId);
     }
   }
 
@@ -226,7 +226,7 @@ export class RecipeDetailsComponent {
           this._selectedVariantIndex.set(0);
         }
 
-        this.loadAuthor(recipe.authorSubject);
+        this.loadAuthor(recipe.authorId);
 
         this._recipe.set(recipe);
       },
@@ -238,8 +238,8 @@ export class RecipeDetailsComponent {
     });
   }
 
-  private loadAuthor(subject: string) {
-    this.userService.loadUserSummary(subject).subscribe({
+  private loadAuthor(id: number) {
+    this.userService.loadUserSummary(id).subscribe({
       next: (user) => {
         logDebug('Fetched author details:', user);
         this._author.set(user);

@@ -8,7 +8,7 @@ import { UserAccountSummary } from './user.types';
 export class UserService {
   private readonly fetchApi = inject(FetchApiService);
 
-  loadUserSummary(subject: string) {
-    return this.fetchApi.getData<UserAccountSummary>(`identity/users/${subject}/summary`);
+  loadUserSummary(id: number) {
+    return this.fetchApi.getData<UserAccountSummary>(`identity/users/${id}/summary`);
   }
 }

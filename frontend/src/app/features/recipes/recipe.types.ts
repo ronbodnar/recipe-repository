@@ -5,7 +5,7 @@ export interface Recipe {
   source: string;
   visibility: RecipeVisibility;
   images: string[];
-  authorSubject: string;
+  authorId: number;
   createdAt: Date;
   updatedAt: Date;
   courses: Course[];

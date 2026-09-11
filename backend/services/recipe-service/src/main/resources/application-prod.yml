@@ -1,6 +1,0 @@
-server:
-  port: 9083
-
-spring:
-  jpa:
-    show-sql: false
