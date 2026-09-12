@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
@@ -17,5 +18,5 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
     @Modifying
     @Transactional
     @Query("UPDATE RefreshToken SET valid = FALSE WHERE deviceId = :deviceId")
-    void invalidateTokensForDeviceId(@Param("deviceId") byte[] deviceId);
+    void invalidateTokensForDeviceId(@Param("deviceId") UUID deviceId);
 }

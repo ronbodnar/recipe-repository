@@ -37,13 +37,12 @@ public class RefreshTokenService {
 
         String deviceIdClaim = claims.get("deviceId", String.class);
         UUID deviceId = UUID.fromString(deviceIdClaim);
-        byte[] deviceIdBytes = toBytes(deviceId);
 
-        invalidateDeviceId(deviceIdBytes);
+        invalidateDeviceId(deviceId);
 
         RefreshToken refreshToken = new RefreshToken(
                 userId,
-                deviceIdBytes,
+                deviceId,
                 hashedToken,
                 ip,
                 issuedAt,
@@ -71,7 +70,7 @@ public class RefreshTokenService {
         return userAccountService.getById(token.getUserId());
     }
 
-    private void invalidateDeviceId(byte[] deviceId) {
+    private void invalidateDeviceId(UUID deviceId) {
         refreshTokenRepository.invalidateTokensForDeviceId(deviceId);
     }
 
@@ -86,12 +85,5 @@ public class RefreshTokenService {
             );
         }
         return messageDigest.digest(token.getBytes(StandardCharsets.UTF_8));
-    }
-
-    private static byte[] toBytes(UUID uuid) {
-        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
-        bb.putLong(uuid.getMostSignificantBits());
-        bb.putLong(uuid.getLeastSignificantBits());
-        return bb.array();
     }
 }

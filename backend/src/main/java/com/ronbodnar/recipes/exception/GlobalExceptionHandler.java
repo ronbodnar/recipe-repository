@@ -16,7 +16,9 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -70,8 +72,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BusinessException.class)
-    public ProblemDetail handleBusinessException(BusinessException ex, HttpServletRequest request, @AuthenticationPrincipal SecurityUserDetails securityUser) {
-        Long userId = securityUser.getId();
+    public ProblemDetail handleBusinessException(BusinessException ex, HttpServletRequest request) {
+        Long userId = null;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof SecurityUserDetails) {
+            userId = ((SecurityUserDetails) auth.getPrincipal()).getId();
+        }
 
         LogLevel level = ex.getErrorCode().getLogLevel();
         switch(level) {

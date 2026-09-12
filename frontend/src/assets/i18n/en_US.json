@@ -100,7 +100,7 @@
       "confirmPasswordLabel": "Confirm Password",
       "haveAccount": "Already have an account?",
       "loginLinkText": "Log in",
-      "successMessage": "Registration successful! You can now log in."
+      "successMessage": "Registration successful! You have been logged in automatically."
     }
   },
   "recipes": {
@@ -197,7 +197,7 @@
         "noRecipes": {
           "title": "Welcome to {{appName}}!",
           "empty": "You haven't added any recipes yet.",
-          "clickToAdd": "Click on the \"+ Add Recipe\" button in the top right corner to create your first recipe."
+          "clickToAdd": "Click on the \"+\" button in the bottom right corner to create your first recipe."
         }
       },
       "discover": {
@@ -207,7 +207,7 @@
         "noRecipes": {
           "title": "No Public Recipes Found",
           "empty": "There are no discover recipes available at the moment.",
-          "clickToAdd": "Click on the \"+ Add Recipe\" button in the top right corner and set the visibility to 'Public' to create a public recipe."
+          "clickToAdd": "Click on the \"+\" button in the bottom right corner and set the visibility to 'Public' to create a public recipe."
         }
       }
     },
@@ -343,8 +343,8 @@
         "profilePicture": "Profile Picture",
         "username": "Username",
         "email": "Email",
-        "givenName": "Given Name",
-        "familyName": "Family Name"
+        "givenName": "First name",
+        "familyName": "Last name"
       }
     },
     "security": {

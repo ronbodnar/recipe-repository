@@ -22,18 +22,8 @@
 
 <ng-template #recipeList>
   <app-fluid-container [pageTitle]="pageTitle()" [size]="'xl'">
-    <div actions class="flex gap-2 pb-4 sm:pb-0">
-      <app-button
-        color="primary"
-        size="sm"
-        [routerLink]="'/app/recipes/edit/new'"
-        label="recipes.edit.addButton"
-        icon="add"
-      />
-    </div>
-
     @if (loadedRecipes().length === 0) {
-      <section class="flex flex-col flex-1 items-center text-center gap-4">
+      <section class="flex flex-col flex-1 items-center text-center gap-4 mt-16">
         <mat-icon class="size-18! text-7xl!">restaurant</mat-icon>
 
         <h2 class="text-xl">
@@ -60,5 +50,14 @@
         />
       </div>
     }
+
+    <app-button
+      class="self-end mt-auto"
+      classList="rounded-full!"
+      color="primary"
+      size="lg"
+      [routerLink]="'/app/recipes/edit/new'"
+      icon="add"
+    />
   </app-fluid-container>
 </ng-template>

@@ -32,20 +32,20 @@ public class UserAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email", unique = true, nullable = false, length = 100)
+    @Column(name = "email", unique = true, nullable = false, length = 254)
     private String email;
 
-    @Column(name = "username", unique = true, nullable = false, length = 50)
+    @Column(name = "username", unique = true, nullable = false, length = 30)
     private String username;
 
     @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "given_name", length = 30)
+    @Column(name = "given_name", length = 150)
     private String givenName;
 
-    @Column(name = "family_name", length = 30)
+    @Column(name = "family_name", length = 150)
     private String familyName;
 
     @Column(name = "profile_image_id")

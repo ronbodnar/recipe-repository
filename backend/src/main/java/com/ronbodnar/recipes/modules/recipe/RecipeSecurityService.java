@@ -5,6 +5,7 @@ import com.ronbodnar.recipes.exception.ErrorCode;
 import com.ronbodnar.recipes.modules.recipe.domain.RecipeVisibility;
 import com.ronbodnar.recipes.security.adapter.SecurityUserDetails;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -18,15 +19,20 @@ public class RecipeSecurityService {
         this.recipeRepository = recipeRepository;
     }
 
-    public boolean isOwner(UUID recipeId, SecurityUserDetails securityUser) {
+    public boolean isOwner(UUID recipeId, Authentication authentication) {
+        SecurityUserDetails securityUser = (SecurityUserDetails) authentication.getPrincipal();
+        if (securityUser == null) {
+            return false;
+        }
+
         Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(() ->
                 new BusinessException(ErrorCode.RECIPE_NOT_FOUND));
 
-        // Return true if the IDs match
         return recipe.getAuthorId().equals(securityUser.getId());
     }
 
-    public boolean canView(UUID recipeId, SecurityUserDetails securityUser) {
+    public boolean canView(UUID recipeId, Authentication authentication) {
+        SecurityUserDetails securityUser = (SecurityUserDetails) authentication.getPrincipal();
         if (securityUser == null) {
             return false;
         }

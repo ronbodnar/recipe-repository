@@ -91,7 +91,7 @@
       "confirmPasswordLabel": "Confirmar contraseña",
       "haveAccount": "¿Ya tienes una cuenta?",
       "loginLinkText": "Iniciar sesión",
-      "successMessage": "¡Registro exitoso! Ya puedes iniciar sesión."
+      "successMessage": "¡Registro exitoso! Has iniciado sesión automáticamente."
     }
   },
   "landing": {
@@ -344,7 +344,7 @@
       "errorMessage": "Ocurrió un error al actualizar tu perfil. Inténtalo de nuevo más tarde.",
       "labels": {
         "profilePicture": "Foto de perfil",
-        "displayName": "Nombre para mostrar",
+        "username": "Nombre para mostrar",
         "email": "Correo electrónico",
         "givenName": "Nombre",
         "familyName": "Apellido"
@@ -391,7 +391,7 @@
       "invalid": "Valor no válido.",
       "duplicateRecipe": "Ya existe una receta con este nombre.",
       "emailAlreadyInUse": "Este correo electrónico ya está en uso.",
-      "displayNameAlreadyInUse": "Este nombre para mostrar ya está en uso."
+      "usernameAlreadyInUse": "Este nombre para mostrar ya está en uso."
     }
   }
 }

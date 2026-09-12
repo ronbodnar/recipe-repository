@@ -12,6 +12,6 @@ export interface UserAccount {
 
 export interface UserAccountSummary {
   id: number;
-  displayName: string;
+  username: string;
   profileImageId: string | null;
 }

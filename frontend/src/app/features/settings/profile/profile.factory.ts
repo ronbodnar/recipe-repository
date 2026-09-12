@@ -2,8 +2,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProfileFormModel, ProfileForm } from './profile.types';
 
 const nameValidators = [
-  Validators.required,
   Validators.minLength(2),
+  Validators.maxLength(150),
   Validators.pattern(/^[a-zA-Z\s'-]+$/),
 ];
 
@@ -15,7 +15,12 @@ export class ProfileFactory {
       profileImageId: new FormControl<string | null>(v?.profileImageId ?? null),
       username: new FormControl(v?.username ?? '', {
         nonNullable: true,
-        validators: nameValidators,
+        validators: [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(30),
+          Validators.pattern(/^[a-zA-Z0-9._-]+$/),
+        ],
       }),
       email: new FormControl(v?.email ?? '', {
         nonNullable: true,
@@ -25,12 +30,10 @@ export class ProfileFactory {
           Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
         ],
       }),
-      givenName: new FormControl(v?.givenName ?? '', {
-        nonNullable: true,
+      givenName: new FormControl(v?.givenName ?? null, {
         validators: nameValidators,
       }),
-      familyName: new FormControl(v?.familyName ?? '', {
-        nonNullable: true,
+      familyName: new FormControl(v?.familyName ?? null, {
         validators: nameValidators,
       }),
     });

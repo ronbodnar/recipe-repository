@@ -15,6 +15,7 @@ import {
   InputTextComponent,
 } from '@ng-modular-forms/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SidenavComponent } from '@features/navigation/sidenav/sidenav.component';
 
 @Component({
   selector: 'app-user-login',
@@ -34,6 +35,7 @@ export class UserLoginComponent extends FormOrchestrator {
   private formBuilder = inject(FormBuilder);
   private errorService = inject(ErrorService);
   private authService = inject(AuthenticationService);
+  private sidenav = inject(SidenavComponent);
 
   isSubmitting = computed(() => this.status() === 'submitting');
 
@@ -42,8 +44,8 @@ export class UserLoginComponent extends FormOrchestrator {
 
     this.orchestrate({
       form: this.formBuilder.group({
-        username: ['', [Validators.required, Validators.minLength(3)]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
+        username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+        password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(255)]],
       }),
     });
   }
@@ -67,6 +69,10 @@ export class UserLoginComponent extends FormOrchestrator {
           return this.errorService.populateFormErrors(this.form(), error);
         }),
       )
-      .subscribe(() => this.router.navigateByUrl('/'));
+      .subscribe(() =>
+        this.router.navigateByUrl('/').then(() => {
+          this.sidenav.open();
+        }),
+      );
   }
 }

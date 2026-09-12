@@ -125,6 +125,11 @@ export class SidenavComponent implements OnDestroy {
     }
   }
 
+  open(): void {
+    this._isSidenavOpen.set(true);
+    this.storageService.setPreference('sidenav.isOpen', true);
+  }
+
   isOpen(section: string): boolean {
     return this.expandedSections().includes(section);
   }

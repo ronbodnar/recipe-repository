@@ -79,7 +79,13 @@ export class AuthenticationService {
       deviceId: this.deviceService.getDeviceId(),
     };
 
-    return this.fetchApiService.postData<UserAccount>('auth/register', body);
+    return this.fetchApiService.postData<UserAccount>('auth/register', body).pipe(
+      catchError((error: ApiError) => throwError(() => error)),
+      tap((response) => {
+        this._authUser.set(response);
+        this.storageService.setUserAccount(response);
+      }),
+    );
   }
 
   logout() {

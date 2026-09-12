@@ -6,6 +6,7 @@ import com.ronbodnar.recipes.modules.auth.dto.RegisterRequest;
 import com.ronbodnar.recipes.modules.auth.refreshtoken.RefreshTokenService;
 import com.ronbodnar.recipes.modules.identity.user.UserAccount;
 import com.ronbodnar.recipes.modules.identity.user.UserAccountService;
+import com.ronbodnar.recipes.modules.identity.user.dto.UserAccountChangeRequest;
 import com.ronbodnar.recipes.security.jwt.JwtCookieService;
 import com.ronbodnar.recipes.security.jwt.JwtService;
 import com.ronbodnar.recipes.modules.auth.domain.AuthenticationTokenType;
@@ -21,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -118,6 +118,10 @@ public class AuthenticationService {
         );
 
         return new AuthenticationResponse(getCurrentUser(securityUser), tokenPair);
+    }
+
+    public void updateCurrentUser(UserAccountChangeRequest request, SecurityUserDetails securityUser) {
+        userAccountService.updateUserAccount(request, securityUser);
     }
 
     public AuthenticationResponse register(RegisterRequest registerRequest, String ip, String userAgent) {

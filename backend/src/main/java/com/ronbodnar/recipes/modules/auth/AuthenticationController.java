@@ -3,6 +3,7 @@ package com.ronbodnar.recipes.modules.auth;
 import com.ronbodnar.recipes.exception.BusinessException;
 import com.ronbodnar.recipes.exception.ErrorCode;
 import com.ronbodnar.recipes.modules.auth.dto.RegisterRequest;
+import com.ronbodnar.recipes.modules.identity.user.dto.UserAccountChangeRequest;
 import com.ronbodnar.recipes.modules.identity.user.dto.UserAccountDTO;
 import com.ronbodnar.recipes.security.jwt.JwtCookieService;
 import com.ronbodnar.recipes.modules.auth.domain.AuthenticationTokenType;
@@ -48,8 +49,9 @@ public class AuthenticationController {
     }
 
     @PutMapping("/me")
-    public UserAccountDTO updateCurrentUser(@AuthenticationPrincipal SecurityUserDetails userDetails) {
-        return null;
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateCurrentUser(@RequestBody @Valid UserAccountChangeRequest request, @AuthenticationPrincipal SecurityUserDetails securityUser) {
+        authenticationService.updateCurrentUser(request, securityUser);
     }
 
     @PostMapping("/login")

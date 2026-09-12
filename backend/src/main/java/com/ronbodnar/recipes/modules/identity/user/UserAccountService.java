@@ -5,8 +5,10 @@ import com.ronbodnar.recipes.exception.ErrorCode;
 import com.ronbodnar.recipes.exception.payload.FieldError;
 import com.ronbodnar.recipes.modules.identity.role.RoleService;
 import com.ronbodnar.recipes.modules.auth.dto.RegisterRequest;
+import com.ronbodnar.recipes.modules.identity.user.dto.UserAccountChangeRequest;
 import com.ronbodnar.recipes.modules.identity.user.dto.UserAccountSummaryDTO;
 import com.ronbodnar.recipes.modules.image.ImageService;
+import com.ronbodnar.recipes.security.adapter.SecurityUserDetails;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,54 +26,74 @@ public class UserAccountService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final UserAccountRepository userAccountRepository;
+    private final UserAccountRepository repository;
 
-    public UserAccountService(RoleService roleService, PasswordEncoder passwordEncoder, ImageService imageService, UserAccountRepository userAccountRepository) {
+    public UserAccountService(RoleService roleService, PasswordEncoder passwordEncoder, ImageService imageService, UserAccountRepository repository) {
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
         this.imageService = imageService;
-        this.userAccountRepository = userAccountRepository;
+        this.repository = repository;
     }
 
     public UserAccount getById(Long id) {
-        return userAccountRepository.findByIdWithRoles(id)
+        return repository.findByIdWithRoles(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
     public UserAccountSummaryDTO getSummaryById(Long id) {
-        UserAccount userAccount = userAccountRepository.findByIdWithRoles(id)
+        UserAccount userAccount = repository.findByIdWithRoles(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         return UserAccountSummaryDTO.from(userAccount);
     }
 
-/*    public void updateUserAccount(IdentityUser identityUser, UserAccountChangeRequest request) {
+    public void updateUserAccount(UserAccountChangeRequest request, SecurityUserDetails securityUser) {
         log.info("Processing user account update request: {}", request);
-        UserAccount userAccount = userAccountRepository.findByIdentityProviderSubject(identityUser.subject())
+        UserAccount userAccount = repository.findById(securityUser.getId())
                 .orElseThrow(() ->
                         new BusinessException(
                             ErrorCode.USER_NOT_FOUND,
-                            "Failed to find a UserAccount with ID %s".formatted(identityUser.subject())
+                            "Failed to find a UserAccount with ID %s".formatted(securityUser.getId())
                         )
                 );
 
-        boolean isUsernameTaken = userAccountRepository.existsDisplayNameUsedByAnotherUser(
-                request.username(),
-                identityUser.subject()
-        );
+        List<FieldError> fieldErrorList = new ArrayList<>();
 
+        boolean isUsernameTaken = repository.existsUsernameByAnotherUser(request.username(), securityUser.getId());
         if (isUsernameTaken) {
-            throw new BusinessException(
-                    ErrorCode.DISPLAY_NAME_ALREADY_IN_USE,
-                    "username",
-                    "This display name is already in use."
+            fieldErrorList.add(
+                    new FieldError(
+                            ErrorCode.USERNAME_ALREADY_IN_USE,
+                            "username",
+                            "Username has already been registered."
+                    )
             );
+        }
+
+        boolean isEmailTaken = repository.existsEmailByAnotherUser(request.email(), securityUser.getId());
+        if (isEmailTaken) {
+            fieldErrorList.add(
+                    new FieldError(
+                            ErrorCode.EMAIL_ALREADY_IN_USE,
+                            "email",
+                            "E-mail address has already been registered."
+                    )
+            );
+        }
+
+        if (!fieldErrorList.isEmpty()) {
+            throw new BusinessException(ErrorCode.VALIDATION_FAILED, fieldErrorList);
         }
 
         UUID existingProfileImageId = userAccount.getProfileImageId();
 
         userAccount.setUsername(request.username());
+        userAccount.setEmail(request.email());
+        userAccount.setGivenName(request.givenName());
+        userAccount.setFamilyName(request.familyName());
         userAccount.setProfileImageId(request.profileImageId());
+
+        repository.saveAndFlush(userAccount);
 
         if (!Objects.equals(existingProfileImageId, request.profileImageId())
                 && existingProfileImageId != null) {
@@ -83,15 +105,15 @@ public class UserAccountService {
         }
 
         log.info("Updated user account with ID: {}", userAccount.getId());
-    }*/
+    }
 
     public UserAccount create(RegisterRequest registerRequest) {
         List<FieldError> fieldErrorList = new ArrayList<>();
-        if (userAccountRepository.existsByUsername(registerRequest.username())) {
+        if (repository.existsByUsername(registerRequest.username())) {
             fieldErrorList.add(new FieldError(ErrorCode.USERNAME_ALREADY_IN_USE, "username", "Username has already been registered."));
         }
 
-        if (userAccountRepository.existsByEmail(registerRequest.email())) {
+        if (repository.existsByEmail(registerRequest.email())) {
             fieldErrorList.add(new FieldError(ErrorCode.EMAIL_ALREADY_IN_USE, "email", "E-mail address has already been registered."));
         }
 
@@ -114,6 +136,6 @@ public class UserAccountService {
         userAccount.setFamilyName(registerRequest.familyName());
         userAccount.setRoles(Set.of(roleService.getDefaultRole()));
 
-        return userAccountRepository.save(userAccount);
+        return repository.save(userAccount);
     }
 }

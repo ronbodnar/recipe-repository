@@ -1,12 +1,14 @@
 package com.ronbodnar.recipes.modules.auth.refreshtoken;
 
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @Table(
@@ -29,7 +31,7 @@ public class RefreshToken {
     private Long userId;
 
     @Column(name = "device_id", nullable = false, columnDefinition = "BINARY(16)")
-    private byte[] deviceId;
+    private UUID deviceId;
 
     @Column(name = "token_hash", nullable = false, columnDefinition = "BINARY(32)")
     private byte[] tokenHash;
@@ -46,7 +48,7 @@ public class RefreshToken {
     @Column(name = "valid", nullable = false, columnDefinition = "TINYINT", length = 1)
     private boolean valid;
 
-    public RefreshToken(Long userId, byte[] deviceId, byte[] tokenHash, String ipAddress, Instant issuedAt, Instant expiresAt) {
+    public RefreshToken(Long userId, UUID deviceId, byte[] tokenHash, String ipAddress, Instant issuedAt, Instant expiresAt) {
         this.userId = userId;
         this.deviceId = deviceId;
         this.tokenHash = tokenHash;

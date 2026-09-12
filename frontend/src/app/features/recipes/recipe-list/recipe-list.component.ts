@@ -55,12 +55,6 @@ export class RecipeListComponent {
 
   readonly pageTitle = computed(() => {
     const source = this.source();
-    const loadedRecipes = this.recipeResponse()?.content;
-
-    if (!loadedRecipes || loadedRecipes.length === 0) {
-      return '';
-    }
-
     switch (source) {
       case 'myRecipes':
         return 'recipes.list.myRecipes.title';

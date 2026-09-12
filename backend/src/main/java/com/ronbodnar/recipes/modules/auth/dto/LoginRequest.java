@@ -8,11 +8,11 @@ import java.util.UUID;
 
 public record LoginRequest(
         @NotBlank
-        @Size(min = 3, max = 20)
+        @Size(min = 3, max = 30)
         String username,
 
         @NotBlank
-        @Size(min = 8, max = 50)
+        @Size(min = 8, max = 255)
         String password,
 
         @NotNull

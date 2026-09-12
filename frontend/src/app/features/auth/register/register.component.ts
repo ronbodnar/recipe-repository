@@ -38,12 +38,15 @@ export class UserRegisterComponent extends FormOrchestrator {
 
     const form = this.formBuilder.group(
       {
-        username: ['', [Validators.required]],
-        email: ['', [Validators.required, Validators.email]],
-        givenName: ['', [Validators.minLength(2), Validators.maxLength(30)]],
-        familyName: ['', [Validators.minLength(2), Validators.maxLength(30)]],
-        password: ['', [Validators.required, Validators.minLength(8)]],
-        confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
+        username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+        email: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
+        givenName: ['', [Validators.minLength(2), Validators.maxLength(150)]],
+        familyName: ['', [Validators.minLength(2), Validators.maxLength(150)]],
+        password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(255)]],
+        confirmPassword: [
+          '',
+          [Validators.required, Validators.minLength(8), Validators.maxLength(255)],
+        ],
       },
       {
         validators: [passwordMatchValidator],
@@ -72,7 +75,7 @@ export class UserRegisterComponent extends FormOrchestrator {
         }),
       )
       .subscribe(() => {
-        this.router.navigateByUrl('/auth/login');
+        this.router.navigateByUrl('/app/recipes/list');
         this.snackBar.openSnackBar(SnackbarType.SUCCESS, 'auth.register.successMessage');
       });
   }
