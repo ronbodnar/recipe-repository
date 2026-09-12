@@ -6,6 +6,7 @@ import com.ronbodnar.recipes.modules.identity.role.Role;
 import com.ronbodnar.recipes.modules.identity.role.RoleRepository;
 import com.ronbodnar.recipes.modules.identity.user.UserAccount;
 import com.ronbodnar.recipes.modules.identity.user.UserAccountRepository;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -26,19 +27,12 @@ public class RecipeRepositoryRecipeApplication {
     @Value("${app.security.default-admin-password}")
     private String defaultAdminPassword;
 
-    @Value("${app.roles.default}")
-    private String defaultRole;
-
     @Bean
     @Profile("!prod")
     CommandLineRunner init(RoleRepository roleRepository, UserAccountRepository userAccountRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-            if (roleRepository.count() == 0) {
-                roleRepository.save(new Role(defaultRole));
-            }
-
             if (!userAccountRepository.existsByUsername("admin")) {
-                Role adminRole = roleRepository.findByName(defaultRole)
+                Role userRole = roleRepository.findByName("USER")
                         .orElseThrow(() ->
                                 new BusinessException(
                                         ErrorCode.ROLE_NOT_FOUND,
@@ -48,11 +42,9 @@ public class RecipeRepositoryRecipeApplication {
 
                 UserAccount admin = new UserAccount();
                 admin.setUsername("admin");
-                admin.setGivenName("Administrator");
-                admin.setFamilyName("LN");
                 admin.setPassword(passwordEncoder.encode(defaultAdminPassword));
                 admin.setEmail("admin@email.com");
-                admin.setRoles(Set.of(adminRole));
+                admin.setRoles(Set.of(userRole));
                 userAccountRepository.save(admin);
             }
         };

@@ -3,7 +3,7 @@
 --
 CREATE TABLE `recipe` (
     `id` BINARY(16) NOT NULL,
-    `author_subject` VARCHAR(255) NOT NULL,
+    `author_id` BIGINT NOT NULL,
     `title` VARCHAR(50) NOT NULL,
     `description` VARCHAR(500) DEFAULT NULL,
     `source` VARCHAR(255) DEFAULT NULL,
@@ -118,30 +118,40 @@ CREATE TABLE `image` (
     `created_at` datetime(6) NOT NULL,
     `storage_key` varchar(255) DEFAULT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Table structure for 'identity' module
 --
 CREATE TABLE `role` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(30) NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(30) DEFAULT NULL,
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `user_role` (
-
-)
 
 CREATE TABLE `user_account` (
     `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `idp_subject` VARCHAR(255) NOT NULL,
-    `display_name` VARCHAR(50) NOT NULL,
+    `username` VARCHAR(30) NOT NULL,
+    `email` VARCHAR(254) NOT NULL,
+    `given_name` VARCHAR(150) DEFAULT NULL,
+    `family_name` VARCHAR(150) DEFAULT NULL,
     `profile_image_id` BINARY(16) DEFAULT NULL,
+    `password` VARCHAR(255) NOT NULL,
     `created_at` DATETIME(6) NOT NULL,
     `last_modified_at` DATETIME(6) NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_user_account_idp_subject` (`idp_subject`),
-    CONSTRAINT `chk_user_account_display_name_length` CHECK (CHAR_LENGTH(`display_name`) >= 2)
+    UNIQUE KEY `uk_user_account_email` (`email`),
+    UNIQUE KEY `uk_user_account_username` (`username`),
+    CONSTRAINT `chk_user_account_username_length` CHECK (CHAR_LENGTH(`username`) >= 3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `user_role` (
+    `user_id` bigint NOT NULL,
+    `role_id` int NOT NULL,
+    PRIMARY KEY (`user_id`,`role_id`),
+    KEY `index_user_role_role_id` (`role_id`),
+    CONSTRAINT `fk_user_role_user_id` FOREIGN KEY (`user_id`) REFERENCES `user_account` (`id`),
+    CONSTRAINT `fk_user_role_role_id` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `user_group` (
@@ -161,4 +171,17 @@ CREATE TABLE `user_group_member` (
     UNIQUE KEY `uk_group_member_group_user` (`group_id`,`user_account_id`),
     CONSTRAINT `fk_group_member_group` FOREIGN KEY (`group_id`) REFERENCES `user_group` (`id`),
     CONSTRAINT `fk_group_member_user_account` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `refresh_token` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `device_id` BINARY(16) NOT NULL,
+    `expires_at` DATETIME(6) NOT NULL,
+    `ip_address` VARCHAR(45) NOT NULL,
+    `issued_at` DATETIME(6) NOT NULL,
+    `token_hash` BINARY(32) NOT NULL,
+    `user_id` BIGINT NOT NULL,
+    `valid` TINYINT NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `index_refresh_token_user_id_token_hash` (`user_id`,`token_hash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

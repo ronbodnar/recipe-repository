@@ -3,9 +3,6 @@ app:
     s3:
       bucket-name: recipe-repository
 
-  roles:
-    default: "USER"
-
   security:
     default-admin-password: ${DEFAULT_ADMIN_PASSWORD}
     jwt-secret: ${JWT_SECRET}
@@ -30,7 +27,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     open-in-view: false
     properties:
       hibernate:
@@ -46,7 +43,7 @@ spring:
       mode: always
 
   flyway:
-    enabled: false
+    enabled: true
 
 logging:
   level:

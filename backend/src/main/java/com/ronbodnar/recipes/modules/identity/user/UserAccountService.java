@@ -134,7 +134,7 @@ public class UserAccountService {
         userAccount.setEmail(registerRequest.email());
         userAccount.setGivenName(registerRequest.givenName());
         userAccount.setFamilyName(registerRequest.familyName());
-        userAccount.setRoles(Set.of(roleService.getDefaultRole()));
+        userAccount.setRoles(Set.of(roleService.findByName("USER")));
 
         return repository.save(userAccount);
     }
