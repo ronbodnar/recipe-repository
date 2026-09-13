@@ -50,7 +50,14 @@ public class AuthenticationController {
 
     @PutMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateCurrentUser(@RequestBody @Valid UserAccountChangeRequest request, @AuthenticationPrincipal SecurityUserDetails securityUser) {
+    public void updateCurrentUser(
+            @RequestBody @Valid UserAccountChangeRequest request,
+            @AuthenticationPrincipal SecurityUserDetails securityUser
+    ) {
+        if (securityUser == null) {
+            throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN);
+        }
+
         authenticationService.updateCurrentUser(request, securityUser);
     }
 

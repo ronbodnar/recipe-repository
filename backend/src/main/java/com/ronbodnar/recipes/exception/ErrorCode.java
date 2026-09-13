@@ -35,6 +35,10 @@ public enum ErrorCode {
     INVALID_CREDENTIALS(HttpStatus.BAD_REQUEST, LogLevel.INFO),
     INVALID_AUTHENTICATION(HttpStatus.UNAUTHORIZED, LogLevel.ERROR),
 
+    // Email
+    CONSTRUCT_EMAIL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, LogLevel.ERROR),
+    SEND_EMAIL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, LogLevel.ERROR),
+
     // Recipes
     RECIPE_NOT_FOUND(HttpStatus.NOT_FOUND,LogLevel.INFO),
     DUPLICATE_RECIPE(HttpStatus.CONFLICT, LogLevel.INFO),

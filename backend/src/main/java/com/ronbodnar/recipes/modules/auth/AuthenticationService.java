@@ -3,6 +3,7 @@ package com.ronbodnar.recipes.modules.auth;
 import com.ronbodnar.recipes.exception.BusinessException;
 import com.ronbodnar.recipes.exception.ErrorCode;
 import com.ronbodnar.recipes.modules.auth.dto.RegisterRequest;
+import com.ronbodnar.recipes.modules.auth.event.UserRegisteredEvent;
 import com.ronbodnar.recipes.modules.auth.refreshtoken.RefreshTokenService;
 import com.ronbodnar.recipes.modules.identity.user.UserAccount;
 import com.ronbodnar.recipes.modules.identity.user.UserAccountService;
@@ -19,6 +20,7 @@ import io.jsonwebtoken.Claims;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,17 +39,21 @@ public class AuthenticationService {
 
     private final RefreshTokenService refreshTokenService;
 
+    private final ApplicationEventPublisher eventPublisher;
+
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationService(
             JwtService jwtService,
             UserAccountService userAccountService,
             RefreshTokenService refreshTokenService,
+            ApplicationEventPublisher eventPublisher,
             AuthenticationManager authenticationManager
     ) {
         this.jwtService = jwtService;
         this.userAccountService = userAccountService;
         this.refreshTokenService = refreshTokenService;
+        this.eventPublisher = eventPublisher;
         this.authenticationManager = authenticationManager;
     }
 
@@ -123,6 +129,7 @@ public class AuthenticationService {
         userAccountService.updateUserAccount(request, securityUser);
     }
 
+    @Transactional
     public AuthenticationResponse register(RegisterRequest registerRequest, String ip, String userAgent) {
         log.info("Register request: {}", registerRequest);
 
@@ -131,6 +138,8 @@ public class AuthenticationService {
         SecurityUserDetails securityUser = SecurityUserDetails.build(created);
 
         TokenPair tokenPair = createTokenPair(securityUser, registerRequest.deviceId(), ip);
+
+        eventPublisher.publishEvent(new UserRegisteredEvent(created.getUsername(), created.getEmail()));
 
         return new AuthenticationResponse(created, tokenPair);
     }

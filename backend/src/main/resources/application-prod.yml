@@ -1,3 +1,8 @@
+app:
+  aws:
+    s3:
+      bucket-name: recipe-repository
+
 spring:
   jpa:
     show-sql: false

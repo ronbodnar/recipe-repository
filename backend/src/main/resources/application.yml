@@ -1,7 +1,12 @@
 app:
   aws:
     s3:
-      bucket-name: recipe-repository
+      bucket-name: recipe-repository-dev
+
+  mail:
+    reply-to: ${EMAIL_REPLY_TO}
+
+  name: Recipe Repository
 
   security:
     default-admin-password: ${DEFAULT_ADMIN_PASSWORD}
@@ -16,7 +21,7 @@ spring:
     import: optional:file:./secrets/app.properties
 
   application:
-    name: recipe-service
+    name: recipe-repository
 
   datasource:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
@@ -37,6 +42,18 @@ spring:
         format_sql: true
         use_sql_comments: true
         generate_statistics: false
+
+  mail:
+    host: smtp.gmail.com
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enabled: true
+            required: true
 
   sql:
     init:

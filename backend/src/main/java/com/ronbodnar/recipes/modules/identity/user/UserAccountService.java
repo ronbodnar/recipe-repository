@@ -28,7 +28,12 @@ public class UserAccountService {
 
     private final UserAccountRepository repository;
 
-    public UserAccountService(RoleService roleService, PasswordEncoder passwordEncoder, ImageService imageService, UserAccountRepository repository) {
+    public UserAccountService(
+            RoleService roleService,
+            PasswordEncoder passwordEncoder,
+            ImageService imageService,
+            UserAccountRepository repository
+    ) {
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
         this.imageService = imageService;
