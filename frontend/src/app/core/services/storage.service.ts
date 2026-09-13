@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserAccount } from '@features/users/user.types';
+import { logDebug } from '@shared/utils/logging';
 
 type PreferenceKey = 'theme' | 'language' | 'sidenav.expandedSections' | 'sidenav.isOpen';
 
@@ -17,6 +18,7 @@ export class StorageService {
    * @param value The value to store. Can be of any type. JSON.stringify is used to convert the value to a string for storage.
    */
   public setPreference<T>(key: PreferenceKey, value: T): void {
+    logDebug('Setting preference', key, 'to', value);
     window.localStorage.setItem(key, JSON.stringify(value));
   }
 
@@ -64,11 +66,13 @@ export class StorageService {
     return null;
   }
 
-  /**
-   * Clears all data from localStorage and sessionStorage.
-   */
-  public clear(): void {
-    window.localStorage.clear();
+  public clearSession(): void {
+    logDebug('Clearing all preferences from sessionStorage');
     window.sessionStorage.clear();
+  }
+
+  public clearPreferences(): void {
+    logDebug('Clearing all preferences from localStorage');
+    window.localStorage.clear();
   }
 }

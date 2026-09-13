@@ -67,7 +67,7 @@ export class SnackbarService {
     return this.snackBar.openFromComponent(SnackbarComponent, {
       data: snackbarData,
       duration: snackbarData.duration ?? 5000,
-      horizontalPosition: snackbarData.horizontalPosition ?? 'right',
+      horizontalPosition: snackbarData.horizontalPosition ?? 'center',
       verticalPosition: snackbarData.verticalPosition ?? 'bottom',
       panelClass: ['mt-[var(--mat-toolbar-standard-height)]!'],
     });

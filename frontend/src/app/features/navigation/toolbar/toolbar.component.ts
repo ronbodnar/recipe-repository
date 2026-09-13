@@ -10,6 +10,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { MediaService } from '@core/services/media.service';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 import { MatSidenav } from '@angular/material/sidenav';
+import { StorageService } from '@core/services/storage.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -31,6 +32,15 @@ export class ToolbarComponent {
   @Input() snav!: MatSidenav;
 
   private readonly mediaService = inject(MediaService);
+  private readonly storageService = inject(StorageService);
 
   readonly isMobile = this.mediaService.isMobile;
+
+  toggleSidenav() {
+    this.snav.toggle();
+    const isOpened = this.snav.opened;
+    console.log('Toggling sidenav, new state isOpened:', isOpened);
+    this.storageService.setPreference('sidenav.isOpen', isOpened);
+    console.log('Current sidenav preference:', this.storageService.getPreference('sidenav.isOpen'));
+  }
 }

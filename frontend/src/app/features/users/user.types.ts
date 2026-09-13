@@ -2,8 +2,8 @@ export interface UserAccount {
   id: number;
   username: string;
   email: string;
-  givenName: string;
-  familyName: string;
+  givenName: string | null;
+  familyName: string | null;
   profileImageId: string | null;
   roles: string[];
   createdAt: Date;

@@ -13,16 +13,16 @@ import { UserRegistrationRequest } from '@features/auth/auth.types';
   providedIn: 'root',
 })
 export class AuthenticationService {
+  private readonly router = inject(Router);
+  private readonly deviceService = inject(DeviceService);
+  private readonly storageService = inject(StorageService);
+  private readonly fetchApiService = inject(FetchApiService);
+
   private authRequest$?: Observable<UserAccount | null>;
 
   private _authUser = signal<UserAccount | undefined | null>(undefined);
 
   public readonly authUser = this._authUser.asReadonly();
-
-  private readonly router = inject(Router);
-  private readonly deviceService = inject(DeviceService);
-  private readonly storageService = inject(StorageService);
-  private readonly fetchApiService = inject(FetchApiService);
 
   readonly isAuthenticated = computed(() => this.authUser() != null);
 
@@ -90,7 +90,7 @@ export class AuthenticationService {
     return this.fetchApiService.fetch('auth/logout', { method: 'POST' }).pipe(
       finalize(() => {
         this.clearAuthentication();
-        this.storageService.clear();
+        this.storageService.clearSession();
 
         const hasAuthGuard = this.routeHasGuard(authGuard);
 

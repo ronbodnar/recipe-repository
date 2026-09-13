@@ -126,6 +126,14 @@ export class SettingsProfileComponent {
     this.fetchApi.putData('auth/me', formData).subscribe({
       next: () => {
         this._status.set('success');
+        this.authService.setAuthUser({
+          ...this.authService.authUser()!,
+          profileImageId: formData.profileImageId ?? null,
+          username: formData.username,
+          email: formData.email,
+          givenName: formData.givenName,
+          familyName: formData.familyName,
+        });
         setTimeout(() => this._status.set('idle'), 3000);
         this.form().markAsPristine();
       },

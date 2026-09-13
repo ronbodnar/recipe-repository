@@ -125,9 +125,16 @@ export class SidenavComponent implements OnDestroy {
     }
   }
 
-  open(): void {
-    this._isSidenavOpen.set(true);
-    this.storageService.setPreference('sidenav.isOpen', true);
+  open(ignorePreference = false): void {
+    console.log('Opening sidenav, ignorePreference:', ignorePreference);
+    console.log(
+      'Current sidenav preference:',
+      this.storageService.getPreference<boolean>('sidenav.isOpen'),
+    );
+    const shouldOpen =
+      this.storageService.getPreference<boolean>('sidenav.isOpen') || ignorePreference;
+    this._isSidenavOpen.set(shouldOpen);
+    this.storageService.setPreference('sidenav.isOpen', shouldOpen);
   }
 
   isOpen(section: string): boolean {
@@ -142,7 +149,6 @@ export class SidenavComponent implements OnDestroy {
   }
 
   onSidenavOpenedChange(isOpened: boolean) {
-    this.storageService.setPreference('sidenav.isOpen', isOpened);
     this._isSidenavOpen.set(isOpened);
 
     if (this.isMobile()) {

@@ -16,6 +16,7 @@ import {
 import { TranslatePipe } from '@ngx-translate/core';
 import { passwordMatchValidator } from '../password-match.validator';
 import { AuthenticationService } from '@core/services/authentication.service';
+import { SidenavComponent } from '@features/navigation/sidenav/sidenav.component';
 
 @Component({
   selector: 'app-user-register',
@@ -29,6 +30,7 @@ export class UserRegisterComponent extends FormOrchestrator {
   private errorService = inject(ErrorService);
   private snackBar = inject(SnackbarService);
   private authService = inject(AuthenticationService);
+  private sidenav = inject(SidenavComponent);
 
   isSubmitting = computed(() => this.status() === 'submitting');
   passwordMismatch = signal(false);
@@ -75,6 +77,7 @@ export class UserRegisterComponent extends FormOrchestrator {
         }),
       )
       .subscribe(() => {
+        this.sidenav.open();
         this.router.navigateByUrl('/app/recipes/list');
         this.snackBar.openSnackBar(SnackbarType.SUCCESS, 'auth.register.successMessage');
       });
