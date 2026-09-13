@@ -17,7 +17,7 @@ import { provideNmfMaterialConfig } from '@ng-modular-forms/material';
 import { ThemeService } from '@core/services/theme.service';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
-import { AuthenticationService } from '@core/services/authentication.service';
+import { AuthService } from '@features/auth/auth.service';
 import { firstValueFrom, take } from 'rxjs';
 
 export const appConfig: ApplicationConfig = {
@@ -70,7 +70,7 @@ export const appConfig: ApplicationConfig = {
 
     provideAppInitializer(async () => {
       const themeService = inject(ThemeService);
-      const authService = inject(AuthenticationService);
+      const authService = inject(AuthService);
 
       themeService.loadTheme();
 

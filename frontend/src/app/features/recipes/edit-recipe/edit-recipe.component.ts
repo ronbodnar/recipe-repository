@@ -52,7 +52,7 @@ import { RecipeNotFoundComponent } from '../components/recipe-not-found/recipe-n
 import { redirectTo } from '@shared/utils/redirect-to';
 import { DialogService } from '@shared/ui/dialog/dialog.service';
 import { logDebug, logError } from '@shared/utils/logging';
-import { AuthenticationService } from '@core/services/authentication.service';
+import { AuthService } from '@features/auth/auth.service';
 import { SnackbarService, SnackbarType } from '@shared/ui/snackbar.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 
@@ -90,7 +90,7 @@ export class EditRecipeComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly snackbar = inject(SnackbarService);
-  private readonly authService = inject(AuthenticationService);
+  private readonly authService = inject(AuthService);
   private readonly featureFlags = inject(FeatureFlagService);
   private readonly dialogService = inject(DialogService);
   private readonly translate = inject(TranslateService);

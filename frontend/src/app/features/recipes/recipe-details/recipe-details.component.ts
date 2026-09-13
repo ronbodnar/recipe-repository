@@ -14,7 +14,7 @@ import { ImageService } from '@core/services/image.service';
 import { CommonModule, DatePipe, LowerCasePipe } from '@angular/common';
 import { UserService } from '@features/users/user.service';
 import { UserAccountSummary } from '@features/users/user.types';
-import { AuthenticationService } from '@core/services/authentication.service';
+import { AuthService } from '@features/auth/auth.service';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ImageCarouselComponent } from '@shared/ui/image-carousel/image-carousel.component';
 import { RecipeNotFoundComponent } from '../components/recipe-not-found/recipe-not-found.component';
@@ -48,7 +48,7 @@ export class RecipeDetailsComponent {
   private readonly recipeService = inject(RecipeService);
   private readonly snackbarService = inject(SnackbarService);
   private readonly userService = inject(UserService);
-  private readonly authService = inject(AuthenticationService);
+  private readonly authService = inject(AuthService);
   readonly imageService = inject(ImageService);
 
   private readonly _recipe = signal<Recipe | null>(null);

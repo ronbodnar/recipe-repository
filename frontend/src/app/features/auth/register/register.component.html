@@ -1,5 +1,12 @@
 <div class="min-h-full flex flex-col items-center px-4 py-12">
-  <img src="assets/images/full-logo.png" width="180" height="180" alt="Recipe Repository" />
+  <a class="mb-4" routerLink="/">
+    <img
+      src="assets/images/full-logo.png"
+      width="180"
+      height="180"
+      [alt]="'app.name' | translate"
+    />
+  </a>
 
   <div
     class="w-full max-w-2xl rounded-2xl border border-border/40 bg-background-alt p-6 shadow-sm sm:p-8"

@@ -1,10 +1,10 @@
-import { AuthenticationService } from '@core/services/authentication.service';
+import { AuthService } from '@features/auth/auth.service';
 import { NavItem } from './nav-item.interface';
 import { inject } from '@angular/core';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 export const getNavItems = (): NavItem[] => {
-  const authService = inject(AuthenticationService);
+  const authService = inject(AuthService);
   const featureFlags = inject(FeatureFlagService);
 
   return [

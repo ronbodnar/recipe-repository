@@ -1,5 +1,12 @@
 <div class="min-h-full flex flex-col items-center px-4 py-12">
-  <img src="assets/images/full-logo.png" width="180" height="180" alt="Recipe Repository" />
+  <a class="mb-4" routerLink="/">
+    <img
+      src="assets/images/full-logo.png"
+      width="180"
+      height="180"
+      [alt]="'app.name' | translate"
+    />
+  </a>
 
   <div
     class="w-full max-w-sm rounded-xl border border-border/40 bg-background-alt p-6 sm:p-8 shadow-sm"
@@ -17,12 +24,16 @@
         [placeholder]="'auth.shared.usernameLabel' | translate"
       />
 
-      <nmf-text
-        type="password"
-        formControlName="password"
-        [label]="'auth.shared.passwordLabel' | translate"
-        [placeholder]="'auth.shared.passwordLabel' | translate"
-      />
+      <div class="flex flex-col">
+        <nmf-text
+          type="password"
+          formControlName="password"
+          [label]="'auth.shared.passwordLabel' | translate"
+          [placeholder]="'auth.shared.passwordLabel' | translate"
+        />
+
+        <a class="text-xs self-end" routerLink="/app/auth/forgot-password">Forgot password?</a>
+      </div>
 
       @if (errorMessage() || form().hasError('custom')) {
         <p class="m-0 text-center text-sm text-danger">

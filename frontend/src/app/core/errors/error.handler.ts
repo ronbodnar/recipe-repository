@@ -1,7 +1,7 @@
 import { ErrorHandler, Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ErrorService } from './error.service';
-import { AuthenticationService } from '../services/authentication.service';
+import { AuthService } from '../../features/auth/auth.service';
 import { environment } from '@env';
 import { logError } from '@shared/utils/logging';
 
@@ -16,7 +16,7 @@ export interface FrontendError {
 
 @Injectable({ providedIn: 'root' })
 export class GlobalErrorHandler implements ErrorHandler {
-  private authService = inject(AuthenticationService);
+  private authService = inject(AuthService);
   private errorService = inject(ErrorService);
   private router = inject(Router);
 

@@ -20,7 +20,7 @@ import {
 import { ApiError } from '../models/api-error.model';
 import { ErrorService } from './error.service';
 import { ErrorCode } from '../interfaces/error-code.interface';
-import { AuthenticationService } from '@core/services/authentication.service';
+import { AuthService } from '@features/auth/auth.service';
 
 /*
  * This interceptor does the following:
@@ -32,8 +32,8 @@ export class ErrorInterceptor implements HttpInterceptor {
   private errorHandler = inject(ErrorService);
   private injector = inject(Injector);
 
-  private get authService(): AuthenticationService {
-    return this.injector.get(AuthenticationService);
+  private get authService(): AuthService {
+    return this.injector.get(AuthService);
   }
 
   private refreshInProgress = signal<boolean>(false);

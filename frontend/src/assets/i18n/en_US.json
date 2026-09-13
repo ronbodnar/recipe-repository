@@ -101,6 +101,14 @@
       "haveAccount": "Already have an account?",
       "loginLinkText": "Log in",
       "successMessage": "Registration successful! You have been logged in automatically."
+    },
+    "forgotPassword": {
+      "title": "Password Reset",
+      "instructions": "Forgot your password? Enter your email address to receive password reset instructions.",
+      "submitButton": "Submit",
+      "loginLinkText": "Log in",
+      "registerLinkText": "Register",
+      "successMessage": "If your email address is registered with us, you will receive password reset instructions shortly."
     }
   },
   "recipes": {

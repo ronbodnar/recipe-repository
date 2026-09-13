@@ -1,13 +1,13 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { SnackbarService, SnackbarType } from '@shared/ui/snackbar.component';
-import { AuthenticationService } from '@core/services/authentication.service';
+import { AuthService } from '@features/auth/auth.service';
 import { logDebug } from '@shared/utils/logging';
 
 export const authGuard: CanActivateFn = (route, _state) => {
   const router = inject(Router);
   const snackBar = inject(SnackbarService);
-  const authService = inject(AuthenticationService);
+  const authService = inject(AuthService);
 
   if (!authService.isAuthenticated() || !authService.authenticatedRoles()) {
     return redirectWithSnackbar(router, snackBar);

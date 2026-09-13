@@ -6,7 +6,7 @@ import { catchError } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ErrorService } from '@core/errors/error.service';
 import { ApiError } from '@core/models/api-error.model';
-import { AuthenticationService } from '@core/services/authentication.service';
+import { AuthService } from '@features/auth/auth.service';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 import {
   FormHydrator,
@@ -34,7 +34,7 @@ export class UserLoginComponent extends FormOrchestrator {
   private router = inject(Router);
   private formBuilder = inject(FormBuilder);
   private errorService = inject(ErrorService);
-  private authService = inject(AuthenticationService);
+  private authService = inject(AuthService);
   private sidenav = inject(SidenavComponent);
 
   isSubmitting = computed(() => this.status() === 'submitting');

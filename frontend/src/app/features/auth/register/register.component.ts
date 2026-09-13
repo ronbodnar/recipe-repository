@@ -15,7 +15,7 @@ import {
 } from '@ng-modular-forms/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { passwordMatchValidator } from '../password-match.validator';
-import { AuthenticationService } from '@core/services/authentication.service';
+import { AuthService } from '@features/auth/auth.service';
 import { SidenavComponent } from '@features/navigation/sidenav/sidenav.component';
 
 @Component({
@@ -29,7 +29,7 @@ export class UserRegisterComponent extends FormOrchestrator {
   private formBuilder = inject(FormBuilder);
   private errorService = inject(ErrorService);
   private snackBar = inject(SnackbarService);
-  private authService = inject(AuthenticationService);
+  private authService = inject(AuthService);
   private sidenav = inject(SidenavComponent);
 
   isSubmitting = computed(() => this.status() === 'submitting');

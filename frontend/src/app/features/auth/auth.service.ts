@@ -1,9 +1,9 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { StorageService } from './storage.service';
+import { StorageService } from '../../core/services/storage.service';
 import { Observable, catchError, finalize, of, shareReplay, tap, throwError } from 'rxjs';
-import { FetchApiService } from './fetch-api.service';
-import { ApiError } from '../models/api-error.model';
-import { DeviceService } from './device.service';
+import { FetchApiService } from '../../core/services/fetch-api.service';
+import { ApiError } from '../../core/models/api-error.model';
+import { DeviceService } from '../../core/services/device.service';
 import { CanActivateFn, Router } from '@angular/router';
 import { authGuard } from '@core/guards/auth.guard';
 import { UserAccount } from '@features/users/user.types';
@@ -12,7 +12,7 @@ import { UserRegistrationRequest } from '@features/auth/auth.types';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthenticationService {
+export class AuthService {
   private readonly router = inject(Router);
   private readonly deviceService = inject(DeviceService);
   private readonly storageService = inject(StorageService);
@@ -84,6 +84,12 @@ export class AuthenticationService {
         this.storageService.setUserAccount(response);
       }),
     );
+  }
+
+  requestPasswordReset(email: string) {
+    return this.fetchApiService
+      .postData('auth/request-password-reset', { email })
+      .pipe(catchError((error: ApiError) => throwError(() => error)));
   }
 
   logout() {

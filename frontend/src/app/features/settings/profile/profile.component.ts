@@ -2,7 +2,7 @@ import { Component, signal, inject, effect, ChangeDetectionStrategy } from '@ang
 import { ReactiveFormsModule } from '@angular/forms';
 import { ErrorService } from '@core/errors/error.service';
 import { ApiError } from '@core/models/api-error.model';
-import { AuthenticationService } from '@core/services/authentication.service';
+import { AuthService } from '@features/auth/auth.service';
 import { FetchApiService } from '@core/services/fetch-api.service';
 import { ImageService } from '@core/services/image.service';
 import { MatInputTextComponent } from '@ng-modular-forms/material';
@@ -33,7 +33,7 @@ export class SettingsProfileComponent {
   private readonly fetchApi = inject(FetchApiService);
   private readonly imageService = inject(ImageService);
   private readonly errorService = inject(ErrorService);
-  private readonly authService = inject(AuthenticationService);
+  private readonly authService = inject(AuthService);
 
   private _status = signal<'idle' | 'submitting' | 'success' | 'error'>('idle');
 

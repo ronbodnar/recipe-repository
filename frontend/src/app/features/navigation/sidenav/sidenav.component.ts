@@ -16,7 +16,7 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NavItem } from '../nav-item.interface';
 import { AppVersionService } from '@core/services/app-version.service';
-import { AuthenticationService } from '@core/services/authentication.service';
+import { AuthService } from '@features/auth/auth.service';
 import { MediaService } from '@core/services/media.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { getNavItems } from '../nav-menu.config';
@@ -43,7 +43,7 @@ export class SidenavComponent implements OnDestroy {
   @ViewChild('snav') nav!: MatSidenav;
 
   private readonly router = inject(Router);
-  private readonly authService = inject(AuthenticationService);
+  private readonly authService = inject(AuthService);
   private readonly storageService = inject(StorageService);
   private readonly mediaService = inject(MediaService);
   private readonly version = inject(AppVersionService);
