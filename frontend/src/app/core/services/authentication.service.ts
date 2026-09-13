@@ -37,11 +37,9 @@ export class AuthenticationService {
     if (!this.authRequest$) {
       this.authRequest$ = this.fetchApiService.getData<UserAccount>('auth/me').pipe(
         tap((user) => {
-          console.log('Authentication check successful, user:', user);
           this._authUser.set(user ?? null);
         }),
-        catchError((error) => {
-          console.log('Authentication check produced an error:', error);
+        catchError(() => {
           this.clearAuthentication();
           this._authUser.set(null);
           return of(null);

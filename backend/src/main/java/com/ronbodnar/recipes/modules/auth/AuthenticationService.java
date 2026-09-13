@@ -61,9 +61,8 @@ public class AuthenticationService {
             String userAgent
     ) {
         log.info(
-                "Login attempt: username={}, password={}, deviceId={}, ip={}, userAgent={}",
+                "Login attempt: username={}, deviceId={}, ip={}, userAgent={}",
                 loginRequest.username(),
-                loginRequest.password(),
                 loginRequest.deviceId(),
                 ip,
                 userAgent

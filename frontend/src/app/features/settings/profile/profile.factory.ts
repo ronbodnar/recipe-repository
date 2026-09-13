@@ -9,7 +9,6 @@ const nameValidators = [
 
 export class ProfileFactory {
   static profile(v?: ProfileFormModel): ProfileForm {
-    console.log('Profile set from ', v);
     return new FormGroup({
       profileImage: new FormControl<File | null>(null),
       profileImageId: new FormControl<string | null>(v?.profileImageId ?? null),

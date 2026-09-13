@@ -70,15 +70,11 @@ export class GroupListComponent {
               actions: [
                 {
                   ...EDIT,
-                  onClick: () => {
-                    console.log('Edit clicked for group:');
-                  },
+                  onClick: () => {},
                 },
                 {
                   ...DELETE,
-                  onClick: () => {
-                    console.log('Delete clicked for group:');
-                  },
+                  onClick: () => {},
                 },
               ] as RowAction[],
             },

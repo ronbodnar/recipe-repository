@@ -9,30 +9,10 @@
       (imageRemoved)="onProfileImageRemoved($event)"
     />
 
-    <nmf-mat-text
-      label="settings.profile.labels.username"
-      formControlName="username"
-      [loading]="form().get('username')?.value === ''"
-    />
-
-    <nmf-mat-text
-      type="email"
-      label="settings.profile.labels.email"
-      formControlName="email"
-      [loading]="form().get('email')?.value === ''"
-    />
-
-    <nmf-mat-text
-      label="settings.profile.labels.givenName"
-      formControlName="givenName"
-      [loading]="form().get('givenName')?.value === ''"
-    />
-
-    <nmf-mat-text
-      label="settings.profile.labels.familyName"
-      formControlName="familyName"
-      [loading]="form().get('familyName')?.value === ''"
-    />
+    <nmf-mat-text label="settings.profile.labels.username" formControlName="username" />
+    <nmf-mat-text label="settings.profile.labels.email" type="email" formControlName="email" />
+    <nmf-mat-text label="settings.profile.labels.givenName" formControlName="givenName" />
+    <nmf-mat-text label="settings.profile.labels.familyName" formControlName="familyName" />
 
     <div class="flex gap-6 items-center">
       <app-button

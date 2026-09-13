@@ -110,16 +110,40 @@ public class UserAccountService {
     public UserAccount create(RegisterRequest registerRequest) {
         List<FieldError> fieldErrorList = new ArrayList<>();
         if (repository.existsByUsername(registerRequest.username())) {
-            fieldErrorList.add(new FieldError(ErrorCode.USERNAME_ALREADY_IN_USE, "username", "Username has already been registered."));
+            fieldErrorList.add(
+                    new FieldError(
+                            ErrorCode.USERNAME_ALREADY_IN_USE,
+                            "username",
+                            "Username has already been registered."
+                    )
+            );
         }
 
         if (repository.existsByEmail(registerRequest.email())) {
-            fieldErrorList.add(new FieldError(ErrorCode.EMAIL_ALREADY_IN_USE, "email", "E-mail address has already been registered."));
+            fieldErrorList.add(
+                    new FieldError(
+                            ErrorCode.EMAIL_ALREADY_IN_USE,
+                            "email",
+                            "E-mail address has already been registered."
+                    )
+            );
         }
 
         if (!registerRequest.password().equals(registerRequest.confirmPassword())) {
-            fieldErrorList.add(new FieldError(ErrorCode.PASSWORD_MISMATCH, "password", "Password fields do not match."));
-            fieldErrorList.add(new FieldError(ErrorCode.PASSWORD_MISMATCH, "confirmPassword", "Password fields do not match."));
+            fieldErrorList.add(
+                    new FieldError(
+                            ErrorCode.PASSWORD_MISMATCH,
+                            "password",
+                            "Password fields do not match."
+                    )
+            );
+            fieldErrorList.add(
+                    new FieldError(
+                            ErrorCode.PASSWORD_MISMATCH,
+                            "confirmPassword",
+                            "Password fields do not match."
+                    )
+            );
         }
 
         if (!fieldErrorList.isEmpty()) {

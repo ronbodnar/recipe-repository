@@ -132,7 +132,6 @@ export class PaginatedTableService<T> {
   }
 
   loadData(triggeredFromSearch = false): void {
-    console.log('loadData');
     const config = this.store.config();
     if (!config) {
       return;
@@ -194,7 +193,6 @@ export class PaginatedTableService<T> {
           }),
         )
         .subscribe((response) => {
-          console.log('fetchData response:', response);
           if (!response) {
             return;
           }
