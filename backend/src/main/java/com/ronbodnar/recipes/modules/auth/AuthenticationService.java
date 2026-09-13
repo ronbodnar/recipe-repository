@@ -3,6 +3,7 @@ package com.ronbodnar.recipes.modules.auth;
 import com.ronbodnar.recipes.exception.BusinessException;
 import com.ronbodnar.recipes.exception.ErrorCode;
 import com.ronbodnar.recipes.modules.auth.dto.RegisterRequest;
+import com.ronbodnar.recipes.modules.auth.event.UserPasswordResetRequestEvent;
 import com.ronbodnar.recipes.modules.auth.event.UserRegisteredEvent;
 import com.ronbodnar.recipes.modules.auth.refreshtoken.RefreshTokenService;
 import com.ronbodnar.recipes.modules.identity.user.UserAccount;
@@ -142,6 +143,12 @@ public class AuthenticationService {
         eventPublisher.publishEvent(new UserRegisteredEvent(created.getUsername(), created.getEmail()));
 
         return new AuthenticationResponse(created, tokenPair);
+    }
+
+    public void requestPasswordReset(String email) {
+        log.info("Password reset request made for email: {}", email);
+
+        eventPublisher.publishEvent(new UserPasswordResetRequestEvent(email));
     }
 
     @Transactional

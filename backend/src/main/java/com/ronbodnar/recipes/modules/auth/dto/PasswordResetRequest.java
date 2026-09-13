@@ -1,4 +1,3 @@
 package com.ronbodnar.recipes.modules.auth.dto;
 
-public record PasswordResetRequest() {
-}
+public record PasswordResetRequest(String email) {}

@@ -3,6 +3,8 @@ app:
     s3:
       bucket-name: recipe-repository
 
+  password-reset-url: https://recipes.ronbodnar.com/app/auth/reset-password
+
 spring:
   jpa:
     show-sql: false

@@ -2,6 +2,7 @@ package com.ronbodnar.recipes.modules.auth;
 
 import com.ronbodnar.recipes.exception.BusinessException;
 import com.ronbodnar.recipes.exception.ErrorCode;
+import com.ronbodnar.recipes.modules.auth.dto.PasswordResetRequest;
 import com.ronbodnar.recipes.modules.auth.dto.RegisterRequest;
 import com.ronbodnar.recipes.modules.identity.user.dto.UserAccountChangeRequest;
 import com.ronbodnar.recipes.modules.identity.user.dto.UserAccountDTO;
@@ -92,6 +93,20 @@ public class AuthenticationController {
         return ResponseEntity.ok().headers(headers).body(UserAccountDTO.from(response.userAccount()));
     }
 
+    @PostMapping("/request-password-reset")
+    public void requestPasswordReset(@RequestBody PasswordResetRequest request) {
+        authenticationService.requestPasswordReset(request.email());
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        TokenPair tokenPair = new TokenPair("", "");
+
+        HttpHeaders headers = jwtCookieService.createCookieHeaders(tokenPair);
+
+        return ResponseEntity.ok().headers(headers).build();
+    }
+
     @GetMapping("/refresh")
     public ResponseEntity<UserAccountDTO> refresh(HttpServletRequest request) {
         String ip = request.getRemoteAddr();
@@ -104,14 +119,5 @@ public class AuthenticationController {
         HttpHeaders headers = jwtCookieService.createCookieHeaders(response.tokenPair());
 
         return ResponseEntity.ok().headers(headers).body(UserAccountDTO.from(response.userAccount()));
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<Void> logout() {
-        TokenPair tokenPair = new TokenPair("", "");
-
-        HttpHeaders headers = jwtCookieService.createCookieHeaders(tokenPair);
-
-        return ResponseEntity.ok().headers(headers).build();
     }
 }
