@@ -20,8 +20,8 @@
     <form [formGroup]="form()" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
       <nmf-text
         formControlName="username"
-        [label]="'auth.shared.usernameLabel' | translate"
-        [placeholder]="'auth.shared.usernameLabel' | translate"
+        [label]="'auth.shared.usernameOrEmailLabel' | translate"
+        [placeholder]="'auth.shared.usernameOrEmailLabel' | translate"
       />
 
       <div class="flex flex-col">
@@ -32,7 +32,7 @@
           [placeholder]="'auth.shared.passwordLabel' | translate"
         />
 
-        <a class="text-xs self-end" routerLink="/app/auth/forgot-password">Forgot password?</a>
+        <a class="text-sm self-end" routerLink="/app/auth/forgot-password">Forgot password?</a>
       </div>
 
       @if (errorMessage() || form().hasError('custom')) {
@@ -44,9 +44,9 @@
       <app-button
         class="text-center"
         color="primary"
-        size="lg"
         type="submit"
         label="auth.login.submitButton"
+        [disabled]="!form().dirty || isSubmitting()"
         [loading]="isSubmitting()"
       ></app-button>
     </form>
@@ -54,7 +54,7 @@
     <p class="mt-6 mb-0 text-center text-sm text-muted">
       {{ 'auth.login.noAccount' | translate }}
       <a routerLink="/app/auth/register" class="font-medium hover:underline">
-        {{ 'auth.login.registerLinkText' | translate }}
+        {{ 'auth.shared.registerLinkText' | translate }}
       </a>
     </p>
   </div>

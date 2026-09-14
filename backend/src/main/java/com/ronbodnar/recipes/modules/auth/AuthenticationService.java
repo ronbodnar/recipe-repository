@@ -3,7 +3,8 @@ package com.ronbodnar.recipes.modules.auth;
 import com.ronbodnar.recipes.exception.BusinessException;
 import com.ronbodnar.recipes.exception.ErrorCode;
 import com.ronbodnar.recipes.modules.auth.dto.RegisterRequest;
-import com.ronbodnar.recipes.modules.auth.event.UserPasswordResetRequestEvent;
+import com.ronbodnar.recipes.modules.auth.event.UserForgotPasswordRequestEvent;
+import com.ronbodnar.recipes.modules.auth.event.UserPasswordChangeEvent;
 import com.ronbodnar.recipes.modules.auth.event.UserRegisteredEvent;
 import com.ronbodnar.recipes.modules.auth.refreshtoken.RefreshTokenService;
 import com.ronbodnar.recipes.modules.identity.user.UserAccount;
@@ -42,6 +43,8 @@ public class AuthenticationService {
 
     private final ApplicationEventPublisher eventPublisher;
 
+    private final PasswordResetService passwordResetService;
+
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationService(
@@ -49,12 +52,14 @@ public class AuthenticationService {
             UserAccountService userAccountService,
             RefreshTokenService refreshTokenService,
             ApplicationEventPublisher eventPublisher,
+            PasswordResetService passwordResetService,
             AuthenticationManager authenticationManager
     ) {
         this.jwtService = jwtService;
         this.userAccountService = userAccountService;
         this.refreshTokenService = refreshTokenService;
         this.eventPublisher = eventPublisher;
+        this.passwordResetService = passwordResetService;
         this.authenticationManager = authenticationManager;
     }
 
@@ -145,10 +150,32 @@ public class AuthenticationService {
         return new AuthenticationResponse(created, tokenPair);
     }
 
-    public void requestPasswordReset(String email) {
-        log.info("Password reset request made for email: {}", email);
+    public void requestPasswordReset(String usernameOrEmail) {
+        log.info("Password reset request made for email: {}", usernameOrEmail);
 
-        eventPublisher.publishEvent(new UserPasswordResetRequestEvent(email));
+        UserAccount userAccount = userAccountService.getByUsernameOrEmailSilent(usernameOrEmail);
+
+        if (userAccount == null) {
+            return;
+        }
+
+        String token = passwordResetService.createResetToken(userAccount.getEmail());
+
+        eventPublisher.publishEvent(new UserForgotPasswordRequestEvent(userAccount.getEmail(), userAccount.getUsername(), token));
+    }
+
+    @Transactional
+    public void resetPassword(String token, String newPassword) {
+        String email = passwordResetService.validateTokenAndGetEmail(token);
+        if (email == null) {
+            throw new BusinessException(ErrorCode.INVALID_PASSWORD_RESET_TOKEN, "The provided token is invalid or has expired.");
+        }
+
+        UserAccount user = userAccountService.resetUserPassword(email, newPassword);
+
+        passwordResetService.invalidateToken(token);
+
+        eventPublisher.publishEvent(new UserPasswordChangeEvent(email, user.getUsername()));
     }
 
     @Transactional

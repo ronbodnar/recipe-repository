@@ -7,7 +7,7 @@ app:
     reply-to: ${EMAIL_REPLY_TO}
 
   name: Recipe Repository
-  password-reset-url: http://localhost:4200/app/auth/reset-password
+  password-reset-url: http://localhost:4200/app/auth/reset-password?token=
 
   security:
     default-admin-password: ${DEFAULT_ADMIN_PASSWORD}
@@ -55,6 +55,11 @@ spring:
           starttls:
             enabled: true
             required: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
   sql:
     init:

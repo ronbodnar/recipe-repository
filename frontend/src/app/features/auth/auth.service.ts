@@ -86,9 +86,15 @@ export class AuthService {
     );
   }
 
-  requestPasswordReset(email: string) {
+  requestPasswordReset(usernameOrEmail: string) {
     return this.fetchApiService
-      .postData('auth/request-password-reset', { email })
+      .postData('auth/request-password-reset', { usernameOrEmail })
+      .pipe(catchError((error: ApiError) => throwError(() => error)));
+  }
+
+  resetPassword(token: string, newPassword: string) {
+    return this.fetchApiService
+      .postData('auth/reset-password', { token, newPassword })
       .pipe(catchError((error: ApiError) => throwError(() => error)));
   }
 

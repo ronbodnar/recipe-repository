@@ -81,14 +81,17 @@
   "auth": {
     "shared": {
       "usernameLabel": "Username",
+      "usernameOrEmailLabel": "Username or Email",
       "passwordLabel": "Password",
-      "emailLabel": "Email"
+      "confirmPasswordLabel": "Confirm Password",
+      "emailLabel": "Email",
+      "loginLinkText": "Log in",
+      "registerLinkText": "Register"
     },
     "login": {
       "title": "Account Login",
       "submitButton": "Log in",
-      "noAccount": "Need to create an account?",
-      "registerLinkText": "Register"
+      "noAccount": "Need to create an account?"
     },
     "register": {
       "title": "Create an Account",
@@ -97,18 +100,22 @@
       "givenNamePlaceholder": "First name (optional)",
       "familyNameLabel": "Last Name",
       "familyNamePlaceholder": "Last name (optional)",
-      "confirmPasswordLabel": "Confirm Password",
       "haveAccount": "Already have an account?",
-      "loginLinkText": "Log in",
       "successMessage": "Registration successful! You have been logged in automatically."
     },
     "forgotPassword": {
       "title": "Password Reset",
-      "instructions": "Forgot your password? Enter your email address to receive password reset instructions.",
+      "instructions": "Enter your username or email address to receive password reset instructions to your email.",
       "submitButton": "Submit",
-      "loginLinkText": "Log in",
-      "registerLinkText": "Register",
-      "successMessage": "If your email address is registered with us, you will receive password reset instructions shortly."
+      "successMessage": "If a user account was found with the provided username or email address, you will receive password reset instructions by email shortly."
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "instructions": "Enter your new password below to reset your account password.",
+      "submitButton": "Reset Password",
+      "success": "Your password has been successfully reset. Please log in with your new password.",
+      "missingToken": "Missing password reset token. Please request a new one and follow the link in your email.",
+      "invalidToken": "The password reset token is invalid or has expired. Please request a new one and follow the link in your email."
     }
   },
   "recipes": {

@@ -45,6 +45,10 @@ public class UserAccountService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
+    public UserAccount getByUsernameOrEmailSilent(String usernameOrEmail) {
+        return repository.findByUsernameOrEmail(usernameOrEmail).orElse(null);
+    }
+
     public UserAccountSummaryDTO getSummaryById(Long id) {
         UserAccount userAccount = repository.findByIdWithRoles(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
@@ -110,6 +114,15 @@ public class UserAccountService {
         }
 
         log.info("Updated user account with ID: {}", userAccount.getId());
+    }
+
+    public UserAccount resetUserPassword(String email, String newPassword) {
+        UserAccount userAccount = repository.findByEmail(email).orElseThrow(() ->
+                new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        userAccount.setPassword(passwordEncoder.encode(newPassword));
+
+        return repository.save(userAccount);
     }
 
     public UserAccount create(RegisterRequest registerRequest) {

@@ -3,8 +3,13 @@ app:
     s3:
       bucket-name: recipe-repository
 
-  password-reset-url: https://recipes.ronbodnar.com/app/auth/reset-password
+  password-reset-url: https://recipes.ronbodnar.com/app/auth/reset-password?token=
 
 spring:
   jpa:
     show-sql: false
+
+  data:
+    redis:
+      host: recipe-repository-redis
+      port: 6379

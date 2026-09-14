@@ -78,7 +78,7 @@ export class SnackbarService {
   selector: 'app-snackbar',
   template: `
     <div
-      class="flex w-full py-2 px-6 gap-4 rounded-md {{ data.classList }}"
+      class="flex w-full max-w-md py-2 px-6 gap-4 rounded-md {{ data.classList }}"
       [class.bg-success]="data.type === SnackbarType.SUCCESS"
       [class.bg-background-alt]="data.type === SnackbarType.INFO"
       [class.bg-danger]="data.type === SnackbarType.ERROR"

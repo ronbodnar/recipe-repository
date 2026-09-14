@@ -2,8 +2,9 @@ package com.ronbodnar.recipes.modules.auth;
 
 import com.ronbodnar.recipes.exception.BusinessException;
 import com.ronbodnar.recipes.exception.ErrorCode;
-import com.ronbodnar.recipes.modules.auth.dto.PasswordResetRequest;
+import com.ronbodnar.recipes.modules.auth.dto.ForgotPasswordRequest;
 import com.ronbodnar.recipes.modules.auth.dto.RegisterRequest;
+import com.ronbodnar.recipes.modules.auth.dto.ResetPasswordRequest;
 import com.ronbodnar.recipes.modules.identity.user.dto.UserAccountChangeRequest;
 import com.ronbodnar.recipes.modules.identity.user.dto.UserAccountDTO;
 import com.ronbodnar.recipes.security.jwt.JwtCookieService;
@@ -94,8 +95,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/request-password-reset")
-    public void requestPasswordReset(@RequestBody PasswordResetRequest request) {
-        authenticationService.requestPasswordReset(request.email());
+    public void requestPasswordReset(@RequestBody ForgotPasswordRequest request) {
+        authenticationService.requestPasswordReset(request.usernameOrEmail());
+    }
+
+    @PostMapping("/reset-password")
+    public void resetPassword(@RequestBody ResetPasswordRequest request) {
+        authenticationService.resetPassword(request.token(), request.newPassword());
     }
 
     @PostMapping("/logout")

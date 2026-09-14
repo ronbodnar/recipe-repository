@@ -23,10 +23,9 @@ public class SecurityUserDetailsService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     @NullMarked
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("Calling loadUserByUsername with username: " + username);
-        UserAccount userAccount = userAccountRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+        UserAccount userAccount = userAccountRepository.findByUsernameOrEmail(usernameOrEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username or email: " + usernameOrEmail));
 
         return SecurityUserDetails.build(userAccount);
     }

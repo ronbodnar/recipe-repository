@@ -20,9 +20,9 @@ export class ForgotPasswordComponent {
   isSubmitting = computed(() => this.status() === 'submitting');
 
   form = new FormGroup({
-    email: new FormControl('', {
+    usernameOrEmail: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.email, Validators.maxLength(254)],
+      validators: [Validators.required, Validators.maxLength(254)],
     }),
   });
 
@@ -32,16 +32,13 @@ export class ForgotPasswordComponent {
       return;
     }
 
-    const { email } = this.form.getRawValue();
+    const { usernameOrEmail } = this.form.getRawValue();
 
     this.status.set('submitting');
 
-    this.authService.requestPasswordReset(email).subscribe({
+    this.authService.requestPasswordReset(usernameOrEmail).subscribe({
       next: () => this.status.set('success'),
-      error: (error) => {
-        this.status.set('idle');
-        this.form.setErrors({ custom: error.message });
-      },
+      error: () => this.status.set('idle'),
     });
   }
 }

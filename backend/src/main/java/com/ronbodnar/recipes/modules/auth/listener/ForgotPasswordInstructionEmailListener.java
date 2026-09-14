@@ -1,6 +1,6 @@
 package com.ronbodnar.recipes.modules.auth.listener;
 
-import com.ronbodnar.recipes.modules.auth.event.UserPasswordResetRequestEvent;
+import com.ronbodnar.recipes.modules.auth.event.UserForgotPasswordRequestEvent;
 import com.ronbodnar.recipes.modules.email.EmailService;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -9,14 +9,14 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PasswordResetInstructionEmailListener {
+public class ForgotPasswordInstructionEmailListener {
 
     private final String appName;
     private final String passwordResetUrl;
 
     private final EmailService emailService;
 
-    public PasswordResetInstructionEmailListener(
+    public ForgotPasswordInstructionEmailListener(
             @Value("${app.name}") String appName,
             @Value("${app.password-reset-url}") String passwordResetUrl,
             EmailService emailService) {
@@ -27,11 +27,13 @@ public class PasswordResetInstructionEmailListener {
 
     @Async("emailTaskExecutor")
     @EventListener
-    public void sendPasswordResetEmail(UserPasswordResetRequestEvent event) {
+    public void sendPasswordResetEmail(UserForgotPasswordRequestEvent event) {
         emailService.sendEmail(
                 event.email(),
                 "Reset your %s password".formatted(appName),
                 """
+                        Hi %s,
+                        
                         We received a request to reset your %s password.
 
                         Use the following link to reset your password:
@@ -39,13 +41,13 @@ public class PasswordResetInstructionEmailListener {
 
                         If you did not request a password reset, you can safely ignore this email.
                         """
-                        .formatted(appName, passwordResetUrl),
-                getHtmlBody(),
+                        .formatted(appName, event.username(), passwordResetUrl + event.token()),
+                getHtmlBody(event.username(), event.token()),
                 null
         );
     }
 
-    public String getHtmlBody() {
+    public String getHtmlBody(String username, String token) {
         return """
                 <!DOCTYPE html>
                 <html lang="en">
@@ -65,7 +67,7 @@ public class PasswordResetInstructionEmailListener {
                         <h2>Password Reset</h2>
 
                         <p>
-                            We received a request to reset your %1$s password.
+                            We received a request to reset your %1$s password for your account <strong>%3$s</strong>.
                         </p>
 
                         <p>
@@ -116,6 +118,6 @@ public class PasswordResetInstructionEmailListener {
                     </div>
                 </body>
                 </html>
-                """.formatted(appName, passwordResetUrl);
+                """.formatted(appName, passwordResetUrl + token, username);
     }
 }

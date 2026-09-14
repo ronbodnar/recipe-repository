@@ -31,7 +31,15 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
     """)
     boolean existsEmailByAnotherUser(@Param("email") String email, @Param("id") Long id);
 
-    Optional<UserAccount> findByUsername(String username);
+    Optional<UserAccount> findByEmail(String email);
+
+    @Query("""
+        SELECT u
+        FROM UserAccount u
+        WHERE u.username = :emailOrUsername
+        OR u.email = :emailOrUsername
+    """)
+    Optional<UserAccount> findByUsernameOrEmail(@Param("emailOrUsername") String emailOrUsername);
 
     Boolean existsByUsername(String username);
 

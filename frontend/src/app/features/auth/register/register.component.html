@@ -9,7 +9,7 @@
   </a>
 
   <div
-    class="w-full max-w-2xl rounded-2xl border border-border/40 bg-background-alt p-6 shadow-sm sm:p-8"
+    class="w-full max-w-2xl rounded-xl border border-border/40 bg-background-alt p-6 shadow-sm sm:p-8"
   >
     <div class="mb-8 text-center">
       <h1 class="m-0 text-2xl font-semibold">
@@ -77,9 +77,9 @@
       <app-button
         class="col-span-full text-center"
         color="primary"
-        size="lg"
         type="submit"
         [label]="'auth.register.submitButton' | translate"
+        [disabled]="!form().dirty || isSubmitting()"
         [loading]="isSubmitting()"
       ></app-button>
     </form>
