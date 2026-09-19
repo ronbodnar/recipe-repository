@@ -286,7 +286,7 @@
         "existing": "Update Recipe"
       },
       "notFound": {
-        "backAction": "Create a New Recipe"
+        "backAction": "Back to My Recipes"
       },
       "loadFailed": {
         "backAction": "Back to My Recipes"
@@ -319,6 +319,23 @@
     }
   },
   "groups": {
+    "notFound": {
+      "title": "Group Not Found",
+      "message": "The group you're looking for doesn't exist, has been deleted, or you do not have permission to view it."
+    },
+    "deleteConfirmation": {
+      "title": "Delete Group",
+      "message": "Are you sure you want to delete this group?<br /><br /><strong>This action is permanent and cannot be undone.</strong>"
+    },
+    "labels": {
+      "name": "Name",
+      "description": "Description"
+    },
+    "roles": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "member": "Member"
+    },
     "list": {
       "title": "My Groups",
       "loading": "Loading your groups...",
@@ -329,6 +346,32 @@
         "empty": "You haven't created or joined any groups yet.",
         "clickToAdd": "Click on the \"+ Add Group\" button in the top right corner to create your first group."
       }
+    },
+    "edit": {
+      "title": {
+        "existing": "Edit Group",
+        "new": "Create Group"
+      },
+      "submitButton": {
+        "existing": "Save Changes",
+        "new": "Create Group"
+      },
+      "placeholders": {
+        "name": "Enter group name",
+        "description": "Enter group description"
+      },
+      "notFound": {
+        "backAction": "Back to My Groups"
+      }
+    },
+    "details": {
+      "title": "Group Details",
+      "loading": "Loading group details...",
+      "errorLoading": "An error occurred while loading the group. Please try again later.",
+      "backButton": "Back to My Groups",
+      "members": "Members",
+      "createdAt": "Created On",
+      "updatedAt": "Last Modified On"
     }
   },
   "settings": {

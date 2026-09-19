@@ -47,5 +47,5 @@ import { TranslatePipe } from '@ngx-translate/core';
   ],
 })
 export class ScopedLoaderComponent {
-  @Input() message = 'loading.long';
+  @Input() message = 'app.loadingMessage';
 }

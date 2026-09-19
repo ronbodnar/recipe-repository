@@ -38,7 +38,7 @@ export class RecipeFormFactory {
       mealTypes: new FormControl<MealType[]>(v?.mealTypes ?? [], { nonNullable: true }),
       dietTypes: new FormControl<DietType[]>(v?.dietTypes ?? [], { nonNullable: true }),
       variants: new FormArray<FormGroup>(
-        (v?.variants ?? [{}]).map((variant) => this.variant(variant)),
+        (v?.variants ?? []).map((variant) => this.variant(variant)),
         {
           validators: [Validators.maxLength(COOKING_METHODS.length)],
         },

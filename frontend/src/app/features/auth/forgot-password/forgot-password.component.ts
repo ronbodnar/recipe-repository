@@ -1,14 +1,14 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { InputTextComponent } from '@ng-modular-forms/core';
+import { MatInputTextComponent } from '@ng-modular-forms/material';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-forgot-password',
-  imports: [InputTextComponent, ButtonComponent, ReactiveFormsModule, TranslatePipe, RouterLink],
+  imports: [MatInputTextComponent, ButtonComponent, ReactiveFormsModule, TranslatePipe, RouterLink],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.css',
 })

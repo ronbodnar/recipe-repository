@@ -1,6 +1,7 @@
-package com.ronbodnar.recipes.modules.identity.group;
+package com.ronbodnar.recipes.modules.group;
 
-import com.ronbodnar.recipes.modules.identity.group.member.GroupMember;
+import com.ronbodnar.recipes.modules.group.domain.GroupRole;
+import com.ronbodnar.recipes.modules.group.member.GroupMember;
 
 import jakarta.persistence.*;
 
@@ -31,6 +32,9 @@ public class Group {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "description")
+    private String description;
+
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -47,6 +51,15 @@ public class Group {
     private List<GroupMember> members = new ArrayList<>();
 
     public void addMember(GroupMember member) {
+        member.setGroup(this);
+
         members.add(member);
+    }
+
+    public GroupMember getOwnerMember() {
+        return this.members.stream()
+                .filter(m -> m.getRole() == GroupRole.OWNER)
+                .findFirst()
+                .orElse(null);
     }
 }

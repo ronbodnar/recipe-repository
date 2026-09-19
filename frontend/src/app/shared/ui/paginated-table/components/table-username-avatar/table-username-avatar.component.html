@@ -1,0 +1,21 @@
+<div class="flex items-center gap-3">
+  @if (profileImageUrl) {
+    <img
+      [src]="profileImageUrl"
+      [alt]="username"
+      class="h-10 w-10 shrink-0 rounded-full border border-border/40 object-cover"
+    />
+  } @else {
+    <div
+      class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border/40 bg-background-alt"
+    >
+      <mat-icon class="text-lg text-muted">person</mat-icon>
+    </div>
+  }
+
+  <div class="flex min-w-0 flex-col">
+    <span class="truncate font-medium text-foreground" [title]="username">
+      {{ username }}
+    </span>
+  </div>
+</div>

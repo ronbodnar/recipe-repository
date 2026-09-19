@@ -18,14 +18,14 @@
     </div>
 
     <form [formGroup]="form()" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
-      <nmf-text
+      <nmf-mat-text
         formControlName="username"
         [label]="'auth.shared.usernameOrEmailLabel' | translate"
         [placeholder]="'auth.shared.usernameOrEmailLabel' | translate"
       />
 
       <div class="flex flex-col">
-        <nmf-text
+        <nmf-mat-text
           type="password"
           formControlName="password"
           [label]="'auth.shared.passwordLabel' | translate"

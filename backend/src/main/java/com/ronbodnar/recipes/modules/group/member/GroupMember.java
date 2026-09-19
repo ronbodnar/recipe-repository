@@ -1,12 +1,16 @@
-package com.ronbodnar.recipes.modules.identity.group.member;
+package com.ronbodnar.recipes.modules.group.member;
 
-import com.ronbodnar.recipes.modules.identity.group.Group;
-import com.ronbodnar.recipes.modules.identity.group.domain.GroupRole;
+import com.ronbodnar.recipes.modules.group.Group;
+import com.ronbodnar.recipes.modules.group.domain.GroupRole;
 import com.ronbodnar.recipes.modules.identity.user.UserAccount;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,6 +23,7 @@ import lombok.Setter;
                 columnNames = {"group_id", "user_account_id"}
         )
 )
+@EntityListeners(AuditingEntityListener.class)
 public class GroupMember {
 
     @Id
@@ -36,5 +41,9 @@ public class GroupMember {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private GroupRole role;
+
+    @CreatedDate
+    @Column(name = "joined_at", nullable = false, updatable = false)
+    private LocalDateTime joinedAt;
 
 }

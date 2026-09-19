@@ -8,7 +8,7 @@ export interface PaginatedTableFetchParams {
   searchValue: string;
   searchColumn: string;
   page: number;
-  pageSize: number;
+  size: number;
   sort: string[];
 }
 

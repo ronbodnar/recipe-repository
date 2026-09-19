@@ -1,1 +1,106 @@
-<p>edit-group works!</p>
+@if (loading()) {
+  <app-full-page-loader message="recipes.edit.loading" />
+}
+
+@switch (status()) {
+  @case ('notFound') {
+    <ng-container *ngTemplateOutlet="recipeNotFound"></ng-container>
+  }
+
+  @case ('loadFailed') {
+    <ng-container *ngTemplateOutlet="loadFailed"></ng-container>
+  }
+
+  @default {
+    <ng-container *ngTemplateOutlet="formTemplate"></ng-container>
+  }
+}
+
+<!-- Templates -->
+<ng-template #recipeNotFound>
+  <app-group-not-found>
+    <ng-container backAction>
+      <app-button
+        color="background"
+        classList="border-border/40!"
+        icon="arrow_back"
+        label="groups.edit.notFound.backAction"
+        routerLink="/app/groups/list"
+      />
+    </ng-container>
+  </app-group-not-found>
+</ng-template>
+
+<ng-template #loadFailed>
+  <section class="h-full flex flex-col justify-center items-center space-y-6">
+    <span class="text-danger">{{ 'groups.edit.errorLoading' | translate }}</span>
+
+    <app-button
+      color="background"
+      classList="border-border/40!"
+      icon="arrow_back"
+      label="groups.edit.loadFailed.backAction"
+      routerLink="/app/groups/list"
+    />
+  </section>
+</ng-template>
+
+<ng-template #formTemplate>
+  <app-fluid-container
+    [pageTitle]="loadedGroup() ? 'groups.edit.title.existing' : 'groups.edit.title.new'"
+    [showBackButton]="true"
+    (backClicked)="goBack()"
+  >
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <!-- Group Details -->
+      <div class="flex flex-col min-w-0 gap-4">
+        <nmf-mat-text
+          formControlName="name"
+          label="groups.labels.name"
+          placeholder="groups.edit.placeholders.name"
+        />
+
+        <nmf-mat-textarea
+          formControlName="description"
+          label="groups.labels.description"
+          placeholder="groups.edit.placeholders.description"
+          [rows]="4"
+        />
+
+        <div class="flex justify-between items-center">
+          <p class="text-sm text-danger">
+            @if (form.hasError('server')) {
+              {{ form.getError('server') | translate }}
+            } @else if (form.invalid && validated()) {
+              {{ 'forms.hasErrors' | translate }}
+            } @else if (status() === 'submitFailed') {
+              {{ 'groups.edit.errorSubmitting' | translate }}
+            }
+          </p>
+          <div class="flex gap-4">
+            <app-button
+              color="secondary"
+              size="md"
+              type="button"
+              label="forms.cancel"
+              [routerLink]="
+                loadedGroup() ? '/app/groups/details/' + loadedGroup()!.id : '/app/groups/list'
+              "
+              [routerState]="loadedGroup() ? { group: loadedGroup() } : {}"
+            />
+
+            <app-button
+              color="primary"
+              size="md"
+              type="submit"
+              [label]="
+                loadedGroup() ? 'groups.edit.submitButton.existing' : 'groups.edit.submitButton.new'
+              "
+              [loading]="status() === 'submitting'"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </app-fluid-container>
+</ng-template>

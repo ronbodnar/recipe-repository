@@ -157,6 +157,7 @@ CREATE TABLE `user_role` (
 CREATE TABLE `user_group` (
     `id` BIGINT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(50) NOT NULL,
+    `description` VARCHAR(500) DEFAULT NULL,
     `created_at` datetime(6) NOT NULL,
     `last_modified_at` datetime(6) NOT NULL,
     PRIMARY KEY (`id`)

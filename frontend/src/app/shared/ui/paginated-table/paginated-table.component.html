@@ -1,6 +1,6 @@
 @if (!loaded()) {
   <div class="flex flex-col items-center">
-    <app-scoped-loader></app-scoped-loader>
+    <app-scoped-loader [message]="loadingMessage()"></app-scoped-loader>
   </div>
 }
 

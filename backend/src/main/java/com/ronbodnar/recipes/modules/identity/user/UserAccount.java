@@ -1,6 +1,6 @@
 package com.ronbodnar.recipes.modules.identity.user;
 
-import com.ronbodnar.recipes.modules.identity.group.member.GroupMember;
+import com.ronbodnar.recipes.modules.group.member.GroupMember;
 import com.ronbodnar.recipes.modules.identity.role.Role;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

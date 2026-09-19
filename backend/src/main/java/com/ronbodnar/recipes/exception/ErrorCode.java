@@ -52,8 +52,13 @@ public enum ErrorCode {
     IMAGE_SIZE_TOO_BIG(HttpStatus.BAD_REQUEST, LogLevel.WARN),
     UNSUPPORTED_MEDIA_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, LogLevel.WARN),
 
+    // Groups
+    GROUP_NOT_FOUND(HttpStatus.NOT_FOUND,LogLevel.INFO),
+    GROUP_NAME_ALREADY_IN_USE(HttpStatus.CONFLICT, LogLevel.INFO),
+    NOT_GROUP_OWNER(HttpStatus.FORBIDDEN, LogLevel.WARN),
+
     // Users
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND,LogLevel.WARN),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND,LogLevel.INFO),
     USER_PROFILE_CONFLICT(HttpStatus.CONFLICT, LogLevel.WARN),
     EMAIL_ALREADY_IN_USE(HttpStatus.CONFLICT, LogLevel.INFO),
     USERNAME_ALREADY_IN_USE(HttpStatus.CONFLICT, LogLevel.INFO),

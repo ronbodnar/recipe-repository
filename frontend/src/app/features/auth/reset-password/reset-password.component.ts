@@ -1,7 +1,7 @@
 import { Component, signal, computed, inject } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { InputTextComponent } from '@ng-modular-forms/core';
+import { MatInputTextComponent } from '@ng-modular-forms/material';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 import { SnackbarService, SnackbarType } from '@shared/ui/snackbar.component';
@@ -12,7 +12,7 @@ import { ErrorCode } from '@core/interfaces/error-code.interface';
 
 @Component({
   selector: 'app-reset-password',
-  imports: [InputTextComponent, ButtonComponent, ReactiveFormsModule, TranslatePipe, RouterLink],
+  imports: [MatInputTextComponent, ButtonComponent, ReactiveFormsModule, TranslatePipe, RouterLink],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.css',
 })

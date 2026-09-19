@@ -49,7 +49,6 @@ import {
 } from '@ng-modular-forms/material';
 
 import { RecipeNotFoundComponent } from '../components/recipe-not-found/recipe-not-found.component';
-import { redirectTo } from '@shared/utils/redirect-to';
 import { DialogService } from '@shared/ui/dialog/dialog.service';
 import { logDebug, logError } from '@shared/utils/logging';
 import { AuthService } from '@features/auth/auth.service';
@@ -298,10 +297,6 @@ export class EditRecipeComponent {
   dropVariant(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.variants.controls, event.previousIndex, event.currentIndex);
     this._activeVariantIndex.set(event.currentIndex);
-  }
-
-  redirectToNew() {
-    redirectTo(this.router, '/app/recipes/edit/new');
   }
 
   goBack() {

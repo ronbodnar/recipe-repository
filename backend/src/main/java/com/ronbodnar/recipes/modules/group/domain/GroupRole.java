@@ -1,4 +1,4 @@
-package com.ronbodnar.recipes.modules.identity.group.domain;
+package com.ronbodnar.recipes.modules.group.domain;
 
 public enum GroupRole {
 

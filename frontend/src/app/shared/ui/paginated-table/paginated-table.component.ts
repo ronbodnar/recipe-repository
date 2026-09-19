@@ -11,6 +11,7 @@ import {
   computed,
   effect,
   inject,
+  input,
 } from '@angular/core';
 import {
   MatPaginator,
@@ -69,6 +70,8 @@ export class PaginatedTableComponent<T = any> implements AfterViewInit, OnDestro
   private store = inject<PaginatedTableStore<T>>(PaginatedTableStore);
   private service = inject<PaginatedTableService<T>>(PaginatedTableService);
   private filterService = inject<PaginatedTableFilterService<T>>(PaginatedTableFilterService);
+
+  loadingMessage = input('app.loadingMessage');
 
   @Input() tableConfigSignal!: Signal<PaginatedTableConfig<T>>;
 

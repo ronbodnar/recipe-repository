@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class FeatureFlagService {
   featureFlags: Record<string, boolean> = {
-    groups: false,
+    groups: true,
     discover: true,
   };
 

@@ -25,7 +25,7 @@
         classList="border-border/40!"
         icon="arrow_back"
         label="recipes.edit.notFound.backAction"
-        (click)="redirectToNew()"
+        routerLink="/app/recipes/list"
       />
     </ng-container>
   </app-recipe-not-found>
@@ -58,9 +58,9 @@
           | translate
       }}
     </p>
-    <form class="mt-6" [formGroup]="form()" (ngSubmit)="submit()">
+    <form [formGroup]="form()" (ngSubmit)="submit()">
       <!-- Recipe Details -->
-      <div class="col-span-3 flex flex-col min-w-0 gap-4">
+      <div class="flex flex-col min-w-0 gap-4">
         <nmf-mat-text
           formControlName="title"
           label="recipes.labels.title"

@@ -22,46 +22,46 @@
       (ngSubmit)="onSubmit()"
       class="flex w-full flex-col gap-x-4 gap-y-3 lg:grid lg:grid-cols-2"
     >
-      <nmf-text
+      <nmf-mat-text
         label="auth.register.givenNameLabel"
         type="text"
         formControlName="givenName"
         placeholder="auth.register.givenNamePlaceholder"
       />
 
-      <nmf-text
+      <nmf-mat-text
         label="auth.register.familyNameLabel"
         type="text"
         formControlName="familyName"
         placeholder="auth.register.familyNamePlaceholder"
       />
 
-      <nmf-text
+      <nmf-mat-text
         label="auth.shared.emailLabel"
         type="email"
         formControlName="email"
         placeholder="auth.shared.emailLabel"
       />
 
-      <nmf-text
+      <nmf-mat-text
         label="auth.shared.usernameLabel"
         type="text"
         formControlName="username"
         placeholder="auth.shared.usernameLabel"
       />
 
-      <nmf-text
+      <nmf-mat-text
         label="auth.shared.passwordLabel"
         type="password"
         formControlName="password"
         placeholder="auth.shared.passwordLabel"
       />
 
-      <nmf-text
-        label="auth.register.confirmPasswordLabel"
+      <nmf-mat-text
+        label="auth.shared.confirmPasswordLabel"
         type="password"
         formControlName="confirmPassword"
-        placeholder="auth.register.confirmPasswordLabel"
+        placeholder="auth.shared.confirmPasswordLabel"
       />
 
       <p class="col-span-full m-0 min-h-5 text-center text-sm text-danger">
@@ -87,7 +87,7 @@
     <p class="mt-6 mb-0 text-center text-sm text-muted">
       {{ 'auth.register.haveAccount' | translate }}
       <a routerLink="/app/auth/login" class="font-medium hover:underline">
-        {{ 'auth.register.loginLinkText' | translate }}
+        {{ 'auth.shared.loginLinkText' | translate }}
       </a>
     </p>
   </div>

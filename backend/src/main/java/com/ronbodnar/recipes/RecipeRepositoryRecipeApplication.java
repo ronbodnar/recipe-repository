@@ -31,16 +31,19 @@ public class RecipeRepositoryRecipeApplication {
 
     @Bean
     @Profile("!prod")
-    CommandLineRunner init(RoleRepository roleRepository, UserAccountRepository userAccountRepository, PasswordEncoder passwordEncoder) {
+    CommandLineRunner init(
+            RoleRepository roleRepository,
+            UserAccountRepository userAccountRepository,
+            PasswordEncoder passwordEncoder
+    ) {
         return args -> {
             if (!userAccountRepository.existsByUsername("admin")) {
-                Role userRole = roleRepository.findByName("USER")
-                        .orElseThrow(() ->
-                                new BusinessException(
-                                        ErrorCode.ROLE_NOT_FOUND,
-                                        "Failed to find Administrator role during initialization"
-                                )
-                        );
+                Role userRole = roleRepository.findByName("USER").orElseThrow(() ->
+                        new BusinessException(
+                                ErrorCode.ROLE_NOT_FOUND,
+                                "Failed to find Administrator role during initialization"
+                        )
+                );
 
                 UserAccount admin = new UserAccount();
                 admin.setUsername("admin");

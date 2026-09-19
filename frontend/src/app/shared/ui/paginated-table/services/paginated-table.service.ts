@@ -176,7 +176,7 @@ export class PaginatedTableService<T> {
         searchValue: triggeredFromSearch ? this.store.filterValue() : '',
         searchColumn: triggeredFromSearch ? this.store.filterColumn() : '',
         page: pageIndex * pageSize,
-        pageSize: pageSize,
+        size: pageSize,
         sort: ['createdAt,desc'],
       };
 

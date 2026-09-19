@@ -7,12 +7,8 @@ import { ErrorService } from '@core/errors/error.service';
 import { ApiError } from '@core/models/api-error.model';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 import { SnackbarService, SnackbarType } from '@shared/ui/snackbar.component';
-import {
-  FormHydrator,
-  FormOrchestrator,
-  FormSerializer,
-  InputTextComponent,
-} from '@ng-modular-forms/core';
+import { FormHydrator, FormOrchestrator, FormSerializer } from '@ng-modular-forms/core';
+import { MatInputTextComponent } from '@ng-modular-forms/material';
 import { TranslatePipe } from '@ngx-translate/core';
 import { passwordMatchValidator } from '../password-match.validator';
 import { AuthService } from '@features/auth/auth.service';
@@ -20,7 +16,7 @@ import { SidenavComponent } from '@features/navigation/sidenav/sidenav.component
 
 @Component({
   selector: 'app-user-register',
-  imports: [RouterLink, ReactiveFormsModule, ButtonComponent, TranslatePipe, InputTextComponent],
+  imports: [RouterLink, ReactiveFormsModule, ButtonComponent, TranslatePipe, MatInputTextComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })

@@ -1,0 +1,66 @@
+@if (loading()) {
+  <app-full-page-loader message="groups.details.loading" />
+} @else if (group(); as group) {
+  <app-fluid-container
+    size="xl"
+    [pageTitle]="group.name"
+    [showBackButton]="true"
+    (backClicked)="goBack()"
+  >
+    @if (group.description) {
+      <p subtitle class="mt-0 lg:mb-6 text-muted">
+        {{ group.description }}
+      </p>
+    }
+
+    <!-- Group Metadata -->
+    <section
+      class="mb-10 flex items-center justify-evenly border-y border-border/40 py-4 text-xs text-muted"
+    >
+      <div class="flex flex-col gap-0.5">
+        <span class="uppercase tracking-wider">
+          {{ 'groups.details.members' | translate }}
+        </span>
+        <span class="font-medium text-foreground">
+          {{ group.memberCount }}
+        </span>
+      </div>
+
+      <div class="h-7 w-px bg-border/40"></div>
+
+      <div class="flex flex-col gap-0.5">
+        <span class="uppercase tracking-wider">
+          {{ 'groups.details.createdAt' | translate }}
+        </span>
+        <span class="font-medium text-foreground">
+          {{ group.createdAt | date: 'mediumDate' }}
+        </span>
+      </div>
+
+      <div class="h-7 w-px bg-border/40"></div>
+
+      <div class="flex flex-col gap-0.5">
+        <span class="uppercase tracking-wider">
+          {{ 'groups.details.updatedAt' | translate }}
+        </span>
+        <span class="font-medium text-foreground">
+          {{ group.lastModifiedAt | date: 'mediumDate' }}
+        </span>
+      </div>
+    </section>
+
+    <!-- Members -->
+    <section>
+      <div class="flex items-center gap-2">
+        <mat-icon class="text-primary!">group</mat-icon>
+        <h2 class="text-lg font-semibold text-foreground">
+          {{ 'groups.details.members' | translate }}
+        </h2>
+      </div>
+
+      <app-paginated-table [tableConfigSignal]="tableConfig" />
+    </section>
+  </app-fluid-container>
+} @else {
+  <app-group-not-found />
+}
