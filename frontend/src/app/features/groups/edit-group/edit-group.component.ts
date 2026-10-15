@@ -12,6 +12,8 @@ import { logDebug, logError } from '@shared/utils/logging';
 import { FullPageLoaderComponent } from '@shared/ui/full-page-loader.component';
 import { GroupNotFoundComponent } from '../components/group-not-found/group-not-found.component';
 import { SnackbarService, SnackbarType } from '@shared/ui/snackbar.component';
+import { ApiError } from '@core/models/api-error.model';
+import { ErrorService } from '@core/errors/error.service';
 
 @Component({
   selector: 'app-edit-group',
@@ -34,6 +36,7 @@ export class EditGroupComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly snackbar = inject(SnackbarService);
   private readonly groupService = inject(GroupService);
+  private readonly errorService = inject(ErrorService);
 
   private _loading = signal(true);
   private _loadedGroup = signal<Group | null>(null);
@@ -86,6 +89,8 @@ export class EditGroupComponent {
   submit(): void {
     this._validated.set(true);
 
+    logDebug('Form submitted:', this.form.getRawValue());
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -97,16 +102,21 @@ export class EditGroupComponent {
 
     this.groupService.saveGroup(group, this.loadedGroup()?.id).subscribe({
       next: (group) => {
-        this._status.set('idle');
-        console.log('Group saved successfully:', group);
+        this.router.navigate(['/app/groups/details', group.id], {
+          state: { group },
+        });
+        logDebug('Group saved successfully:', group);
       },
-      error: (err) => {
+      error: (err: ApiError) => {
+        logError('Failed to save group:', err);
+        if (err.hasFormError()) {
+          this.errorService.populateFormErrors(this.form, err);
+          this._status.set('idle');
+          return;
+        }
         this._status.set('submitFailed');
-        console.error('Failed to save group:', err);
       },
     });
-
-    console.log('Form submitted:', this.form.getRawValue());
   }
 
   goBack(): void {

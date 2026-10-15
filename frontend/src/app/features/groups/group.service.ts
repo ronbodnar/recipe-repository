@@ -43,4 +43,19 @@ export class GroupService {
       method: 'DELETE',
     });
   }
+
+  inviteMember(groupId: number, usernameOrEmail: string): Observable<void> {
+    return this.fetchApi.fetch<void>(`groups/${groupId}/members/invite`, {
+      method: 'POST',
+      requestBody: {
+        usernameOrEmail,
+      },
+    });
+  }
+
+  removeMember(groupId: number, memberId: number): Observable<void> {
+    return this.fetchApi.fetch<void>(`groups/${groupId}/members/${memberId}`, {
+      method: 'DELETE',
+    });
+  }
 }

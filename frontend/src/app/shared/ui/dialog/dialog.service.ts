@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { DialogComponent } from './dialog.component';
 import { ComponentType } from '@angular/cdk/portal';
+import { InputDialogComponent } from './components/input-dialog.component';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +37,30 @@ export class DialogService {
             color: 'danger',
           },
         ],
+      },
+    });
+  }
+
+  openInputDialog(
+    title: string,
+    message: string,
+    type: 'text' | 'textarea' | 'number' | 'email' | 'password' = 'text',
+    options?: {
+      rows?: number;
+      minWidth?: number;
+      submitButtonLabel?: string;
+    },
+  ): MatDialogRef<DialogComponent> {
+    return this.dialog.open(DialogComponent, {
+      data: {
+        title: title,
+        component: InputDialogComponent,
+        componentInputs: {
+          rows: options?.rows || 1,
+          message: message,
+          type: type,
+          submitButtonLabel: options?.submitButtonLabel || 'forms.submit',
+        },
       },
     });
   }

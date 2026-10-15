@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FluidContainerComponent } from '@shared/ui/fluid-container/fluid-container.component';
 import { PaginatedTableConfig } from '@shared/ui/paginated-table/paginated-table.config';
@@ -15,6 +15,7 @@ import { Group } from '../group.types';
 import { GroupService } from '../group.service';
 import { catchError } from 'rxjs';
 import { DialogService } from '@shared/ui/dialog/dialog.service';
+import { logDebug } from '@shared/utils/logging';
 
 @Component({
   selector: 'app-group-list',
@@ -26,7 +27,11 @@ export class GroupListComponent {
   private readonly groupService = inject(GroupService);
   private readonly dialogService = inject(DialogService);
 
+  private _refreshTable = signal(0);
+
   tableConfig = computed<PaginatedTableConfig<Group>>(() => {
+    this._refreshTable();
+
     return {
       elevation: 4,
       pagination: true,
@@ -35,7 +40,7 @@ export class GroupListComponent {
       fetchData: (params: Record<string, unknown>) =>
         this.groupService.loadGroups(params).pipe(
           catchError((error) => {
-            console.log('Error loading groups:', error);
+            logDebug('Error loading groups:', error);
             throw error;
           }),
         ),
@@ -73,6 +78,7 @@ export class GroupListComponent {
           orderable: false,
           className: 'text-center',
           width: '10%',
+          visible: false,
           angularComponent: TableRowActionsComponent,
           angularComponentData: (row) => ({
             input: {
@@ -104,10 +110,11 @@ export class GroupListComponent {
       if (response) {
         this.groupService.deleteGroup(id).subscribe({
           next: () => {
-            console.log('Successfully deleted group with id:', id);
+            logDebug('Successfully deleted group with id:', id);
+            this._refreshTable.update((v) => v + 1);
           },
           error: (error) => {
-            console.log('Error deleting group with id:', id, error);
+            logDebug('Error deleting group with id:', id, error);
           },
         });
       }
