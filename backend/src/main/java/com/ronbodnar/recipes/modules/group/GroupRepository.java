@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
+    boolean existsByName(String name);
+
     boolean existsByNameAndIdIsNot(String name, Long id);
 
     @Query("""

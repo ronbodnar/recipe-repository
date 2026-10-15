@@ -74,6 +74,22 @@ public class UserAccount {
                 this.id, this.username, this.givenName, this.familyName, this.email);
     }
 
+    @Transient
+    public String getFullName() {
+        String fullName = null;
+        if (this.givenName != null) {
+            fullName = this.givenName;
+        }
+        if (this.familyName != null) {
+            if (fullName == null) {
+                fullName = this.familyName;
+            } else {
+                fullName += " " + this.familyName;
+            }
+        }
+        return fullName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

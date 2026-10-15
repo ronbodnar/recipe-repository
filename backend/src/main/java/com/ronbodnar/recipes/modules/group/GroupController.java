@@ -4,6 +4,7 @@ import com.ronbodnar.recipes.modules.group.domain.SearchQuery;
 import com.ronbodnar.recipes.modules.group.dto.GroupSummaryDTO;
 import com.ronbodnar.recipes.modules.group.dto.GroupRequest;
 import com.ronbodnar.recipes.modules.group.member.dto.GroupMemberDTO;
+import com.ronbodnar.recipes.modules.group.member.dto.InviteGroupMemberRequest;
 import com.ronbodnar.recipes.security.adapter.SecurityUserDetails;
 
 import org.springframework.data.domain.Page;
@@ -48,6 +49,19 @@ public class GroupController {
     @GetMapping("/{id}/members")
     public Page<GroupMemberDTO> getGroupMembers(@PathVariable Long id, Pageable pageable) {
         return groupService.getMembersById(id, pageable);
+    }
+
+    @PostMapping("/{groupId}/members/invite")
+    public void inviteGroupMember(
+            @PathVariable Long groupId,
+            @RequestBody InviteGroupMemberRequest inviteGroupMemberRequest,
+            @AuthenticationPrincipal SecurityUserDetails securityUser) {
+        groupService.inviteGroupMember(groupId, securityUser.getId(), inviteGroupMemberRequest.usernameOrEmail());
+    }
+
+    @DeleteMapping("/{groupId}/members/{memberId}")
+    public void removeGroupMember(@PathVariable Long groupId, @PathVariable Long memberId) {
+        groupService.removeGroupMember(groupId, memberId);
     }
 
     @DeleteMapping("/{id}")

@@ -6,6 +6,7 @@ import com.ronbodnar.recipes.modules.group.domain.GroupRole;
 import com.ronbodnar.recipes.modules.group.domain.SearchQuery;
 import com.ronbodnar.recipes.modules.group.dto.GroupSummaryDTO;
 import com.ronbodnar.recipes.modules.group.dto.GroupRequest;
+import com.ronbodnar.recipes.modules.group.event.GroupInvitationEvent;
 import com.ronbodnar.recipes.modules.group.member.GroupMember;
 import com.ronbodnar.recipes.modules.group.member.GroupMemberRepository;
 import com.ronbodnar.recipes.modules.group.member.dto.GroupMemberDTO;
@@ -14,12 +15,15 @@ import com.ronbodnar.recipes.modules.identity.user.UserAccountService;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -30,10 +34,17 @@ public class GroupService {
 
     private final UserAccountService userAccountService;
 
-    public GroupService(GroupRepository groupRepository, GroupMemberRepository groupMemberRepository, UserAccountService userAccountService) {
+    private final ApplicationEventPublisher eventPublisher;
+
+    public GroupService(
+            GroupRepository groupRepository,
+            GroupMemberRepository groupMemberRepository,
+            UserAccountService userAccountService,
+            ApplicationEventPublisher eventPublisher) {
         this.groupRepository = groupRepository;
         this.groupMemberRepository = groupMemberRepository;
         this.userAccountService = userAccountService;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional(readOnly = true)
@@ -72,6 +83,14 @@ public class GroupService {
 
     @Transactional
     public GroupSummaryDTO createGroup(GroupRequest request, Long ownerId) {
+        if (groupRepository.existsByName(request.name())) {
+            throw new BusinessException(
+                    ErrorCode.GROUP_NAME_ALREADY_IN_USE,
+                    "name",
+                    "A group with the same name already exists."
+            );
+        }
+
         Group group = new Group();
         group.setName(request.name());
         group.setDescription(request.description());
@@ -120,5 +139,36 @@ public class GroupService {
         }
 
         groupRepository.delete(group);
+    }
+
+    public void inviteGroupMember(Long groupId, Long inviterId, String usernameOrEmail) {
+        UserAccount invitedUser = userAccountService.getByUsernameOrEmailSilent(usernameOrEmail);
+        if (invitedUser == null) {
+            return;
+        }
+
+        UserAccount inviter = userAccountService.getById(inviterId);
+
+        Group group = groupRepository.findById(groupId).orElseThrow(() ->
+                new BusinessException(ErrorCode.GROUP_NOT_FOUND));
+
+        String inviterName = inviter.getFullName() == null ? inviter.getUsername() : inviter.getFullName();
+        UUID invitationToken = UUID.randomUUID();
+
+        eventPublisher.publishEvent(
+                new GroupInvitationEvent(invitedUser.getEmail(), group.getName(), inviterName, invitationToken)
+        );
+    }
+
+    @Transactional
+    public void removeGroupMember(Long groupId, Long memberId) {
+        Group group = groupRepository.findById(groupId).orElseThrow(() ->
+                new BusinessException(ErrorCode.GROUP_NOT_FOUND));
+
+        GroupMember member = groupMemberRepository.findById(memberId).orElseThrow(() ->
+                new BusinessException(ErrorCode.GROUP_MEMBER_NOT_FOUND));
+
+        group.getMembers().remove(member);
+        groupMemberRepository.delete(member);
     }
 }

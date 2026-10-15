@@ -18,7 +18,7 @@ server:
   forward-headers-strategy: native
 
 spring:
-  config:
+  config: 
     import: optional:file:./secrets/app.properties
 
   application:
