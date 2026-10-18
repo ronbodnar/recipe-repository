@@ -81,16 +81,18 @@
           </h2>
         </div>
 
-        <div class="flex items-center gap-2">
-          <app-button
-            color="background"
-            size="sm"
-            classList="border-border/40!"
-            icon="person_add"
-            label="groups.details.addMemberButton"
-            (click)="promptInviteMember()"
-          />
-        </div>
+        @if (isGroupOwner()) {
+          <div class="flex items-center gap-2">
+            <app-button
+              color="background"
+              size="sm"
+              classList="border-border/40!"
+              icon="person_add"
+              label="groups.details.addMemberButton"
+              (click)="promptInviteMember()"
+            />
+          </div>
+        }
       </div>
 
       <app-paginated-table [tableConfigSignal]="tableConfig" />

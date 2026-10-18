@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public record GroupInvitationEvent(
         String email,
+        Long groupId,
         String groupName,
         String inviterName,
         UUID token

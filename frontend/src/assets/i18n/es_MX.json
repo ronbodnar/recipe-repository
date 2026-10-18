@@ -307,6 +307,11 @@
     }
   },
   "groups": {
+    "invite": {
+      "title": "Invitación a grupo",
+      "processing": "Procesando tu respuesta...",
+      "error": "No se pudo responder a esta invitación. Puede que haya expirado o se haya retirado."
+    },
     "list": {
       "title": "Mis grupos",
       "loading": "Cargando tus grupos...",

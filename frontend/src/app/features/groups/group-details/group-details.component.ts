@@ -125,6 +125,7 @@ export class GroupDetailsComponent {
           property: 'actions',
           filterable: false,
           orderable: false,
+          visibile: this.isGroupOwner(),
           className: 'text-center',
           width: '10%',
           angularComponent: TableRowActionsComponent,

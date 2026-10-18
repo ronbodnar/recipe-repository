@@ -7,6 +7,9 @@ import com.ronbodnar.recipes.modules.group.domain.SearchQuery;
 import com.ronbodnar.recipes.modules.group.dto.GroupSummaryDTO;
 import com.ronbodnar.recipes.modules.group.dto.GroupRequest;
 import com.ronbodnar.recipes.modules.group.event.GroupInvitationEvent;
+import com.ronbodnar.recipes.modules.group.invitation.GroupInvitation;
+import com.ronbodnar.recipes.modules.group.invitation.GroupInvitationRepository;
+import com.ronbodnar.recipes.modules.group.invitation.GroupInvitationStatus;
 import com.ronbodnar.recipes.modules.group.member.GroupMember;
 import com.ronbodnar.recipes.modules.group.member.GroupMemberRepository;
 import com.ronbodnar.recipes.modules.group.member.dto.GroupMemberDTO;
@@ -31,6 +34,7 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
     private final GroupMemberRepository groupMemberRepository;
+    private final GroupInvitationRepository groupInvitationRepository;
 
     private final UserAccountService userAccountService;
 
@@ -39,10 +43,13 @@ public class GroupService {
     public GroupService(
             GroupRepository groupRepository,
             GroupMemberRepository groupMemberRepository,
+            GroupInvitationRepository groupInvitationRepository,
             UserAccountService userAccountService,
-            ApplicationEventPublisher eventPublisher) {
+            ApplicationEventPublisher eventPublisher
+    ) {
         this.groupRepository = groupRepository;
         this.groupMemberRepository = groupMemberRepository;
+        this.groupInvitationRepository = groupInvitationRepository;
         this.userAccountService = userAccountService;
         this.eventPublisher = eventPublisher;
     }
@@ -141,9 +148,11 @@ public class GroupService {
         groupRepository.delete(group);
     }
 
+    @Transactional
     public void inviteGroupMember(Long groupId, Long inviterId, String usernameOrEmail) {
         UserAccount invitedUser = userAccountService.getByUsernameOrEmailSilent(usernameOrEmail);
         if (invitedUser == null) {
+            log.info("Failed to find a user for group invite with email or username: {}", usernameOrEmail);
             return;
         }
 
@@ -152,12 +161,42 @@ public class GroupService {
         Group group = groupRepository.findById(groupId).orElseThrow(() ->
                 new BusinessException(ErrorCode.GROUP_NOT_FOUND));
 
+        // Avoid sending duplicate invitations when the user is already a member
+        if (group.isMember(invitedUser.getId())) {
+            log.info("Invited user is already part of the same group.");
+            return;
+        }
+
         String inviterName = inviter.getFullName() == null ? inviter.getUsername() : inviter.getFullName();
         UUID invitationToken = UUID.randomUUID();
 
+        GroupInvitation invitation = new GroupInvitation();
+        invitation.setGroup(group);
+        invitation.setInvitedBy(inviter);
+        invitation.setInvitedUser(invitedUser);
+        invitation.setInviteCode(invitationToken);
+        invitation.setStatus(GroupInvitationStatus.PENDING);
+
+        groupInvitationRepository.saveAndFlush(invitation);
+
         eventPublisher.publishEvent(
-                new GroupInvitationEvent(invitedUser.getEmail(), group.getName(), inviterName, invitationToken)
+                new GroupInvitationEvent(invitedUser.getEmail(), group.getId(), group.getName(), inviterName, invitationToken)
         );
+    }
+
+    @Transactional
+    public void respondToInvite(UUID inviteCode, boolean accepted) {
+        GroupInvitation invitation = groupInvitationRepository.findByInviteCode(inviteCode).orElseThrow(() ->
+                new BusinessException(ErrorCode.INVALID_GROUP_INVITE_CODE));
+
+        invitation.setStatus(accepted ? GroupInvitationStatus.ACCEPTED : GroupInvitationStatus.DECLINED);
+
+        if (accepted) {
+            GroupMember member = new GroupMember();
+            member.setUserAccount(invitation.getInvitedUser());
+            member.setRole(GroupRole.MEMBER);
+            invitation.getGroup().addMember(member);
+        }
     }
 
     @Transactional

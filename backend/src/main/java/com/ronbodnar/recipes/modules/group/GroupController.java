@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/groups")
 public class GroupController {
@@ -64,17 +66,14 @@ public class GroupController {
         groupService.removeGroupMember(groupId, memberId);
     }
 
+    @PostMapping("/invite-response/{inviteCode}/{response}")
+    public void respondToInvite(@PathVariable UUID inviteCode, @PathVariable Boolean response) {
+        groupService.respondToInvite(inviteCode, response);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteGroup(@PathVariable Long id, @AuthenticationPrincipal SecurityUserDetails securityUser) {
         groupService.deleteGroup(id, securityUser.getId());
     }
 
-    // Update Groups
-    // Remove Groups
-
-    // Add Group Member
-    // Change Group Member Role
-    // Delete Group Member
-
-    // Check Group Membership
 }

@@ -319,6 +319,11 @@
     }
   },
   "groups": {
+    "invite": {
+      "title": "Group Invitation",
+      "processing": "Processing your response...",
+      "error": "Unable to respond to this invitation. It may have expired or been withdrawn."
+    },
     "notFound": {
       "title": "Group Not Found",
       "message": "The group you're looking for doesn't exist, has been deleted, or you do not have permission to view it."

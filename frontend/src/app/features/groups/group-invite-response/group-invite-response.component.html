@@ -1,0 +1,19 @@
+<div class="min-h-full flex flex-col items-center px-4 py-12">
+  <div
+    class="w-full max-w-sm rounded-xl border border-border/40 bg-background-alt p-6 sm:p-8 shadow-sm"
+  >
+    <h1 class="mt-0 mb-6 text-2xl font-semibold text-center">
+      {{ 'groups.invite.title' | translate }}
+    </h1>
+
+    @if (failed()) {
+      <p class="m-0 text-center text-sm text-danger">
+        {{ 'groups.invite.error' | translate }}
+      </p>
+    } @else {
+      <p class="m-0 text-center text-sm text-muted">
+        {{ 'groups.invite.processing' | translate }}
+      </p>
+    }
+  </div>
+</div>

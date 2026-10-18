@@ -53,6 +53,12 @@ export class GroupService {
     });
   }
 
+  respondToInvite(inviteCode: string, accept: boolean): Observable<void> {
+    return this.fetchApi.fetch<void>(`groups/invite-response/${inviteCode}/${accept}`, {
+      method: 'POST',
+    });
+  }
+
   removeMember(groupId: number, memberId: number): Observable<void> {
     return this.fetchApi.fetch<void>(`groups/${groupId}/members/${memberId}`, {
       method: 'DELETE',
