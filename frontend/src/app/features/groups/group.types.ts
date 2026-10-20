@@ -17,3 +17,13 @@ export interface GroupMember {
   role: string;
   joinedAt: Date;
 }
+
+export interface GroupInvitation {
+  id: number;
+  invitedUsername: string;
+  invitedProfileImageId: string;
+  invitedByUsername: string;
+  invitedByProfileImageId: string;
+  status: string;
+  invitedAt: Date;
+}

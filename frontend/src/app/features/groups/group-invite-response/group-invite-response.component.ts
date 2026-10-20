@@ -19,7 +19,7 @@ export class GroupInviteResponseComponent {
   readonly failed = signal(false);
 
   constructor() {
-    const groupId = this.route.snapshot.paramMap.get('id');
+    const groupId = Number(this.route.snapshot.paramMap.get('id'));
     const inviteCode = this.route.snapshot.paramMap.get('inviteCode');
     const response = this.route.snapshot.queryParamMap.get('response');
 
@@ -27,14 +27,14 @@ export class GroupInviteResponseComponent {
     console.log('invite code', inviteCode);
     console.log('Response', response);
 
-    if (!groupId || (response !== 'accept' && response !== 'decline')) {
+    if (!groupId || !inviteCode || (response !== 'accept' && response !== 'decline')) {
       this.failed.set(true);
       return;
     }
 
     const accept = response === 'accept';
 
-    this.groupService.respondToInvite(groupId, accept).subscribe({
+    this.groupService.respondToInvite(groupId, inviteCode, accept).subscribe({
       next: () => {
         if (accept) {
           this.router.navigate(['/app/groups/details', groupId], { replaceUrl: true });

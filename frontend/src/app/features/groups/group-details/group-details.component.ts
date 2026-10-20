@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GroupService } from '../group.service';
-import { Group, GroupMember } from '../group.types';
+import { Group, GroupInvitation, GroupMember } from '../group.types';
 import { FluidContainerComponent } from '@shared/ui/fluid-container/fluid-container.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FullPageLoaderComponent } from '@shared/ui/full-page-loader.component';
@@ -13,7 +13,7 @@ import {
   PaginatedTableConfig,
   TableColumn,
 } from '@shared/ui/paginated-table/paginated-table.config';
-import { catchError } from 'rxjs';
+import { catchError, tap } from 'rxjs';
 import { logError } from '@shared/utils/logging';
 import { TableUsernameAvatarComponent } from '@shared/ui/paginated-table/components/table-username-avatar/table-username-avatar.component';
 import { GroupNotFoundComponent } from '../components/group-not-found/group-not-found.component';
@@ -55,7 +55,8 @@ export class GroupDetailsComponent {
   private _group = signal<Group | null>(null);
   private _members = signal<GroupMember[]>([]);
   private _loading = signal(true);
-  private _refreshTable = signal(0);
+  private _refreshMemberTable = signal(0);
+  private _refreshInvitationTable = signal(0);
 
   readonly group = this._group.asReadonly();
   readonly members = this._members.asReadonly();
@@ -72,7 +73,7 @@ export class GroupDetailsComponent {
   });
 
   readonly tableConfig = computed<PaginatedTableConfig<GroupMember>>(() => {
-    this._refreshTable();
+    this._refreshMemberTable();
 
     return {
       elevation: 4,
@@ -82,6 +83,7 @@ export class GroupDetailsComponent {
       defaultSort: { property: 'userAccount.username', direction: 'asc' },
       fetchData: (params: Record<string, unknown>) =>
         this.groupService.loadGroupMembers(this._group()!.id, params).pipe(
+          tap((members) => console.log('Loaded members', members)),
           catchError((error) => {
             console.log('Error loading groups:', error);
             throw error;
@@ -147,6 +149,86 @@ export class GroupDetailsComponent {
     };
   });
 
+  readonly invitationTableConfig = computed<PaginatedTableConfig<GroupInvitation>>(() => {
+    this._refreshInvitationTable();
+
+    return {
+      elevation: 4,
+      pagination: true,
+      filterable: true,
+      orderable: true,
+      defaultSort: { property: 'invitedUser.username', direction: 'asc' },
+      fetchData: (params: Record<string, unknown>) =>
+        this.groupService.loadGroupInvitations(this._group()!.id, params).pipe(
+          tap((members) => console.log('Loaded invitations', members)),
+          catchError((error) => {
+            console.log('Error loading groups:', error);
+            throw error;
+          }),
+        ),
+      columns: [
+        {
+          title: 'Username',
+          property: 'invitedUsername',
+          propertyPath: 'invitedUser.username',
+          angularComponent: TableUsernameAvatarComponent,
+          angularComponentData: (invite: GroupInvitation) => ({
+            input: {
+              username: invite.invitedUsername,
+              profileImageUrl: invite.invitedProfileImageId
+                ? this.getProfileImage(invite.invitedProfileImageId)
+                : undefined,
+            },
+          }),
+        },
+        {
+          title: 'Invited By',
+          property: 'invitedByUsername',
+          propertyPath: 'invitedBy.username',
+          angularComponent: TableUsernameAvatarComponent,
+          angularComponentData: (invite: GroupInvitation) => ({
+            input: {
+              username: invite.invitedByUsername,
+              profileImageUrl: invite.invitedByProfileImageId
+                ? this.getProfileImage(invite.invitedByProfileImageId)
+                : undefined,
+            },
+          }),
+        },
+        {
+          title: 'Invitation Date',
+          property: 'invitedAt',
+          filterable: false,
+          transformValue: (value: string) => new Date(value).toLocaleDateString(),
+        },
+        {
+          title: 'Actions',
+          property: 'actions',
+          filterable: false,
+          orderable: false,
+          visible: this.isGroupOwner(),
+          className: 'text-center',
+          width: '10%',
+          angularComponent: TableRowActionsComponent,
+          angularComponentData: (row) => ({
+            input: {
+              rowData: row,
+              actions: [
+                {
+                  ...DELETE,
+                  label: 'Cancel Invitation',
+                  tooltipLabel: 'Cancel Invitation',
+                  icon: 'person_remove',
+                  onClick: () => this.promptConfirmCancelInvitation(row.id),
+                },
+              ] as RowAction[],
+            },
+          }),
+        },
+      ] as TableColumn<GroupInvitation>[],
+    };
+  });
+
   constructor() {
     const groupId = this.route.snapshot.paramMap.get('id');
     if (!groupId || Number.isNaN(Number(groupId))) {
@@ -185,6 +267,7 @@ export class GroupDetailsComponent {
               SnackbarType.SUCCESS,
               'groups.details.inviteMember.success',
             );
+            this._refreshInvitationTable.update((v) => v + 1);
           },
           error: () => {
             this.snackbarService.openSnackBar(
@@ -218,6 +301,19 @@ export class GroupDetailsComponent {
     return this.imageService.getImageUrl(profileImageId, 'PROFILE');
   }
 
+  private promptConfirmCancelInvitation(invitationId: number): void {
+    const dialog = this.dialogService.openConfirmationDialog(
+      'groups.details.cancelInvitation.title',
+      'groups.details.cancelInvitation.message',
+    );
+
+    dialog.afterClosed().subscribe((response) => {
+      if (response) {
+        this.cancelInvitation(invitationId);
+      }
+    });
+  }
+
   private promptConfirmRemoveMember(memberId: number): void {
     const dialog = this.dialogService.openConfirmationDialog(
       'groups.details.removeMember.title',
@@ -242,7 +338,7 @@ export class GroupDetailsComponent {
     this.groupService.removeMember(group.id, memberId).subscribe({
       next: () => {
         this._loading.set(false);
-        this._refreshTable.update((v) => v + 1);
+        this._refreshMemberTable.update((v) => v + 1);
         console.log(`Removed group member with ID: ${memberId}`);
       },
       error: (error) => {
@@ -267,6 +363,27 @@ export class GroupDetailsComponent {
       },
       error: (error) => {
         console.log('Error deleting group:', error);
+        this._loading.set(false);
+      },
+    });
+  }
+
+  private cancelInvitation(invitationId: number): void {
+    const group = this._group();
+    if (!group) {
+      return;
+    }
+
+    this._loading.set(true);
+
+    this.groupService.cancelInvitation(group.id, invitationId).subscribe({
+      next: () => {
+        this._loading.set(false);
+        this._refreshInvitationTable.update((v) => v + 1);
+        console.log(`Cancelled invitation with ID: ${invitationId}`);
+      },
+      error: (error) => {
+        console.log('Error cancelling invitation:', error);
         this._loading.set(false);
       },
     });

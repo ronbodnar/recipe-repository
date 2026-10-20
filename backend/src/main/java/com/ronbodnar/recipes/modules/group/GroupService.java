@@ -8,6 +8,7 @@ import com.ronbodnar.recipes.modules.group.dto.GroupSummaryDTO;
 import com.ronbodnar.recipes.modules.group.dto.GroupRequest;
 import com.ronbodnar.recipes.modules.group.event.GroupInvitationEvent;
 import com.ronbodnar.recipes.modules.group.invitation.GroupInvitation;
+import com.ronbodnar.recipes.modules.group.invitation.GroupInvitationDTO;
 import com.ronbodnar.recipes.modules.group.invitation.GroupInvitationRepository;
 import com.ronbodnar.recipes.modules.group.invitation.GroupInvitationStatus;
 import com.ronbodnar.recipes.modules.group.member.GroupMember;
@@ -67,7 +68,13 @@ public class GroupService {
         return groupMemberRepository.findByGroupId(groupId, pageable).map(GroupMemberDTO::from);
     }
 
+    @Transactional(readOnly = true)
+    public Page<GroupInvitationDTO> getInvitationsById(Long groupId, Pageable pageable) {
+        return groupInvitationRepository.findByGroupId(groupId, pageable).map(GroupInvitationDTO::from);
+    }
+
     public Page<GroupSummaryDTO> getGroups(
+            Long userId,
             SearchQuery searchQuery,
             Pageable pageable
     ) {
@@ -79,13 +86,13 @@ public class GroupService {
         if (memberOrder != null) {
             pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
             if (memberOrder.isAscending()) {
-                return groupRepository.getGroupsWithNameLikeOrderByMemberCountAsc(searchValue, pageable);
+                return groupRepository.getGroupsWithNameLikeOrderByMemberCountAsc(userId, searchValue, pageable);
             } else {
-                return groupRepository.getGroupsWithNameLikeOrderByMemberCountDesc(searchValue, pageable);
+                return groupRepository.getGroupsWithNameLikeOrderByMemberCountDesc(userId, searchValue, pageable);
             }
         }
 
-        return groupRepository.getGroupsWithNameLike(searchValue, pageable);
+        return groupRepository.getGroupsWithNameLike(userId, searchValue, pageable);
     }
 
     @Transactional
@@ -174,7 +181,7 @@ public class GroupService {
         invitation.setGroup(group);
         invitation.setInvitedBy(inviter);
         invitation.setInvitedUser(invitedUser);
-        invitation.setInviteCode(invitationToken);
+        invitation.setId(invitationToken);
         invitation.setStatus(GroupInvitationStatus.PENDING);
 
         groupInvitationRepository.saveAndFlush(invitation);
@@ -185,9 +192,17 @@ public class GroupService {
     }
 
     @Transactional
-    public void respondToInvite(UUID inviteCode, boolean accepted) {
-        GroupInvitation invitation = groupInvitationRepository.findByInviteCode(inviteCode).orElseThrow(() ->
+    public void respondToInvite(UUID inviteCode, boolean accepted, Long authUserId) {
+        GroupInvitation invitation = groupInvitationRepository.findById(inviteCode).orElseThrow(() ->
                 new BusinessException(ErrorCode.INVALID_GROUP_INVITE_CODE));
+
+        if (!authUserId.equals(invitation.getInvitedUser().getId())) {
+            throw new BusinessException(ErrorCode.INVALID_GROUP_INVITE_CODE);
+        }
+
+        if (invitation.getStatus() != GroupInvitationStatus.PENDING) {
+            throw new BusinessException(ErrorCode.INVALID_GROUP_INVITE_CODE);
+        }
 
         invitation.setStatus(accepted ? GroupInvitationStatus.ACCEPTED : GroupInvitationStatus.DECLINED);
 
@@ -197,6 +212,18 @@ public class GroupService {
             member.setRole(GroupRole.MEMBER);
             invitation.getGroup().addMember(member);
         }
+    }
+
+    public void cancelInvite(UUID inviteCode, Long authUserId) {
+        GroupInvitation invitation = groupInvitationRepository.findById(inviteCode).orElseThrow(() ->
+                new BusinessException(ErrorCode.INVALID_GROUP_INVITE_CODE));
+
+        if (!authUserId.equals(invitation.getInvitedBy().getId())
+                || !invitation.getGroup().getOwnerMember().getUserAccount().getId().equals(authUserId)) {
+            throw new BusinessException(ErrorCode.INVALID_GROUP_INVITE_CODE);
+        }
+
+        invitation.setStatus(GroupInvitationStatus.CANCELLED);
     }
 
     @Transactional

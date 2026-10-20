@@ -39,9 +39,6 @@ public class GroupInvitation {
     @JoinColumn(name = "invited_by_user_id", nullable = false)
     private UserAccount invitedBy;
 
-    @Column(name = "invite_code", nullable = false)
-    private UUID inviteCode;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private GroupInvitationStatus status;

@@ -3,6 +3,8 @@ package com.ronbodnar.recipes.modules.group;
 import com.ronbodnar.recipes.modules.group.domain.SearchQuery;
 import com.ronbodnar.recipes.modules.group.dto.GroupSummaryDTO;
 import com.ronbodnar.recipes.modules.group.dto.GroupRequest;
+import com.ronbodnar.recipes.modules.group.invitation.GroupInvitation;
+import com.ronbodnar.recipes.modules.group.invitation.GroupInvitationDTO;
 import com.ronbodnar.recipes.modules.group.member.dto.GroupMemberDTO;
 import com.ronbodnar.recipes.modules.group.member.dto.InviteGroupMemberRequest;
 import com.ronbodnar.recipes.security.adapter.SecurityUserDetails;
@@ -29,7 +31,7 @@ public class GroupController {
             SearchQuery searchQuery,
             Pageable pageable,
             @AuthenticationPrincipal SecurityUserDetails securityUser) {
-        return groupService.getGroups(searchQuery, pageable);
+        return groupService.getGroups(securityUser.getId(), searchQuery, pageable);
     }
 
     // Add Groups
@@ -53,6 +55,11 @@ public class GroupController {
         return groupService.getMembersById(id, pageable);
     }
 
+    @GetMapping("/{id}/invitations")
+    public Page<GroupInvitationDTO> getGroupInvitations(@PathVariable Long id, Pageable pageable) {
+        return groupService.getInvitationsById(id, pageable);
+    }
+
     @PostMapping("/{groupId}/members/invite")
     public void inviteGroupMember(
             @PathVariable Long groupId,
@@ -66,9 +73,18 @@ public class GroupController {
         groupService.removeGroupMember(groupId, memberId);
     }
 
-    @PostMapping("/invite-response/{inviteCode}/{response}")
-    public void respondToInvite(@PathVariable UUID inviteCode, @PathVariable Boolean response) {
-        groupService.respondToInvite(inviteCode, response);
+    @PostMapping("/{groupId}/invitations/{inviteCode}/{response}")
+    public void respondToInvite(
+            @PathVariable UUID inviteCode,
+            @PathVariable Boolean response,
+            @AuthenticationPrincipal SecurityUserDetails securityUser
+    ) {
+        groupService.respondToInvite(inviteCode, response, securityUser.getId());
+    }
+
+    @PostMapping("/{groupId}/invitations/{inviteCode}/cancel")
+    public void cancelInvite(@PathVariable UUID inviteCode, @AuthenticationPrincipal SecurityUserDetails securityUser) {
+        groupService.cancelInvite(inviteCode, securityUser.getId());
     }
 
     @DeleteMapping("/{id}")

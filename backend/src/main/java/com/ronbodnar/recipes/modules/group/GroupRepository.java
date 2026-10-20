@@ -25,8 +25,14 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
         )
         FROM Group g
         WHERE g.name LIKE CONCAT('%', :searchValue, '%')
+            AND EXISTS (
+                SELECT m.id
+                FROM g.members m
+                WHERE m.userAccount.id = :userId
+            )
     """)
     Page<GroupSummaryDTO> getGroupsWithNameLike(
+            Long userId,
             String searchValue,
             Pageable pageable
     );
@@ -43,9 +49,15 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
         )
         FROM Group g
         WHERE g.name LIKE CONCAT('%', :searchValue, '%')
+            AND EXISTS (
+                SELECT m.id
+                FROM g.members m
+                WHERE m.userAccount.id = :userId
+            )
         ORDER BY SIZE(g.members) ASC
     """)
     Page<GroupSummaryDTO> getGroupsWithNameLikeOrderByMemberCountAsc(
+            Long userId,
             String searchValue,
             Pageable pageable
     );
@@ -62,9 +74,15 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
         )
         FROM Group g
         WHERE g.name LIKE CONCAT('%', :searchValue, '%')
+            AND EXISTS (
+                SELECT m.id
+                FROM g.members m
+                WHERE m.userAccount.id = :userId
+            )
         ORDER BY SIZE(g.members) DESC
     """)
     Page<GroupSummaryDTO> getGroupsWithNameLikeOrderByMemberCountDesc(
+            Long userId,
             String searchValue,
             Pageable pageable
     );

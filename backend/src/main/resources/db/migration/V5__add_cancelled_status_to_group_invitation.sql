@@ -1,0 +1,2 @@
+ALTER TABLE `user_group_invitation`
+    MODIFY COLUMN `status` ENUM('PENDING','ACCEPTED','DECLINED','CANCELLED') NOT NULL

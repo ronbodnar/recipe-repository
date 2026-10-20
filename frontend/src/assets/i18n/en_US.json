@@ -341,6 +341,11 @@
       "admin": "Admin",
       "member": "Member"
     },
+    "invitationStatuses": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "declined": "Declined"
+    },
     "list": {
       "title": "My Groups",
       "loading": "Loading your groups...",
@@ -376,6 +381,7 @@
       "errorLoading": "An error occurred while loading the group. Please try again later.",
       "backButton": "Back to My Groups",
       "members": "Members",
+      "pendingInvitations": "Pending Invitations",
       "createdAt": "Created On",
       "updatedAt": "Last Modified On",
       "editButton": "Edit Group",
