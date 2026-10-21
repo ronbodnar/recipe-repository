@@ -40,5 +40,6 @@ export class GeneralSettingsHandler extends FormHandlerBase<Controls> {
   onLanguageChange(language: string) {
     if (!language) return;
     this.translateService.use(language);
+    localStorage.setItem('language', language);
   }
 }

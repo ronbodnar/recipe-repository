@@ -75,7 +75,7 @@ export class ButtonComponent {
         return 'bg-primary text-white border border-primary hover:bg-primary/80 active:bg-primary/70';
 
       case 'secondary':
-        return 'bg-background-alt text-white border border-background-alt hover:bg-background-alt/80 active:bg-background-alt/70';
+        return 'bg-background-alt text-text border border-background-alt hover:bg-background-alt/80 active:bg-background-alt/70';
 
       case 'background':
         return 'bg-background text-text border border-background-alt hover:bg-background-alt active:bg-background-alt';

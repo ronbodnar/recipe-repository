@@ -36,6 +36,7 @@ export const appConfig: ApplicationConfig = {
     provideTranslateService({
       loader: provideTranslateHttpLoader(),
       lang: (
+        localStorage.getItem('language') ||
         (navigator.languages && navigator.languages[0]) ||
         navigator.language ||
         'en-US'
