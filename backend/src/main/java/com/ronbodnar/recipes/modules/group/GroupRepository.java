@@ -7,7 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface GroupRepository extends JpaRepository<Group, Long> {
+
+    boolean existsByName(String name);
 
     boolean existsByNameAndIdIsNot(String name, Long id);
 
@@ -23,8 +27,14 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
         )
         FROM Group g
         WHERE g.name LIKE CONCAT('%', :searchValue, '%')
+            AND EXISTS (
+                SELECT m.id
+                FROM g.members m
+                WHERE m.userAccount.id = :userId
+            )
     """)
     Page<GroupSummaryDTO> getGroupsWithNameLike(
+            Long userId,
             String searchValue,
             Pageable pageable
     );
@@ -41,9 +51,15 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
         )
         FROM Group g
         WHERE g.name LIKE CONCAT('%', :searchValue, '%')
+            AND EXISTS (
+                SELECT m.id
+                FROM g.members m
+                WHERE m.userAccount.id = :userId
+            )
         ORDER BY SIZE(g.members) ASC
     """)
     Page<GroupSummaryDTO> getGroupsWithNameLikeOrderByMemberCountAsc(
+            Long userId,
             String searchValue,
             Pageable pageable
     );
@@ -60,10 +76,25 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
         )
         FROM Group g
         WHERE g.name LIKE CONCAT('%', :searchValue, '%')
+            AND EXISTS (
+                SELECT m.id
+                FROM g.members m
+                WHERE m.userAccount.id = :userId
+            )
         ORDER BY SIZE(g.members) DESC
     """)
     Page<GroupSummaryDTO> getGroupsWithNameLikeOrderByMemberCountDesc(
+            Long userId,
             String searchValue,
             Pageable pageable
     );
+
+    @Query("""
+        SELECT g
+        FROM Group g
+        JOIN GroupMember gm ON gm.group.id = g.id
+        JOIN FETCH g.members
+        WHERE gm.userAccount.id = :userId
+    """)
+    List<Group> findAllWithUserId(Long userId);
 }

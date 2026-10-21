@@ -13,6 +13,28 @@
       </p>
     }
 
+    @if (isGroupOwner()) {
+      <div actions class="flex items-center gap-2">
+        <app-button
+          color="background"
+          size="sm"
+          classList="border-border/40!"
+          icon="edit"
+          label="groups.details.editButton"
+          [routerLink]="'/app/groups/edit/' + group.id"
+          [routerState]="{ group }"
+        />
+        <app-button
+          color="background"
+          size="sm"
+          classList="border-border/40!"
+          icon="delete"
+          label="groups.details.deleteButton"
+          (click)="promptDeleteGroup()"
+        />
+      </div>
+    }
+
     <!-- Group Metadata -->
     <section
       class="mb-10 flex items-center justify-evenly border-y border-border/40 py-4 text-xs text-muted"
@@ -49,17 +71,32 @@
       </div>
     </section>
 
-    <!-- Members -->
-    <section>
-      <div class="flex items-center gap-2">
-        <mat-icon class="text-primary!">group</mat-icon>
-        <h2 class="text-lg font-semibold text-foreground">
-          {{ 'groups.details.members' | translate }}
-        </h2>
-      </div>
+    <mat-tab-group>
+      <mat-tab [label]="'groups.details.tables.members' | translate">
+        <div class="flex justify-end py-4">
+          @if (isGroupOwner()) {
+            <app-button
+              color="background"
+              size="sm"
+              classList="border-border/40!"
+              icon="person_add"
+              label="groups.details.inviteMemberButton"
+              (click)="promptInviteMember()"
+            />
+          }
+        </div>
 
-      <app-paginated-table [tableConfigSignal]="tableConfig" />
-    </section>
+        <app-paginated-table [tableConfigSignal]="tableConfig" />
+      </mat-tab>
+
+      <mat-tab [label]="'groups.details.tables.pendingInvitations' | translate">
+        <div class="py-4">
+          <!-- Render an empty state when there are no invitations.
+           Otherwise, show the existing invitation table. -->
+          <app-paginated-table [tableConfigSignal]="invitationTableConfig" />
+        </div>
+      </mat-tab>
+    </mat-tab-group>
   </app-fluid-container>
 } @else {
   <app-group-not-found />

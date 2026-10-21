@@ -72,4 +72,15 @@ public class RecipeController {
     public void delete(@PathVariable("id") UUID id) {
         recipeService.deleteById(id);
     }
+
+    @GetMapping("/group")
+    public Page<RecipeSummaryDTO> getGroupRecipes(Pageable pageable, @AuthenticationPrincipal SecurityUserDetails securityUser) {
+        return recipeService.getGroupRecipes(securityUser.getId(), pageable);
+    }
+
+    @GetMapping("/group/{groupId}")
+    // TODO: group validation
+    public Page<RecipeSummaryDTO> getRecipesForGroup(@PathVariable("groupId") Long groupId, Pageable pageable) {
+        return recipeService.getRecipesForGroup(groupId, pageable);
+    }
 }

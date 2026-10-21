@@ -56,6 +56,10 @@ public enum ErrorCode {
     GROUP_NOT_FOUND(HttpStatus.NOT_FOUND,LogLevel.INFO),
     GROUP_NAME_ALREADY_IN_USE(HttpStatus.CONFLICT, LogLevel.INFO),
     NOT_GROUP_OWNER(HttpStatus.FORBIDDEN, LogLevel.WARN),
+    GROUP_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND,LogLevel.INFO),
+    INVALID_GROUP_INVITE_CODE(HttpStatus.FORBIDDEN, LogLevel.INFO),
+    DUPLICATE_GROUP_INVITE(HttpStatus.CONFLICT, LogLevel.INFO),
+    NOT_INVITE_CODE_USER(HttpStatus.FORBIDDEN, LogLevel.INFO),
 
     // Users
     USER_NOT_FOUND(HttpStatus.NOT_FOUND,LogLevel.INFO),

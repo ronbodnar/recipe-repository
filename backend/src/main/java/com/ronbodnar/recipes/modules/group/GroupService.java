@@ -6,6 +6,11 @@ import com.ronbodnar.recipes.modules.group.domain.GroupRole;
 import com.ronbodnar.recipes.modules.group.domain.SearchQuery;
 import com.ronbodnar.recipes.modules.group.dto.GroupSummaryDTO;
 import com.ronbodnar.recipes.modules.group.dto.GroupRequest;
+import com.ronbodnar.recipes.modules.group.event.GroupInvitationEvent;
+import com.ronbodnar.recipes.modules.group.invitation.GroupInvitation;
+import com.ronbodnar.recipes.modules.group.invitation.GroupInvitationDTO;
+import com.ronbodnar.recipes.modules.group.invitation.GroupInvitationRepository;
+import com.ronbodnar.recipes.modules.group.invitation.GroupInvitationStatus;
 import com.ronbodnar.recipes.modules.group.member.GroupMember;
 import com.ronbodnar.recipes.modules.group.member.GroupMemberRepository;
 import com.ronbodnar.recipes.modules.group.member.dto.GroupMemberDTO;
@@ -14,6 +19,7 @@ import com.ronbodnar.recipes.modules.identity.user.UserAccountService;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,19 +27,33 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.UUID;
+
 @Slf4j
 @Service
 public class GroupService {
 
     private final GroupRepository groupRepository;
     private final GroupMemberRepository groupMemberRepository;
+    private final GroupInvitationRepository groupInvitationRepository;
 
     private final UserAccountService userAccountService;
 
-    public GroupService(GroupRepository groupRepository, GroupMemberRepository groupMemberRepository, UserAccountService userAccountService) {
+    private final ApplicationEventPublisher eventPublisher;
+
+    public GroupService(
+            GroupRepository groupRepository,
+            GroupMemberRepository groupMemberRepository,
+            GroupInvitationRepository groupInvitationRepository,
+            UserAccountService userAccountService,
+            ApplicationEventPublisher eventPublisher
+    ) {
         this.groupRepository = groupRepository;
         this.groupMemberRepository = groupMemberRepository;
+        this.groupInvitationRepository = groupInvitationRepository;
         this.userAccountService = userAccountService;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional(readOnly = true)
@@ -49,7 +69,17 @@ public class GroupService {
         return groupMemberRepository.findByGroupId(groupId, pageable).map(GroupMemberDTO::from);
     }
 
+    @Transactional(readOnly = true)
+    public Page<GroupInvitationDTO> getInvitationsById(Long groupId, Pageable pageable) {
+        return groupInvitationRepository.findByGroupId(groupId, pageable).map(GroupInvitationDTO::from);
+    }
+
+    public List<Group> getAllUserGroups(Long userId) {
+        return groupRepository.findAllWithUserId(userId);
+    }
+
     public Page<GroupSummaryDTO> getGroups(
+            Long userId,
             SearchQuery searchQuery,
             Pageable pageable
     ) {
@@ -61,17 +91,25 @@ public class GroupService {
         if (memberOrder != null) {
             pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
             if (memberOrder.isAscending()) {
-                return groupRepository.getGroupsWithNameLikeOrderByMemberCountAsc(searchValue, pageable);
+                return groupRepository.getGroupsWithNameLikeOrderByMemberCountAsc(userId, searchValue, pageable);
             } else {
-                return groupRepository.getGroupsWithNameLikeOrderByMemberCountDesc(searchValue, pageable);
+                return groupRepository.getGroupsWithNameLikeOrderByMemberCountDesc(userId, searchValue, pageable);
             }
         }
 
-        return groupRepository.getGroupsWithNameLike(searchValue, pageable);
+        return groupRepository.getGroupsWithNameLike(userId, searchValue, pageable);
     }
 
     @Transactional
     public GroupSummaryDTO createGroup(GroupRequest request, Long ownerId) {
+        if (groupRepository.existsByName(request.name())) {
+            throw new BusinessException(
+                    ErrorCode.GROUP_NAME_ALREADY_IN_USE,
+                    "name",
+                    "A group with the same name already exists."
+            );
+        }
+
         Group group = new Group();
         group.setName(request.name());
         group.setDescription(request.description());
@@ -120,5 +158,92 @@ public class GroupService {
         }
 
         groupRepository.delete(group);
+    }
+
+    @Transactional
+    public void inviteGroupMember(Long groupId, Long inviterId, String usernameOrEmail) {
+        UserAccount invitedUser = userAccountService.getByUsernameOrEmailSilent(usernameOrEmail);
+        if (invitedUser == null) {
+            log.info("Failed to find a user for group invite with email or username: {}", usernameOrEmail);
+            return;
+        }
+
+        UserAccount inviter = userAccountService.getById(inviterId);
+
+        Group group = groupRepository.findById(groupId).orElseThrow(() ->
+                new BusinessException(ErrorCode.GROUP_NOT_FOUND));
+
+        if (group.isMember(invitedUser.getId())) {
+            throw new BusinessException(ErrorCode.DUPLICATE_GROUP_INVITE);
+        }
+
+        if (groupInvitationRepository.hasPendingInvitation(invitedUser.getEmail())) {
+            throw new BusinessException(ErrorCode.DUPLICATE_GROUP_INVITE);
+        }
+
+        String inviterName = inviter.getFullName() == null ? inviter.getUsername() : inviter.getFullName();
+
+        GroupInvitation invitation = new GroupInvitation();
+        invitation.setGroup(group);
+        invitation.setInvitedBy(inviter);
+        invitation.setInvitedUser(invitedUser);
+        invitation.setStatus(GroupInvitationStatus.PENDING);
+
+        GroupInvitation savedInvitation = groupInvitationRepository.saveAndFlush(invitation);
+
+        eventPublisher.publishEvent(
+                new GroupInvitationEvent(invitedUser.getEmail(), group.getId(), group.getName(), inviterName, savedInvitation.getId())
+        );
+    }
+
+    @Transactional
+    public void respondToInvitation(UUID inviteCode, boolean accepted, Long authUserId) {
+        System.out.println("Invite code:" + inviteCode);
+        GroupInvitation invitation = groupInvitationRepository.findById(inviteCode).orElseThrow(() ->
+                new BusinessException(ErrorCode.INVALID_GROUP_INVITE_CODE));
+
+        if (!authUserId.equals(invitation.getInvitedUser().getId())) {
+            throw new BusinessException(ErrorCode.NOT_INVITE_CODE_USER);
+        }
+
+        if (invitation.getStatus() != GroupInvitationStatus.PENDING) {
+            throw new BusinessException(ErrorCode.INVALID_GROUP_INVITE_CODE);
+        }
+
+        invitation.setStatus(accepted ? GroupInvitationStatus.ACCEPTED : GroupInvitationStatus.DECLINED);
+
+        if (accepted) {
+            GroupMember member = new GroupMember();
+            member.setUserAccount(invitation.getInvitedUser());
+            member.setRole(GroupRole.MEMBER);
+            invitation.getGroup().addMember(member);
+        }
+    }
+
+    @Transactional
+    public void cancelInvitation(UUID inviteCode, Long authUserId) {
+        GroupInvitation invitation = groupInvitationRepository.findById(inviteCode).orElseThrow(() ->
+                new BusinessException(ErrorCode.INVALID_GROUP_INVITE_CODE));
+
+        boolean userIsInviter = authUserId.equals(invitation.getInvitedBy().getId());
+        boolean userIsOwner = invitation.getGroup().getOwnerMember().getUserAccount().getId().equals(authUserId);
+
+        if (!userIsInviter || !userIsOwner) {
+            throw new BusinessException(ErrorCode.INVALID_GROUP_INVITE_CODE);
+        }
+
+        invitation.setStatus(GroupInvitationStatus.CANCELLED);
+    }
+
+    @Transactional
+    public void removeGroupMember(Long groupId, Long memberId) {
+        Group group = groupRepository.findById(groupId).orElseThrow(() ->
+                new BusinessException(ErrorCode.GROUP_NOT_FOUND));
+
+        GroupMember member = groupMemberRepository.findById(memberId).orElseThrow(() ->
+                new BusinessException(ErrorCode.GROUP_MEMBER_NOT_FOUND));
+
+        group.getMembers().remove(member);
+        groupMemberRepository.delete(member);
     }
 }

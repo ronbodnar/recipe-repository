@@ -14,6 +14,14 @@ export const routes: Route[] = [
       import('./edit-group/edit-group.component').then((m) => m.EditGroupComponent),
   },
   {
+    path: ':id/invite/:inviteCode',
+    title: 'groups.invite.title',
+    loadComponent: () =>
+      import('./group-invite-response/group-invite-response.component').then(
+        (m) => m.GroupInviteResponseComponent,
+      ),
+  },
+  {
     path: 'details/:id',
     title: 'groups.details.title',
     loadComponent: () =>

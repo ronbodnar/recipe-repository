@@ -1,6 +1,7 @@
 package com.ronbodnar.recipes.modules.group;
 
 import com.ronbodnar.recipes.modules.group.domain.GroupRole;
+import com.ronbodnar.recipes.modules.group.invitation.GroupInvitation;
 import com.ronbodnar.recipes.modules.group.member.GroupMember;
 
 import jakarta.persistence.*;
@@ -50,10 +51,22 @@ public class Group {
     )
     private List<GroupMember> members = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "group",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<GroupInvitation> invitations = new ArrayList<>();
+
     public void addMember(GroupMember member) {
         member.setGroup(this);
 
         members.add(member);
+    }
+
+    public boolean isMember(Long userAccountId) {
+        return members.stream()
+                .anyMatch(m -> m.getUserAccount().getId().equals(userAccountId));
     }
 
     public GroupMember getOwnerMember() {

@@ -1,4 +1,6 @@
 app:
+  name: ${APP_NAME}
+
   aws:
     s3:
       bucket-name: recipe-repository-dev
@@ -6,19 +8,22 @@ app:
   mail:
     reply-to: ${EMAIL_REPLY_TO}
 
-  name: ${APP_NAME}
   password-reset-url: http://localhost:4200/app/auth/reset-password?token=
 
   security:
     default-admin-password: ${DEFAULT_ADMIN_PASSWORD}
     jwt-secret: ${JWT_SECRET}
 
+  groups:
+    enabled: true
+    invitation-url: http://localhost:4200/app/groups/GROUP_ID/invite/
+
 server:
   port: 8080
   forward-headers-strategy: native
 
 spring:
-  config:
+  config: 
     import: optional:file:./secrets/app.properties
 
   application:

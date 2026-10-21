@@ -44,6 +44,18 @@ public class RecipeService {
         return toSummaryPage(recipes);
     }
 
+    public Page<RecipeSummaryDTO> getGroupRecipes(Long userId, Pageable pageable) {
+        Page<Recipe> recipes = recipeRepository.findAllGroupRecipes(userId, pageable);
+
+        return toSummaryPage(recipes);
+    }
+
+    public Page<RecipeSummaryDTO> getRecipesForGroup(Long groupId, Pageable pageable) {
+        Page<Recipe> recipes = recipeRepository.findRecipesForGroup(groupId, pageable);
+
+        return toSummaryPage(recipes);
+    }
+
     @Transactional(readOnly = true)
     public RecipeDetailsDTO getById(UUID id) {
         Recipe recipe = recipeRepository.findById(id).orElseThrow(() ->

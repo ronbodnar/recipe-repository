@@ -13,7 +13,7 @@ import { logDebug } from '@shared/utils/logging';
 import { PaginatedResponse } from '@core/interfaces/paginated-response.interface';
 import { PaginationComponent } from '@shared/ui/pagination/pagination.component';
 
-export type RecipeListSource = 'myRecipes' | 'discover';
+export type RecipeListSource = 'myRecipes' | 'groupRecipes' | 'discover';
 
 @Component({
   selector: 'app-recipe-list',
@@ -53,20 +53,6 @@ export class RecipeListComponent {
   readonly totalRecipes = computed(() => this.recipeResponse()?.page.totalElements || 0);
   readonly totalPages = computed(() => this.recipeResponse()?.page.totalPages || 0);
 
-  readonly pageTitle = computed(() => {
-    const source = this.source();
-    switch (source) {
-      case 'myRecipes':
-        return 'recipes.list.myRecipes.title';
-
-      case 'discover':
-        return 'recipes.list.discover.title';
-
-      default:
-        return '';
-    }
-  });
-
   readonly pageSizeOptions = [10, 15, 25, 50];
   pageSize = 15;
   currentPage = 0;
@@ -81,10 +67,12 @@ export class RecipeListComponent {
     this.currentPage = page;
     this._isLoading.set(true);
 
-    const recipes$ =
-      this.source() === 'discover'
-        ? this.recipeService.loadDiscoverRecipes(this.currentPage, this.pageSize)
-        : this.recipeService.loadPaginatedRecipes(this.currentPage, this.pageSize);
+    const observables = {
+      discover: this.recipeService.loadDiscoverRecipes(this.currentPage, this.pageSize),
+      groupRecipes: this.recipeService.loadGroupRecipes(this.currentPage, this.pageSize),
+      myRecipes: this.recipeService.loadPaginatedRecipes(this.currentPage, this.pageSize),
+    };
+    const recipes$ = observables[this.source()];
 
     recipes$.subscribe({
       next: (data) => {

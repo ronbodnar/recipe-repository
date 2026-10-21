@@ -42,6 +42,25 @@ export class RecipeService {
     });
   }
 
+  loadGroupRecipes(
+    page: number,
+    size: number,
+    sort: string[] = ['id,desc'],
+  ): Observable<PaginatedResponse<RecipeSummary>> {
+    return this.fetchApi.fetchPaginatedData<RecipeSummary>('recipes/group', {
+      method: 'GET',
+      parameters: {
+        page,
+        size,
+        sort,
+      },
+    });
+  }
+
+  loadRecipesForGroup(groupId: number): Observable<RecipeSummary[]> {
+    return this.fetchApi.getData<RecipeSummary[]>(`recipes/group/${groupId}`);
+  }
+
   loadRecipe(recipeId: string): Observable<Recipe> {
     return this.fetchApi.getData<Recipe>(`recipes/${recipeId}`);
   }

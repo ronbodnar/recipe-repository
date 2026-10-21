@@ -55,6 +55,7 @@
     "myRecipes": "My Recipes",
     "addRecipe": "Add Recipe",
     "discoverRecipes": "Discover Recipes",
+    "groupRecipes": "Group Recipes",
     "groups": "Groups",
     "myGroups": "My Groups",
     "addGroup": "Add Group",
@@ -224,6 +225,16 @@
           "empty": "There are no discover recipes available at the moment.",
           "clickToAdd": "Click on the \"+\" button in the bottom right corner and set the visibility to 'Public' to create a public recipe."
         }
+      },
+      "groupRecipes": {
+        "title": "Group Recipes",
+        "loading": "Loading group recipes...",
+        "errorLoading": "Error loading group recipes. Please try again.",
+        "noRecipes": {
+          "title": "No Group Recipes Found",
+          "empty": "There are no group recipes available at the moment.",
+          "clickToAdd": "Click on the \"+\" button in the bottom right corner and set the visibility to 'Group' to create a group recipe."
+        }
       }
     },
     "details": {
@@ -319,6 +330,12 @@
     }
   },
   "groups": {
+    "invite": {
+      "title": "Group Invitation",
+      "processing": "Processing your response...",
+      "error": "Unable to respond to this invitation. It may have expired or been withdrawn.",
+      "notInviteCodeUser": "Unable to respond to this invitation. You are not logged into the correct user account."
+    },
     "notFound": {
       "title": "Group Not Found",
       "message": "The group you're looking for doesn't exist, has been deleted, or you do not have permission to view it."
@@ -336,15 +353,27 @@
       "admin": "Admin",
       "member": "Member"
     },
+    "invitationStatuses": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "declined": "Declined"
+    },
     "list": {
       "title": "My Groups",
       "loading": "Loading your groups...",
       "errorLoading": "Error loading groups. Please try again.",
+      "errorSubmitting": "An error occurred while submitting the group. Please try again later.",
       "addButton": "Add Group",
       "noGroups": {
         "title": "Welcome to {{appName}}!",
         "empty": "You haven't created or joined any groups yet.",
         "clickToAdd": "Click on the \"+ Add Group\" button in the top right corner to create your first group."
+      },
+      "tables": {
+        "name": "Name",
+        "members": "Members",
+        "createdAt": "Created At",
+        "actions": "Actions"
       }
     },
     "edit": {
@@ -370,8 +399,45 @@
       "errorLoading": "An error occurred while loading the group. Please try again later.",
       "backButton": "Back to My Groups",
       "members": "Members",
+      "pendingInvitations": "Pending Invitations",
       "createdAt": "Created On",
-      "updatedAt": "Last Modified On"
+      "updatedAt": "Last Modified On",
+      "editButton": "Edit Group",
+      "deleteButton": "Delete Group",
+      "inviteMemberButton": "Invite Member",
+      "deleteConfirmation": {
+        "title": "Delete Group",
+        "message": "Are you sure you want to delete this group?<br /><br /><strong>This action is permanent and cannot be undone.</strong>"
+      },
+      "cancelInvitation": {
+        "title": "Cancel Invitation",
+        "message": "Are you sure you want to cancel this invitation?",
+        "success": "The invitation has been successfully canceled.",
+        "error": "An error occurred while canceling the invitation. Please try again later."
+      },
+      "inviteMember": {
+        "title": "Invite Member",
+        "message": "Enter the username or email of the member you want to invite to this group.",
+        "submitButton": "Send Invite",
+        "success": "If the email address or username are valid, the member will receive an invitation shortly.",
+        "error": "An error occurred while inviting the member. Please try again later."
+      },
+      "removeMember": {
+        "title": "Remove Member",
+        "message": "Are you sure you want to remove this member from the group?",
+        "success": "The member has been successfully removed from the group."
+      },
+      "tables": {
+        "username": "Username",
+        "fullName": "Full Name",
+        "role": "Role",
+        "memberSince": "Member Since",
+        "actions": "Actions",
+        "invitedBy": "Invited By",
+        "invitationDate": "Invitation Date",
+        "members": "Members",
+        "pendingInvitations": "Invitations"
+      }
     }
   },
   "settings": {
@@ -433,7 +499,8 @@
       "invalid": "Invalid value.",
       "duplicateRecipe": "A recipe with this name already exists.",
       "emailAlreadyInUse": "This email is already in use.",
-      "usernameAlreadyInUse": "This username is already in use."
+      "usernameAlreadyInUse": "This username is already in use.",
+      "groupNameAlreadyInUse": "A group with this name already exists."
     }
   }
 }
