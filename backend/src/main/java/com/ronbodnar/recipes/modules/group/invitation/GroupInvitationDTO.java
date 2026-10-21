@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record GroupInvitationDTO(
-        UUID invitationCode,
+        UUID id,
         String invitedUsername,
         UUID invitedProfileImageId,
         String invitedByUsername,

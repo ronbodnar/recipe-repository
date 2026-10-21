@@ -59,7 +59,7 @@ export class GroupService {
   }
 
   inviteMember(groupId: number, usernameOrEmail: string): Observable<void> {
-    return this.fetchApi.fetch<void>(`groups/${groupId}/members/invite`, {
+    return this.fetchApi.fetch<void>(`groups/${groupId}/invitations`, {
       method: 'POST',
       requestBody: {
         usernameOrEmail,
@@ -67,8 +67,8 @@ export class GroupService {
     });
   }
 
-  respondToInvite(groupId: number, inviteCode: string, accept: boolean): Observable<void> {
-    return this.fetchApi.fetch<void>(`groups/${groupId}/invitations/${inviteCode}/${accept}`, {
+  respondToInvitation(groupId: number, invitationId: string, accept: boolean): Observable<void> {
+    return this.fetchApi.fetch<void>(`groups/${groupId}/invitations/${invitationId}/${accept}`, {
       method: 'POST',
     });
   }

@@ -27,6 +27,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -71,6 +72,10 @@ public class GroupService {
     @Transactional(readOnly = true)
     public Page<GroupInvitationDTO> getInvitationsById(Long groupId, Pageable pageable) {
         return groupInvitationRepository.findByGroupId(groupId, pageable).map(GroupInvitationDTO::from);
+    }
+
+    public List<Group> getAllUserGroups(Long userId) {
+        return groupRepository.findAllWithUserId(userId);
     }
 
     public Page<GroupSummaryDTO> getGroups(
@@ -168,36 +173,37 @@ public class GroupService {
         Group group = groupRepository.findById(groupId).orElseThrow(() ->
                 new BusinessException(ErrorCode.GROUP_NOT_FOUND));
 
-        // Avoid sending duplicate invitations when the user is already a member
         if (group.isMember(invitedUser.getId())) {
-            log.info("Invited user is already part of the same group.");
-            return;
+            throw new BusinessException(ErrorCode.DUPLICATE_GROUP_INVITE);
+        }
+
+        if (groupInvitationRepository.hasPendingInvitation(invitedUser.getEmail())) {
+            throw new BusinessException(ErrorCode.DUPLICATE_GROUP_INVITE);
         }
 
         String inviterName = inviter.getFullName() == null ? inviter.getUsername() : inviter.getFullName();
-        UUID invitationToken = UUID.randomUUID();
 
         GroupInvitation invitation = new GroupInvitation();
         invitation.setGroup(group);
         invitation.setInvitedBy(inviter);
         invitation.setInvitedUser(invitedUser);
-        invitation.setId(invitationToken);
         invitation.setStatus(GroupInvitationStatus.PENDING);
 
-        groupInvitationRepository.saveAndFlush(invitation);
+        GroupInvitation savedInvitation = groupInvitationRepository.saveAndFlush(invitation);
 
         eventPublisher.publishEvent(
-                new GroupInvitationEvent(invitedUser.getEmail(), group.getId(), group.getName(), inviterName, invitationToken)
+                new GroupInvitationEvent(invitedUser.getEmail(), group.getId(), group.getName(), inviterName, savedInvitation.getId())
         );
     }
 
     @Transactional
-    public void respondToInvite(UUID inviteCode, boolean accepted, Long authUserId) {
+    public void respondToInvitation(UUID inviteCode, boolean accepted, Long authUserId) {
+        System.out.println("Invite code:" + inviteCode);
         GroupInvitation invitation = groupInvitationRepository.findById(inviteCode).orElseThrow(() ->
                 new BusinessException(ErrorCode.INVALID_GROUP_INVITE_CODE));
 
         if (!authUserId.equals(invitation.getInvitedUser().getId())) {
-            throw new BusinessException(ErrorCode.INVALID_GROUP_INVITE_CODE);
+            throw new BusinessException(ErrorCode.NOT_INVITE_CODE_USER);
         }
 
         if (invitation.getStatus() != GroupInvitationStatus.PENDING) {
@@ -214,12 +220,15 @@ public class GroupService {
         }
     }
 
-    public void cancelInvite(UUID inviteCode, Long authUserId) {
+    @Transactional
+    public void cancelInvitation(UUID inviteCode, Long authUserId) {
         GroupInvitation invitation = groupInvitationRepository.findById(inviteCode).orElseThrow(() ->
                 new BusinessException(ErrorCode.INVALID_GROUP_INVITE_CODE));
 
-        if (!authUserId.equals(invitation.getInvitedBy().getId())
-                || !invitation.getGroup().getOwnerMember().getUserAccount().getId().equals(authUserId)) {
+        boolean userIsInviter = authUserId.equals(invitation.getInvitedBy().getId());
+        boolean userIsOwner = invitation.getGroup().getOwnerMember().getUserAccount().getId().equals(authUserId);
+
+        if (!userIsInviter || !userIsOwner) {
             throw new BusinessException(ErrorCode.INVALID_GROUP_INVITE_CODE);
         }
 

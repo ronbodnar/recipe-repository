@@ -55,6 +55,7 @@
     "myRecipes": "My Recipes",
     "addRecipe": "Add Recipe",
     "discoverRecipes": "Discover Recipes",
+    "groupRecipes": "Group Recipes",
     "groups": "Groups",
     "myGroups": "My Groups",
     "addGroup": "Add Group",
@@ -224,6 +225,16 @@
           "empty": "There are no discover recipes available at the moment.",
           "clickToAdd": "Click on the \"+\" button in the bottom right corner and set the visibility to 'Public' to create a public recipe."
         }
+      },
+      "groupRecipes": {
+        "title": "Group Recipes",
+        "loading": "Loading group recipes...",
+        "errorLoading": "Error loading group recipes. Please try again.",
+        "noRecipes": {
+          "title": "No Group Recipes Found",
+          "empty": "There are no group recipes available at the moment.",
+          "clickToAdd": "Click on the \"+\" button in the bottom right corner and set the visibility to 'Group' to create a group recipe."
+        }
       }
     },
     "details": {
@@ -322,7 +333,8 @@
     "invite": {
       "title": "Group Invitation",
       "processing": "Processing your response...",
-      "error": "Unable to respond to this invitation. It may have expired or been withdrawn."
+      "error": "Unable to respond to this invitation. It may have expired or been withdrawn.",
+      "notInviteCodeUser": "Unable to respond to this invitation. You are not logged into the correct user account."
     },
     "notFound": {
       "title": "Group Not Found",
@@ -386,7 +398,7 @@
       "updatedAt": "Last Modified On",
       "editButton": "Edit Group",
       "deleteButton": "Delete Group",
-      "addMemberButton": "Add Member",
+      "inviteMemberButton": "Invite Member",
       "deleteConfirmation": {
         "title": "Delete Group",
         "message": "Are you sure you want to delete this group?<br /><br /><strong>This action is permanent and cannot be undone.</strong>"

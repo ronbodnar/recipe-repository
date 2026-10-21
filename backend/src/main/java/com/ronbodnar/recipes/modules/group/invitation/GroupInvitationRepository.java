@@ -17,4 +17,11 @@ public interface GroupInvitationRepository extends JpaRepository<GroupInvitation
     """)
     Page<GroupInvitation> findByGroupId(Long groupId, Pageable pageable);
 
+    @Query("""
+        SELECT COUNT(g.id) > 0
+        FROM GroupInvitation g
+        WHERE g.invitedUser.email = :email AND g.status = 'PENDING'
+    """)
+    boolean hasPendingInvitation(String email);
+
 }

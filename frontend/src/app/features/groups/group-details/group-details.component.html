@@ -71,46 +71,32 @@
       </div>
     </section>
 
-    <!-- Members -->
-    <section>
-      <div class="flex justify-between">
-        <div class="flex items-center gap-2">
-          <mat-icon class="text-primary!">group</mat-icon>
-          <h2 class="text-lg font-semibold text-foreground">
-            {{ 'groups.details.members' | translate }}
-          </h2>
-        </div>
-
-        @if (isGroupOwner()) {
-          <div class="flex items-center gap-2">
+    <mat-tab-group>
+      <mat-tab label="Members">
+        <div class="flex justify-end py-4">
+          @if (isGroupOwner()) {
             <app-button
               color="background"
               size="sm"
               classList="border-border/40!"
               icon="person_add"
-              label="groups.details.addMemberButton"
+              label="groups.details.inviteMemberButton"
               (click)="promptInviteMember()"
             />
-          </div>
-        }
-      </div>
-
-      <app-paginated-table [tableConfigSignal]="tableConfig" />
-    </section>
-
-    <!-- Invitations -->
-    <section class="mt-10">
-      <div class="flex justify-between">
-        <div class="flex items-center gap-2">
-          <mat-icon class="text-primary!">more_time</mat-icon>
-          <h2 class="text-lg font-semibold text-foreground">
-            {{ 'groups.details.pendingInvitations' | translate }}
-          </h2>
+          }
         </div>
-      </div>
 
-      <app-paginated-table [tableConfigSignal]="invitationTableConfig" />
-    </section>
+        <app-paginated-table [tableConfigSignal]="tableConfig" />
+      </mat-tab>
+
+      <mat-tab label="Invitations">
+        <div class="py-4">
+          <!-- Render an empty state when there are no invitations.
+           Otherwise, show the existing invitation table. -->
+          <app-paginated-table [tableConfigSignal]="invitationTableConfig" />
+        </div>
+      </mat-tab>
+    </mat-tab-group>
   </app-fluid-container>
 } @else {
   <app-group-not-found />

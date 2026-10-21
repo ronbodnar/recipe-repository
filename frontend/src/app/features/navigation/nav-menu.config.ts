@@ -35,6 +35,12 @@ export const getNavItems = (): NavItem[] => {
     ...(featureFlags.isFeatureEnabled('groups')
       ? [
           {
+            sectionName: 'groupRecipes',
+            icon: 'group_work',
+            label: 'navigation.groupRecipes',
+            route: '/app/recipes/groups',
+          },
+          {
             sectionName: 'myGroups',
             icon: 'group',
             label: 'navigation.myGroups',

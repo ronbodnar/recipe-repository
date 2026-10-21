@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
     boolean existsByName(String name);
@@ -86,4 +88,13 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             String searchValue,
             Pageable pageable
     );
+
+    @Query("""
+        SELECT g
+        FROM Group g
+        JOIN GroupMember gm ON gm.group.id = g.id
+        JOIN FETCH g.members
+        WHERE gm.userAccount.id = :userId
+    """)
+    List<Group> findAllWithUserId(Long userId);
 }

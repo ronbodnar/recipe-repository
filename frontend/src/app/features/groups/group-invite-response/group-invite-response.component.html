@@ -6,9 +6,9 @@
       {{ 'groups.invite.title' | translate }}
     </h1>
 
-    @if (failed()) {
+    @if (errorMessage()) {
       <p class="m-0 text-center text-sm text-danger">
-        {{ 'groups.invite.error' | translate }}
+        {{ 'groups.invite.' + errorMessage() | translate }}
       </p>
     } @else {
       <p class="m-0 text-center text-sm text-muted">

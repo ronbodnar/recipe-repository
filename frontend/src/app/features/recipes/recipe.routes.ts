@@ -11,6 +11,7 @@ export const routes: Routes = [
       source: 'myRecipes',
     },
   },
+
   {
     path: 'discover',
     title: 'recipes.list.discover.title',
@@ -20,6 +21,17 @@ export const routes: Routes = [
       source: 'discover',
     },
   },
+
+  {
+    path: 'groups',
+    title: 'recipes.list.groupRecipes.title',
+    loadComponent: () =>
+      import('./recipe-list/recipe-list.component').then((m) => m.RecipeListComponent),
+    data: {
+      source: 'groupRecipes',
+    },
+  },
+
   {
     path: 'edit/:id',
     title: (route: ActivatedRouteSnapshot) => {
@@ -36,6 +48,7 @@ export const routes: Routes = [
       };
     },
   },
+
   {
     path: 'details/:id',
     loadComponent: () =>

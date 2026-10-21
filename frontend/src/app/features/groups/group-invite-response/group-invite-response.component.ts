@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { logError } from '@shared/utils/logging';
 import { GroupService } from '../group.service';
+import { ApiError } from '@core/models/api-error.model';
+import { ErrorCode } from '@core/interfaces/error-code.interface';
 
 @Component({
   selector: 'app-group-invite-response',
@@ -16,7 +18,7 @@ export class GroupInviteResponseComponent {
   private readonly router = inject(Router);
   private readonly groupService = inject(GroupService);
 
-  readonly failed = signal(false);
+  readonly errorMessage = signal('');
 
   constructor() {
     const groupId = Number(this.route.snapshot.paramMap.get('id'));
@@ -28,13 +30,13 @@ export class GroupInviteResponseComponent {
     console.log('Response', response);
 
     if (!groupId || !inviteCode || (response !== 'accept' && response !== 'decline')) {
-      this.failed.set(true);
+      this.errorMessage.set('error');
       return;
     }
 
     const accept = response === 'accept';
 
-    this.groupService.respondToInvite(groupId, inviteCode, accept).subscribe({
+    this.groupService.respondToInvitation(groupId, inviteCode, accept).subscribe({
       next: () => {
         if (accept) {
           this.router.navigate(['/app/groups/details', groupId], { replaceUrl: true });
@@ -42,9 +44,13 @@ export class GroupInviteResponseComponent {
           this.router.navigate(['/'], { replaceUrl: true });
         }
       },
-      error: (err) => {
+      error: (err: ApiError) => {
         logError('Failed to respond to group invite:', err);
-        this.failed.set(true);
+        if (err.code === ErrorCode.NOT_INVITE_CODE_USER) {
+          this.errorMessage.set('notInviteCodeUser');
+        } else {
+          this.errorMessage.set('error');
+        }
       },
     });
   }

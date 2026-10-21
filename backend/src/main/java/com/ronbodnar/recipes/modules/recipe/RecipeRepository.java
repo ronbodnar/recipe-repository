@@ -30,6 +30,31 @@ public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
     Page<Recipe> findAllPublicRecipes(Pageable pageable);
 
     @Query("""
+        SELECT DISTINCT r
+        FROM Recipe r
+        JOIN GroupMember gm ON gm.userAccount.id = r.authorId
+        JOIN Group g ON g.id = gm.group.id
+        LEFT JOIN FETCH r.imageIds
+        WHERE r.visibility = 'GROUP'
+            AND EXISTS (
+                SELECT m.id
+                FROM g.members m
+                WHERE m.userAccount.id = :userId
+            )
+    """)
+    Page<Recipe> findAllGroupRecipes(Long userId, Pageable pageable);
+
+    @Query("""
+        SELECT DISTINCT r
+        FROM Recipe r
+        JOIN GroupMember gm ON gm.userAccount.id = r.authorId
+        LEFT JOIN FETCH r.imageIds
+        WHERE r.visibility = 'GROUP'
+          AND gm.group.id = :groupId
+    """)
+    Page<Recipe> findRecipesForGroup(Long groupId, Pageable pageable);
+
+    @Query("""
         SELECT r.imageIds
         FROM Recipe r
         JOIN r.imageIds

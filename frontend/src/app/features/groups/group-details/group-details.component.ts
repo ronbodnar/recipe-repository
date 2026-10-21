@@ -14,7 +14,7 @@ import {
   TableColumn,
 } from '@shared/ui/paginated-table/paginated-table.config';
 import { catchError, tap } from 'rxjs';
-import { logError } from '@shared/utils/logging';
+import { logDebug, logError } from '@shared/utils/logging';
 import { TableUsernameAvatarComponent } from '@shared/ui/paginated-table/components/table-username-avatar/table-username-avatar.component';
 import { GroupNotFoundComponent } from '../components/group-not-found/group-not-found.component';
 import { ButtonComponent } from '@shared/ui/button/button.component';
@@ -26,6 +26,8 @@ import {
   RowAction,
   TableRowActionsComponent,
 } from '@shared/ui/paginated-table/components/table-row-actions/table-row-actions.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { RecipeService } from '@features/recipes/recipe.service';
 
 @Component({
   selector: 'app-group-details',
@@ -35,6 +37,7 @@ import {
     DatePipe,
     FullPageLoaderComponent,
     MatIconModule,
+    MatTabsModule,
     PaginatedTableComponent,
     GroupNotFoundComponent,
     ButtonComponent,
@@ -51,15 +54,16 @@ export class GroupDetailsComponent {
   private authService = inject(AuthService);
   private dialogService = inject(DialogService);
   private snackbarService = inject(SnackbarService);
+  private recipeService = inject(RecipeService);
 
   private _group = signal<Group | null>(null);
-  private _members = signal<GroupMember[]>([]);
+  private _invitations = signal<GroupInvitation[]>([]);
   private _loading = signal(true);
   private _refreshMemberTable = signal(0);
   private _refreshInvitationTable = signal(0);
 
   readonly group = this._group.asReadonly();
-  readonly members = this._members.asReadonly();
+  readonly invitations = this._invitations.asReadonly();
   readonly loading = this._loading.asReadonly();
 
   readonly isGroupOwner = computed(() => {
@@ -83,7 +87,7 @@ export class GroupDetailsComponent {
       defaultSort: { property: 'userAccount.username', direction: 'asc' },
       fetchData: (params: Record<string, unknown>) =>
         this.groupService.loadGroupMembers(this._group()!.id, params).pipe(
-          tap((members) => console.log('Loaded members', members)),
+          tap((members) => logDebug('Loaded members', members)),
           catchError((error) => {
             console.log('Error loading groups:', error);
             throw error;
@@ -127,7 +131,7 @@ export class GroupDetailsComponent {
           property: 'actions',
           filterable: false,
           orderable: false,
-          visibile: this.isGroupOwner(),
+          visible: this.isGroupOwner(),
           className: 'text-center',
           width: '10%',
           angularComponent: TableRowActionsComponent,
@@ -237,6 +241,15 @@ export class GroupDetailsComponent {
       return;
     }
 
+    this.recipeService.loadRecipesForGroup(Number(groupId)).subscribe({
+      next: (recipes) => {
+        console.log('Loaded recipes for group:', recipes);
+      },
+      error: (error) => {
+        logError('Error loading recipes for group:', error);
+      },
+    });
+
     this.groupService.loadGroup(Number(groupId)).subscribe({
       next: (group) => {
         console.log('Loaded group:', group);
@@ -333,17 +346,13 @@ export class GroupDetailsComponent {
       return;
     }
 
-    this._loading.set(true);
-
     this.groupService.removeMember(group.id, memberId).subscribe({
       next: () => {
-        this._loading.set(false);
         this._refreshMemberTable.update((v) => v + 1);
         console.log(`Removed group member with ID: ${memberId}`);
       },
       error: (error) => {
         console.log('Error removing group member:', error);
-        this._loading.set(false);
       },
     });
   }
@@ -374,17 +383,14 @@ export class GroupDetailsComponent {
       return;
     }
 
-    this._loading.set(true);
-
     this.groupService.cancelInvitation(group.id, invitationId).subscribe({
       next: () => {
-        this._loading.set(false);
         this._refreshInvitationTable.update((v) => v + 1);
         console.log(`Cancelled invitation with ID: ${invitationId}`);
       },
       error: (error) => {
         console.log('Error cancelling invitation:', error);
-        this._loading.set(false);
+        this.snackbarService.openSnackBar(SnackbarType.ERROR, 'ok');
       },
     });
   }
