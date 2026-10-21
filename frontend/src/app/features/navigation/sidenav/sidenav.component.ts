@@ -126,11 +126,6 @@ export class SidenavComponent implements OnDestroy {
   }
 
   open(ignorePreference = false): void {
-    console.log('Opening sidenav, ignorePreference:', ignorePreference);
-    console.log(
-      'Current sidenav preference:',
-      this.storageService.getPreference<boolean>('sidenav.isOpen'),
-    );
     const shouldOpen =
       this.storageService.getPreference<boolean>('sidenav.isOpen') || ignorePreference;
     this._isSidenavOpen.set(shouldOpen);

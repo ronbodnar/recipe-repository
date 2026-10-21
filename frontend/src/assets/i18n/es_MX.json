@@ -67,8 +67,7 @@
     "hasErrors": "Hay errores en el formulario. Corrígelos e inténtalo de nuevo."
   },
   "landing": {
-    "subtitle": "Organiza tus recetas privadas para cocinar dondequiera que vayas.",
-    "comingSoon": "Próximamente en tu cocina...",
+    "subtitle": "Recetas privadas para cocinar dondequiera que vayas.",
     "privateRecipeTitle": "Recetas privadas",
     "privateRecipeSubtitle": "Mantén tus recetas personales privadas y organizadas.",
     "ingredientsTitle": "Buscar ingredientes",

@@ -25,10 +25,6 @@ export class GroupInviteResponseComponent {
     const inviteCode = this.route.snapshot.paramMap.get('inviteCode');
     const response = this.route.snapshot.queryParamMap.get('response');
 
-    console.log('groupID', groupId);
-    console.log('invite code', inviteCode);
-    console.log('Response', response);
-
     if (!groupId || !inviteCode || (response !== 'accept' && response !== 'decline')) {
       this.errorMessage.set('error');
       return;

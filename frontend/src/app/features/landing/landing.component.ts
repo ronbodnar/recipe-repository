@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '@shared/ui/button/button.component';
+import { environment } from '@env';
 
 @Component({
   selector: 'app-landing',
@@ -10,6 +11,8 @@ import { ButtonComponent } from '@shared/ui/button/button.component';
   styleUrl: './landing.component.css',
 })
 export class LandingComponent {
+  environmentName = environment.name;
+
   readonly cards = [
     {
       icon: 'lock',

@@ -67,8 +67,7 @@
     "hasErrors": "There are errors in the form. Please correct them and try again."
   },
   "landing": {
-    "subtitle": "Organize your private recipes for on-the-go cooking.",
-    "comingSoon": "Coming soon to your kitchen...",
+    "subtitle": "Private recipes for on-the-go cooking.",
     "privateRecipeTitle": "Private Recipes",
     "privateRecipeSubtitle": "Keep your personal recipes private and organized.",
     "ingredientsTitle": "Find Ingredients",

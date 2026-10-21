@@ -89,7 +89,7 @@ export class GroupDetailsComponent {
         this.groupService.loadGroupMembers(this._group()!.id, params).pipe(
           tap((members) => logDebug('Loaded members', members)),
           catchError((error) => {
-            console.log('Error loading groups:', error);
+            logDebug('Error loading groups:', error);
             throw error;
           }),
         ),
@@ -164,9 +164,9 @@ export class GroupDetailsComponent {
       defaultSort: { property: 'invitedUser.username', direction: 'asc' },
       fetchData: (params: Record<string, unknown>) =>
         this.groupService.loadGroupInvitations(this._group()!.id, params).pipe(
-          tap((members) => console.log('Loaded invitations', members)),
+          tap((members) => logDebug('Loaded invitations', members)),
           catchError((error) => {
-            console.log('Error loading groups:', error);
+            logDebug('Error loading groups:', error);
             throw error;
           }),
         ),
@@ -243,7 +243,7 @@ export class GroupDetailsComponent {
 
     this.recipeService.loadRecipesForGroup(Number(groupId)).subscribe({
       next: (recipes) => {
-        console.log('Loaded recipes for group:', recipes);
+        logDebug('Loaded recipes for group:', recipes);
       },
       error: (error) => {
         logError('Error loading recipes for group:', error);
@@ -252,12 +252,12 @@ export class GroupDetailsComponent {
 
     this.groupService.loadGroup(Number(groupId)).subscribe({
       next: (group) => {
-        console.log('Loaded group:', group);
+        logDebug('Loaded group:', group);
         this._group.set(group);
         this._loading.set(false);
       },
       error: (error) => {
-        console.log('Error loading group:', error);
+        logDebug('Error loading group:', error);
         this._loading.set(false);
       },
     });
@@ -349,10 +349,10 @@ export class GroupDetailsComponent {
     this.groupService.removeMember(group.id, memberId).subscribe({
       next: () => {
         this._refreshMemberTable.update((v) => v + 1);
-        console.log(`Removed group member with ID: ${memberId}`);
+        logDebug(`Removed group member with ID: ${memberId}`);
       },
       error: (error) => {
-        console.log('Error removing group member:', error);
+        logDebug('Error removing group member:', error);
       },
     });
   }
@@ -371,7 +371,7 @@ export class GroupDetailsComponent {
         this.router.navigate(['/app/groups/list']);
       },
       error: (error) => {
-        console.log('Error deleting group:', error);
+        logDebug('Error deleting group:', error);
         this._loading.set(false);
       },
     });
@@ -386,14 +386,14 @@ export class GroupDetailsComponent {
     this.groupService.cancelInvitation(group.id, invitationId).subscribe({
       next: () => {
         this._refreshInvitationTable.update((v) => v + 1);
-        console.log(`Cancelled invitation with ID: ${invitationId}`);
+        logDebug(`Cancelled invitation with ID: ${invitationId}`);
         this.snackbarService.openSnackBar(
           SnackbarType.SUCCESS,
           'groups.details.cancelInvitation.success',
         );
       },
       error: (error) => {
-        console.log('Error cancelling invitation:', error);
+        logDebug('Error cancelling invitation:', error);
         this.snackbarService.openSnackBar(
           SnackbarType.ERROR,
           'groups.details.cancelInvitation.error',

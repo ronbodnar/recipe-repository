@@ -1,31 +1,40 @@
 <div
   class="min-h-screen xl:h-screen bg-background flex items-center justify-center p-6 select-none"
 >
-  <main class="min-h-full flex flex-col gap-20 text-center max-w-4xl">
-    <div class="flex flex-col items-center gap-2 xl:mt-20">
-      <mat-icon class="text-primary! text-5xl! size-12!">restaurant_menu</mat-icon>
+  <main class="min-h-full flex flex-col gap-15 text-center max-w-4xl">
+    <div class="flex flex-col items-center gap-2 xl:mt-10">
+      @if (environmentName === 'family') {
+        <img
+          src="assets/images/full-logo.png"
+          width="200"
+          height="200"
+          [alt]="'app.name' | translate"
+        />
+      } @else {
+        <mat-icon class="text-primary! text-5xl! size-12!">restaurant_menu</mat-icon>
+      }
 
       <h1 class="text-4xl font-bold my-2">{{ 'app.name' | translate }}</h1>
 
       <p class="text-muted text-lg my-2">
         {{ 'landing.subtitle' | translate }}
       </p>
-    </div>
 
-    <div class="flex justify-center gap-3">
-      <app-button
-        color="primary"
-        size="lg"
-        label="landing.primaryCtaButton"
-        routerLink="/app/auth/register"
-      />
+      <div class="flex justify-center gap-3 my-2">
+        <app-button
+          color="primary"
+          size="lg"
+          label="landing.primaryCtaButton"
+          routerLink="/app/auth/register"
+        />
 
-      <app-button
-        color="secondary"
-        size="lg"
-        label="landing.secondaryCtaButton"
-        routerLink="/app/auth/login"
-      />
+        <app-button
+          color="secondary"
+          size="lg"
+          label="landing.secondaryCtaButton"
+          routerLink="/app/auth/login"
+        />
+      </div>
     </div>
 
     <div class="grid xl:grid-cols-3 gap-8">

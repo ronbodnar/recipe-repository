@@ -54,11 +54,11 @@
                 }
               ]
             },
-            "bodnar": {
+            "family": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.bodnar.ts"
+                  "with": "src/environments/environment.family.ts"
                 }
               ]
             }
@@ -74,8 +74,8 @@
             "development": {
               "buildTarget": "frontend:build:development"
             },
-            "bodnar": {
-              "buildTarget": "frontend:build:bodnar"
+            "family": {
+              "buildTarget": "frontend:build:family"
             }
           },
           "defaultConfiguration": "development"

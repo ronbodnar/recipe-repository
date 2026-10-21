@@ -39,8 +39,6 @@ export class ToolbarComponent {
   toggleSidenav() {
     this.snav.toggle();
     const isOpened = this.snav.opened;
-    console.log('Toggling sidenav, new state isOpened:', isOpened);
     this.storageService.setPreference('sidenav.isOpen', isOpened);
-    console.log('Current sidenav preference:', this.storageService.getPreference('sidenav.isOpen'));
   }
 }
