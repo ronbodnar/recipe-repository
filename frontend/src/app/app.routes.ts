@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LandingComponent } from './features/landing/landing.component';
 import { guestGuard } from '@core/guards/guest.guard';
 import { authGuard } from '@core/guards/auth.guard';
+import { environment } from '@env';
 
 export const routes: Routes = [
   {
@@ -13,11 +14,15 @@ export const routes: Routes = [
     path: 'app/auth',
     loadChildren: () => import('./features/auth/auth.routes').then((m) => m.routes),
   },
-  {
-    path: 'app/groups',
-    canActivate: [authGuard],
-    loadChildren: () => import('./features/groups/group.routes').then((m) => m.routes),
-  },
+  ...(environment.enableGroups
+    ? [
+        {
+          path: 'app/groups',
+          canActivate: [authGuard],
+          loadChildren: () => import('./features/groups/group.routes').then((m) => m.routes),
+        },
+      ]
+    : []),
   {
     path: 'app/users',
     canActivate: [authGuard],

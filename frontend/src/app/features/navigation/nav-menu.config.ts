@@ -1,11 +1,10 @@
 import { AuthService } from '@features/auth/auth.service';
 import { NavItem } from './nav-item.interface';
 import { inject } from '@angular/core';
-import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { environment } from '@env';
 
 export const getNavItems = (): NavItem[] => {
   const authService = inject(AuthService);
-  const featureFlags = inject(FeatureFlagService);
 
   return [
     {
@@ -21,7 +20,7 @@ export const getNavItems = (): NavItem[] => {
       route: '/app/recipes/edit/new',
     },
 
-    ...(featureFlags.isFeatureEnabled('discover')
+    ...(environment.enableDiscover
       ? [
           {
             sectionName: 'discoverRecipes',
@@ -32,7 +31,7 @@ export const getNavItems = (): NavItem[] => {
         ]
       : []),
 
-    ...(featureFlags.isFeatureEnabled('groups')
+    ...(environment.enableGroups
       ? [
           {
             sectionName: 'groupRecipes',

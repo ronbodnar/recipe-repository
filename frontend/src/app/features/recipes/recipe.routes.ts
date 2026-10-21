@@ -1,5 +1,6 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Routes } from '@angular/router';
+import { environment } from '@env';
 
 export const routes: Routes = [
   {
@@ -12,15 +13,19 @@ export const routes: Routes = [
     },
   },
 
-  {
-    path: 'discover',
-    title: 'recipes.list.discover.title',
-    loadComponent: () =>
-      import('./recipe-list/recipe-list.component').then((m) => m.RecipeListComponent),
-    data: {
-      source: 'discover',
-    },
-  },
+  ...(environment.enableDiscover
+    ? [
+        {
+          path: 'discover',
+          title: 'recipes.list.discover.title',
+          loadComponent: () =>
+            import('./recipe-list/recipe-list.component').then((m) => m.RecipeListComponent),
+          data: {
+            source: 'discover',
+          },
+        },
+      ]
+    : []),
 
   {
     path: 'groups',

@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { environment } from '@env';
 import {
   Event,
   NavigationCancel,
@@ -10,6 +11,7 @@ import {
 } from '@angular/router';
 import { AppVersionService } from '@core/services/app-version.service';
 import { SidenavComponent } from '@features/navigation/sidenav/sidenav.component';
+import { TranslateService } from '@ngx-translate/core';
 import { FullPageLoaderComponent } from '@shared/ui/full-page-loader.component';
 
 @Component({
@@ -35,6 +37,7 @@ export class AppComponent {
   loaderTimeoutRef: ReturnType<typeof setTimeout> | undefined;
 
   private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
   private readonly appVersionService = inject(AppVersionService);
 
   ngOnInit(): void {
@@ -43,6 +46,8 @@ export class AppComponent {
 
     console.log('Subscribing to router events...');
     this.router.events.subscribe((event: Event) => this.interceptNavigation(event));
+
+    this.translate.set('app.name', environment.appName);
 
     console.log('Application initialized');
   }

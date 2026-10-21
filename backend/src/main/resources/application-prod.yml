@@ -5,6 +5,10 @@ app:
 
   password-reset-url: https://recipes.ronbodnar.com/app/auth/reset-password?token=
 
+  groups:
+    enabled: true
+    invitation-url: https://recipes.ronbodnar.com/app/groups/GROUP_ID/invite/
+
 spring:
   jpa:
     show-sql: false

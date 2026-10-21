@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormArray, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
+import { environment } from '@env';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -53,7 +53,6 @@ import { DialogService } from '@shared/ui/dialog/dialog.service';
 import { logDebug, logError } from '@shared/utils/logging';
 import { AuthService } from '@features/auth/auth.service';
 import { SnackbarService, SnackbarType } from '@shared/ui/snackbar.component';
-import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
   selector: 'app-edit-recipe',
@@ -64,7 +63,6 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
     MatCardModule,
     MatChipsModule,
     MatIconModule,
-    MatButtonModule,
     MatTabsModule,
     MatExpansionModule,
     CdkDropList,
@@ -90,7 +88,6 @@ export class EditRecipeComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly snackbar = inject(SnackbarService);
   private readonly authService = inject(AuthService);
-  private readonly featureFlags = inject(FeatureFlagService);
   private readonly dialogService = inject(DialogService);
   private readonly translate = inject(TranslateService);
   private readonly mediaService = inject(MediaService);
@@ -173,7 +170,7 @@ export class EditRecipeComponent {
   })).sort((a, b) => a.label.localeCompare(b.label));
 
   visibilityOptions = VISIBILITY_TYPES.filter(
-    (visibility) => this.featureFlags.isFeatureEnabled('groups') || visibility !== 'GROUP',
+    (visibility) => environment.enableGroups || visibility !== 'GROUP',
   )
     .map((visibility) => ({
       value: visibility,

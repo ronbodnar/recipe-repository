@@ -1,6 +1,5 @@
 {
   "app": {
-    "name": "Recipe Repository",
     "version": "Version {{version}}",
     "copyright": "All rights reserved.",
     "loadingMessage": "Almost there..."
