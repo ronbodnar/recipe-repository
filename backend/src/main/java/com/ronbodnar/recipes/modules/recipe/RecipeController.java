@@ -51,6 +51,12 @@ public class RecipeController {
         return recipeService.getDiscoverRecipes(pageable);
     }
 
+    @GetMapping("/search")
+    public Page<RecipeSummaryDTO> searchRecipes(@RequestParam("searchValue") String query, Pageable pageable) {
+        System.out.println("Searching for: " + query);
+        return null;
+    }
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@recipeSecurityService.isOwner(#id, authentication)")
