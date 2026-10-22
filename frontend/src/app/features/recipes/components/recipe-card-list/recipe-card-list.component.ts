@@ -18,6 +18,7 @@ export class RecipeCardListComponent {
 
   readonly source = input.required<RecipeListSource>();
   readonly recipes = input.required<RecipeSummary[]>();
+  readonly searchValue = input<string | null>(null);
 
   readonly recipeImageUrls = (imageIds: string[]) =>
     imageIds.map((imageId) => this.imageService.getImageUrl(imageId));

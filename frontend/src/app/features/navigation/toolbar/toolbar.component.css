@@ -1,5 +1,16 @@
-::ng-deep .mat-mdc-menu-item .mat-mdc-menu-submenu-icon {
-  padding: 0;
-  margin: 0;
-  rotate: 180deg;
+:host ::ng-deep .toolbar-search-field .mat-mdc-form-field-infix {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: auto !important;
+  min-width: 0;
+}
+
+:host ::ng-deep .toolbar-search-field .mat-mdc-form-field-infix input[matInput] {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+:host ::ng-deep .toolbar-search-field .nmf-mat-suffix-slot {
+  flex: 0 0 auto;
 }

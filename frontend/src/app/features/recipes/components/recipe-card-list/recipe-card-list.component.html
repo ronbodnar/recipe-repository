@@ -4,7 +4,7 @@
       <article
         class="group flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border border-border/40 bg-background-alt shadow-sm transition-all duration-200 hover:border-primary/50 hover:-translate-y-1 hover:shadow-lg"
         [routerLink]="'/app/recipes/details/' + recipe.id"
-        [state]="{ source: source() }"
+        [state]="{ source: source(), searchValue: searchValue() }"
       >
         <div class="aspect-4/3 w-full overflow-hidden">
           <app-image-carousel

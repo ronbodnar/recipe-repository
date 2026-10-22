@@ -57,6 +57,7 @@ export class RecipeDetailsComponent {
   private readonly _deleting = signal(false);
   private readonly _hasError = signal(false);
   private readonly _source = signal<RecipeListSource | null>(null);
+  private readonly _searchValue = signal<string | null>(null);
   private readonly _selectedVariantIndex = signal<number | null>(null);
 
   readonly recipe = this._recipe.asReadonly();
@@ -135,14 +136,15 @@ export class RecipeDetailsComponent {
 
   constructor() {
     const state = this.router.currentNavigation()?.extras.state as
-      | { source?: RecipeListSource; recipe?: Recipe }
+      | { source?: RecipeListSource; searchValue?: string | null; recipe?: Recipe }
       | undefined;
 
-    const { source, recipe } = state ?? {};
+    const { source, searchValue, recipe } = state ?? {};
 
     if (source) {
       this._source.set(source);
     }
+    this._searchValue.set(searchValue ?? null);
 
     if (recipe) {
       this._recipe.set(recipe);
@@ -212,6 +214,12 @@ export class RecipeDetailsComponent {
   }
 
   goBack(): void {
+    const searchValue = this._searchValue();
+    if (searchValue) {
+      this.router.navigate(['/app/recipes/search'], { queryParams: { searchValue } });
+      return;
+    }
+
     this.router.navigate(
       this.source() === 'discover' ? ['/app/recipes/discover'] : ['/app/recipes/list'],
     );

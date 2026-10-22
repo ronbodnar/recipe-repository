@@ -28,6 +28,13 @@ export const routes: Routes = [
     : []),
 
   {
+    path: 'search',
+    title: 'recipes.search.title',
+    loadComponent: () =>
+      import('./recipe-search/recipe-search.component').then((m) => m.RecipeSearchComponent),
+  },
+
+  {
     path: 'groups',
     title: 'recipes.list.groupRecipes.title',
     loadComponent: () =>

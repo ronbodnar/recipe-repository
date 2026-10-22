@@ -118,6 +118,16 @@
     }
   },
   "recipes": {
+    "search": {
+      "title": "Buscar recetas",
+      "resultsFor": "Resultados para \"{{searchValue}}\"",
+      "prompt": "Busca recetas por título o ingrediente.",
+      "loading": "Buscando recetas...",
+      "error": "No se pudieron cargar los resultados. Inténtalo de nuevo.",
+      "retry": "Intentar de nuevo",
+      "noResultsTitle": "No se encontraron recetas",
+      "noResults": "No hay recetas que coincidan con \"{{searchValue}}\". Prueba otro título o ingrediente."
+    },
     "notFound": {
       "title": "Receta no encontrada",
       "message": "La receta que buscas no existe, es posible que haya sido eliminada o no tengas permiso para verla."
