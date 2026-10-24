@@ -27,6 +27,23 @@ export class RecipeService {
     });
   }
 
+  searchRecipes(
+    searchValue: string,
+    page: number,
+    size: number,
+    sort: string[] = ['id,desc'],
+  ): Observable<PaginatedResponse<RecipeSummary>> {
+    return this.fetchApi.fetchPaginatedData<RecipeSummary>('recipes/search', {
+      method: 'GET',
+      parameters: {
+        searchValue,
+        page,
+        size,
+        sort,
+      },
+    });
+  }
+
   loadDiscoverRecipes(
     page: number,
     size: number,

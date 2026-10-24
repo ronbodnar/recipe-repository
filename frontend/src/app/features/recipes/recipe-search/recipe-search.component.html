@@ -1,0 +1,53 @@
+<app-fluid-container size="xl" pageTitle="recipes.search.title">
+  <p subtitle class="mt-0 text-muted">
+    @if (query()) {
+      {{ 'recipes.search.resultsFor' | translate: { searchValue: query() } }}
+    } @else {
+      {{ 'recipes.search.prompt' | translate }}
+    }
+  </p>
+
+  @if (query()) {
+    @if (isLoading()) {
+      <app-scoped-loader [message]="'recipes.search.loading'" />
+    } @else if (hasError()) {
+      <section class="flex flex-col items-center gap-4 py-16 text-center" role="alert">
+        <mat-icon class="size-16! text-6xl! text-danger">error_outline</mat-icon>
+        <p class="m-0">{{ 'recipes.search.error' | translate }}</p>
+        <app-button
+          color="background"
+          icon="refresh"
+          [label]="'recipes.search.retry'"
+          (click)="loadPage(currentPage)"
+        />
+      </section>
+    } @else if (loadedRecipes().length === 0) {
+      <section class="flex flex-col items-center gap-3 py-16 text-center">
+        <mat-icon class="size-16! text-6xl! text-muted">search_off</mat-icon>
+        <h2 class="m-0 text-xl">{{ 'recipes.search.noResultsTitle' | translate }}</h2>
+        <p class="m-0 text-muted">
+          {{ 'recipes.search.noResults' | translate: { searchValue: query() } }}
+        </p>
+      </section>
+    } @else {
+      <div class="flex flex-col gap-4">
+        <app-recipe-card-list
+          [source]="'myRecipes'"
+          [searchValue]="query()"
+          [recipes]="loadedRecipes()"
+        />
+
+        <app-pagination
+          class="mt-8"
+          [currentPage]="currentPage"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="pageSizeOptions"
+          [totalItems]="totalRecipes()"
+          [totalPages]="totalPages()"
+          (pageChange)="loadPage($event)"
+          (pageSizeChange)="changePageSize($event)"
+        />
+      </div>
+    }
+  }
+</app-fluid-container>

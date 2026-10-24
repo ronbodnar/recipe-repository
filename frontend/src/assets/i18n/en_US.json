@@ -118,6 +118,16 @@
     }
   },
   "recipes": {
+    "search": {
+      "title": "Search Recipes",
+      "resultsFor": "Results for \"{{searchValue}}\"",
+      "prompt": "Search for recipe titles or ingredients.",
+      "loading": "Searching recipes...",
+      "error": "Couldn't load search results. Please try again.",
+      "retry": "Try again",
+      "noResultsTitle": "No recipes found",
+      "noResults": "No recipes matched \"{{searchValue}}\". Try another title or ingredient."
+    },
     "notFound": {
       "title": "Recipe Not Found",
       "message": "The recipe you're looking for doesn't exist, may have been deleted, or you may not have permission to view it."

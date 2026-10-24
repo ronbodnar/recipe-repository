@@ -29,6 +29,7 @@ public class RecipeService {
         this.imageService = imageService;
     }
 
+    @Transactional(readOnly = true)
     public Page<RecipeSummaryDTO> getAllSummaries(Long authorId, Pageable pageable) {
         Page<Recipe> recipes = recipeRepository.findAllByAuthorWithImages(
                 authorId,
@@ -38,20 +39,30 @@ public class RecipeService {
         return toSummaryPage(recipes);
     }
 
+    @Transactional(readOnly = true)
     public Page<RecipeSummaryDTO> getDiscoverRecipes(Pageable pageable) {
         Page<Recipe> recipes = recipeRepository.findAllPublicRecipes(pageable);
 
         return toSummaryPage(recipes);
     }
 
+    @Transactional(readOnly = true)
     public Page<RecipeSummaryDTO> getGroupRecipes(Long userId, Pageable pageable) {
         Page<Recipe> recipes = recipeRepository.findAllGroupRecipes(userId, pageable);
 
         return toSummaryPage(recipes);
     }
 
+    @Transactional(readOnly = true)
     public Page<RecipeSummaryDTO> getRecipesForGroup(Long groupId, Pageable pageable) {
         Page<Recipe> recipes = recipeRepository.findRecipesForGroup(groupId, pageable);
+
+        return toSummaryPage(recipes);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<RecipeSummaryDTO> searchRecipes(String query, Pageable pageable) {
+        Page<Recipe> recipes = recipeRepository.searchRecipes(query, pageable);
 
         return toSummaryPage(recipes);
     }
@@ -67,6 +78,7 @@ public class RecipeService {
         return RecipeDetailsDTO.from(recipe);
     }
 
+    @Transactional
     public void deleteById(UUID id) {
         List<UUID> imageIds = recipeRepository.findAllImageIdsForRecipeId(id);
 
@@ -160,7 +172,7 @@ public class RecipeService {
                         recipe.getId(),
                         recipe.getTitle(),
                         recipe.getDescription(),
-                        recipe.getImageIds()
+                        List.copyOf(recipe.getImageIds())
                 )
         );
     }

@@ -1,4 +1,4 @@
-<mat-toolbar class="px-4!">
+<mat-toolbar class="relative px-0!">
   <app-button
     icon="menu"
     size="xl"
@@ -13,4 +13,47 @@
   >
     {{ 'app.name' | translate }}
   </div>
+
+  <div class="flex flex-1 auto"></div>
+
+  @if (searchActive()) {
+    <div
+      class="absolute inset-0 z-10 flex w-full items-center gap-1 px-0! xl:inset-y-0 xl:right-0 xl:left-auto xl:w-[min(36rem,70vw)]"
+      (keydown.escape)="toggleSearch()"
+    >
+      <nmf-mat-text
+        class="toolbar-search-field min-w-0 flex-1 bg-background-alt"
+        [formControl]="searchControl"
+        placeholder="Search for titles or ingredients"
+        [autofocus]="true"
+        (keydown.enter)="onSearch()"
+      >
+        <app-button
+          nmfSuffix
+          icon="search"
+          size="md"
+          [color]="'transparent'"
+          [iconClassList]="['text-text!']"
+          [classList]="['p-0!']"
+          (click)="onSearch()"
+        ></app-button>
+      </nmf-mat-text>
+
+      <app-button
+        icon="close"
+        size="xl"
+        [color]="'transparent'"
+        [iconClassList]="['text-text!']"
+        (click)="toggleSearch()"
+      ></app-button>
+    </div>
+  } @else {
+    <app-button
+      icon="search"
+      size="xl"
+      [color]="'transparent'"
+      [iconClassList]="['text-text!']"
+      (click)="toggleSearch()"
+    ></app-button>
+  }
 </mat-toolbar>
