@@ -20,6 +20,7 @@ import { ImageCarouselComponent } from '@shared/ui/image-carousel/image-carousel
 import { RecipeNotFoundComponent } from '../components/recipe-not-found/recipe-not-found.component';
 import { RecipeListSource } from '../recipe-list/recipe-list.component';
 import { logDebug } from '@shared/utils/logging';
+import { scaleIngredient } from '@shared/utils/scale-ingredient';
 
 @Component({
   selector: 'app-recipe-details',
@@ -57,7 +58,9 @@ export class RecipeDetailsComponent {
   private readonly _deleting = signal(false);
   private readonly _hasError = signal(false);
   private readonly _source = signal<RecipeListSource | null>(null);
+  private readonly _searchValue = signal<string | null>(null);
   private readonly _selectedVariantIndex = signal<number | null>(null);
+  private readonly _ingredientScale = signal<number>(1);
 
   readonly recipe = this._recipe.asReadonly();
   readonly author = this._author.asReadonly();
@@ -66,10 +69,23 @@ export class RecipeDetailsComponent {
   readonly deleting = this._deleting.asReadonly();
   readonly source = this._source.asReadonly();
   readonly selectedVariantIndex = this._selectedVariantIndex.asReadonly();
+  readonly ingredientScale = this._ingredientScale.asReadonly();
 
   readonly selectedVariant = computed(
     () => this.recipe()?.variants[this.selectedVariantIndex() ?? 0] ?? null,
   );
+
+  readonly scaledIngredients = computed(() => {
+    const variant = this.selectedVariant();
+    const scale = this.ingredientScale();
+    if (!variant) {
+      return [];
+    }
+
+    return variant.ingredients.map((ingredient) => scaleIngredient(ingredient, scale));
+  });
+
+  readonly scaleOptions = [0.5, 1, 2, 3];
 
   readonly recipeAttributes = computed(() => {
     const recipe = this.recipe();
@@ -135,14 +151,15 @@ export class RecipeDetailsComponent {
 
   constructor() {
     const state = this.router.currentNavigation()?.extras.state as
-      | { source?: RecipeListSource; recipe?: Recipe }
+      | { source?: RecipeListSource; searchValue?: string | null; recipe?: Recipe }
       | undefined;
 
-    const { source, recipe } = state ?? {};
+    const { source, searchValue, recipe } = state ?? {};
 
     if (source) {
       this._source.set(source);
     }
+    this._searchValue.set(searchValue ?? null);
 
     if (recipe) {
       this._recipe.set(recipe);
@@ -171,6 +188,17 @@ export class RecipeDetailsComponent {
     const variant = this.recipe()?.variants[index] ?? null;
     const method = variant?.cookingMethod ?? null;
     return `recipes.labels.cookingMethods.${method?.toLowerCase().replaceAll('_', '-')}`;
+  }
+
+  setIngredientScale(scale: number): void {
+    this._ingredientScale.set(scale);
+  }
+
+  onScaleInput(event: Event): void {
+    const value = Number((event.target as HTMLInputElement).value);
+    if (Number.isFinite(value) && value > 0) {
+      this._ingredientScale.set(value);
+    }
   }
 
   selectVariant(index: number): void {
@@ -212,6 +240,12 @@ export class RecipeDetailsComponent {
   }
 
   goBack(): void {
+    const searchValue = this._searchValue();
+    if (searchValue) {
+      this.router.navigate(['/app/recipes/search'], { queryParams: { searchValue } });
+      return;
+    }
+
     this.router.navigate(
       this.source() === 'discover' ? ['/app/recipes/discover'] : ['/app/recipes/list'],
     );

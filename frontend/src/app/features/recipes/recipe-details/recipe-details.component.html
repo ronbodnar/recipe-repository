@@ -22,7 +22,7 @@
         classList="border-border/40!"
         icon="arrow_back"
         label="recipes.details.notFound.backAction"
-        routerLink="/app/recipes/list"
+        (click)="goBack()"
       />
     </ng-container>
   </app-recipe-not-found>
@@ -274,9 +274,29 @@
                     headerText="recipes.labels.ingredients"
                     headerIcon="restaurant_menu"
                     emptyListText="recipes.details.noIngredients"
-                    [listItems]="variant.ingredients"
+                    [listItems]="scaledIngredients()"
                     [useCheckboxes]="true"
-                  />
+                  >
+                    <div class="flex gap-1">
+                      @for (option of scaleOptions; track option) {
+                        <app-button
+                          size="xs"
+                          [color]="ingredientScale() === option ? 'primary' : 'background'"
+                          (click)="setIngredientScale(option)"
+                        >
+                          {{ option }}x
+                        </app-button>
+                      }
+                      <input
+                        type="number"
+                        min="0.1"
+                        step="any"
+                        class="w-20 rounded-full border border-border/40 bg-transparent px-3 py-1 text-sm"
+                        [value]="ingredientScale()"
+                        (input)="onScaleInput($event)"
+                      />
+                    </div>
+                  </app-rich-text-list>
                 </div>
                 <!-- Instructions -->
                 <div class="flex flex-col gap-12 lg:col-span-7">
