@@ -90,20 +90,20 @@
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>
-			<version>0.13.0</version>
+			<version>${jjwt.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
-			<version>0.13.0</version>
+			<version>${jjwt.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
-			<version>0.13.0</version>
+			<version>${jjwt.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 
@@ -129,28 +129,18 @@
 
 		<!-- AWS SDK -->
 		<dependency>
-			<groupId>software.amazon.awssdk</groupId>
-			<artifactId>s3</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>software.amazon.awssdk</groupId>
-					<artifactId>netty-nio-client</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>software.amazon.awssdk</groupId>
-					<artifactId>apache-client</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>io.awspring.cloud</groupId>
+			<artifactId>spring-cloud-aws-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.awspring.cloud</groupId>
+			<artifactId>spring-cloud-aws-starter-s3</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>software.amazon.awssdk</groupId>
-			<artifactId>url-connection-client</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>software.amazon.awssdk</groupId>
-			<artifactId>netty-nio-client</artifactId>
+			<artifactId>aws-crt-client</artifactId>
 		</dependency>
 
 		<!-- Testing -->
@@ -172,13 +162,12 @@
 		</dependency>
 	</dependencies>
 
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>software.amazon.awssdk</groupId>
-				<artifactId>bom</artifactId>
-				<version>${aws.java.sdk.version}</version>
+				<groupId>io.awspring.cloud</groupId>
+				<artifactId>spring-cloud-aws-dependencies</artifactId>
+				<version>4.1.1</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

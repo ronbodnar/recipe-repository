@@ -2,8 +2,6 @@ package com.ronbodnar.recipes;
 
 import com.ronbodnar.recipes.exception.BusinessException;
 import com.ronbodnar.recipes.exception.ErrorCode;
-import com.ronbodnar.recipes.modules.group.invitation.GroupInvitation;
-import com.ronbodnar.recipes.modules.group.invitation.GroupInvitationRepository;
 import com.ronbodnar.recipes.modules.identity.role.Role;
 import com.ronbodnar.recipes.modules.identity.role.RoleRepository;
 import com.ronbodnar.recipes.modules.identity.user.UserAccount;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
@@ -32,8 +29,7 @@ import java.util.Set;
 public class RecipeRepositoryRecipeApplication {
 
     public static void main(String[] args) {
-        ApplicationContext contetx = SpringApplication.run(RecipeRepositoryRecipeApplication.class, args);
-        System.out.println("GroupInvitationRepository bean:" + contetx.getBean(GroupInvitationRepository.class));
+       SpringApplication.run(RecipeRepositoryRecipeApplication.class, args);
     }
 
     @Value("${app.security.default-admin-password}")

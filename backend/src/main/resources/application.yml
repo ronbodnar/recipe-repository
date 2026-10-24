@@ -23,11 +23,22 @@ server:
   forward-headers-strategy: native
 
 spring:
-  config: 
-    import: optional:file:./secrets/app.properties
+  config:
+    import:
+      - optional:file:./secrets/app.properties
+      - optional:file:./secrets/aws.properties
 
   application:
     name: recipe-repository
+
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_ACCESS_KEY_ID}
+        secret-key: ${AWS_SECRET_ACCESS_KEY}
+
+      s3:
+        region: us-west-2
 
   datasource:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
@@ -48,6 +59,7 @@ spring:
         format_sql: true
         use_sql_comments: true
         generate_statistics: false
+        default_batch_fetch_size: 50
 
   mail:
     host: smtp.gmail.com
