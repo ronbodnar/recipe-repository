@@ -30,7 +30,7 @@ export class UserRegisterComponent extends FormOrchestrator {
   private authService = inject(AuthService);
   private sidenav = inject(SidenavComponent);
 
-  enableRegistrationCodes = environment.enableRegistration;
+  registrationCodeRequired = !environment.enableRegistration;
   isSubmitting = computed(() => this.status() === 'submitting');
   passwordMismatch = signal(false);
 
@@ -51,7 +51,7 @@ export class UserRegisterComponent extends FormOrchestrator {
           [Validators.required, Validators.minLength(8), Validators.maxLength(255)],
         ],
         code: [
-          this.enableRegistrationCodes ? (registrationCode ?? '') : crypto.randomUUID(),
+          this.registrationCodeRequired ? (registrationCode ?? '') : crypto.randomUUID(),
           [Validators.required, Validators.minLength(36), Validators.maxLength(36)],
         ],
       },
