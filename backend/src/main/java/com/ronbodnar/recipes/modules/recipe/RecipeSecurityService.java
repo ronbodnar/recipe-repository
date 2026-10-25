@@ -11,15 +11,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component("recipeSecurityService")
 public class RecipeSecurityService {
 
-    private final GroupService groupService;
+    private final Optional<GroupService> groupService;
     private final RecipeRepository recipeRepository;
 
-    public RecipeSecurityService(GroupService groupService, RecipeRepository recipeRepository) {
+    public RecipeSecurityService(Optional<GroupService> groupService, RecipeRepository recipeRepository) {
         this.groupService = groupService;
         this.recipeRepository = recipeRepository;
     }
@@ -52,13 +53,17 @@ public class RecipeSecurityService {
             return true;
         }
 
-        if (recipe.getVisibility() != RecipeVisibility.GROUP) {
-            return false;
+        if (groupService.isPresent()) {
+            if (recipe.getVisibility() != RecipeVisibility.GROUP) {
+                return false;
+            }
+
+            List<Group> authorGroups = groupService.get().getAllUserGroups(recipe.getAuthorId());
+
+            return authorGroups.stream().anyMatch(group -> group.isMember(user.getId()));
         }
 
-        List<Group> authorGroups = groupService.getAllUserGroups(recipe.getAuthorId());
-
-        return authorGroups.stream().anyMatch(group -> group.isMember(user.getId()));
+        return false;
     }
 
 }
