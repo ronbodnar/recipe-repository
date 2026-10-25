@@ -65,9 +65,6 @@ export class SidenavComponent implements OnDestroy {
   readonly navItems = computed<NavItem[]>(() => {
     this.authService.authUser();
 
-    console.log('Authenticated User:', this.authService.authUser());
-    console.log('Authenticated Roles:', this.authService.authenticatedRoles());
-
     return [
       {
         sectionName: 'myRecipes',
