@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   OnDestroy,
   signal,
@@ -19,9 +20,10 @@ import { AppVersionService } from '@core/services/app-version.service';
 import { AuthService } from '@features/auth/auth.service';
 import { MediaService } from '@core/services/media.service';
 import { TranslatePipe } from '@ngx-translate/core';
-import { getNavItems } from '../nav-menu.config';
 import { StorageService } from '@core/services/storage.service';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
+import { environment } from '@env';
+import { UserInvitationService } from '@features/users/user-invitation.service';
 
 @Component({
   selector: 'app-side-nav',
@@ -44,6 +46,7 @@ export class SidenavComponent implements OnDestroy {
 
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
+  private readonly userInvitationService = inject(UserInvitationService);
   private readonly storageService = inject(StorageService);
   private readonly mediaService = inject(MediaService);
   private readonly version = inject(AppVersionService);
@@ -59,7 +62,75 @@ export class SidenavComponent implements OnDestroy {
 
   readonly isSidenavOpen = this._isSidenavOpen.asReadonly();
 
-  readonly NAV_ITEMS = getNavItems();
+  readonly navItems = computed<NavItem[]>(() => {
+    this.authService.authUser();
+
+    console.log('Authenticated User:', this.authService.authUser());
+    console.log('Authenticated Roles:', this.authService.authenticatedRoles());
+
+    return [
+      {
+        sectionName: 'myRecipes',
+        icon: 'menu_book',
+        label: 'navigation.myRecipes',
+        route: '/app/recipes/list',
+      },
+      {
+        sectionName: 'addRecipe',
+        icon: 'add',
+        label: 'navigation.addRecipe',
+        route: '/app/recipes/edit/new',
+      },
+
+      {
+        sectionName: 'discoverRecipes',
+        icon: 'explore',
+        label: 'navigation.discoverRecipes',
+        route: '/app/recipes/discover',
+      },
+
+      ...(environment.enableSelfHosting
+        ? []
+        : [
+            {
+              sectionName: 'groupRecipes',
+              icon: 'group_work',
+              label: 'navigation.groupRecipes',
+              route: '/app/recipes/groups',
+            },
+            {
+              sectionName: 'myGroups',
+              icon: 'group',
+              label: 'navigation.myGroups',
+              route: '/app/groups/list',
+            },
+          ]),
+
+      ...(this.authService.hasRole('admin')
+        ? [
+            {
+              sectionName: 'inviteUser',
+              icon: 'person_add',
+              label: 'navigation.inviteUser',
+              onClick: () => this.userInvitationService.promptInviteToRegister(),
+            },
+          ]
+        : []),
+
+      {
+        sectionName: 'settings',
+        icon: 'settings',
+        label: 'navigation.settings',
+        route: '/app/settings',
+      },
+      {
+        sectionName: 'logout',
+        icon: 'logout',
+        label: 'navigation.logout',
+        onClick: () => this.authService.logout().subscribe(),
+      },
+    ];
+  });
 
   private expandedSections = signal<string[]>(
     this.storageService.getPreference('sidenav.expandedSections') || [],
