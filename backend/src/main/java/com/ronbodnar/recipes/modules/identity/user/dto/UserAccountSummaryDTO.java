@@ -7,6 +7,7 @@ import java.util.UUID;
 public record UserAccountSummaryDTO(
         Long id,
         String username,
+        String fullName,
         UUID profileImageId
 ) {
 
@@ -14,6 +15,7 @@ public record UserAccountSummaryDTO(
         return new UserAccountSummaryDTO(
                 userAccount.getId(),
                 userAccount.getUsername(),
+                userAccount.getFullName(),
                 userAccount.getProfileImageId()
         );
     }

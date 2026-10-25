@@ -13,5 +13,6 @@ export interface UserAccount {
 export interface UserAccountSummary {
   id: number;
   username: string;
+  fullName: string | null;
   profileImageId: string | null;
 }
