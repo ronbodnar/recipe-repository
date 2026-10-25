@@ -1,17 +1,17 @@
 app:
   aws:
     s3:
-      bucket-name: recipe-repository
+      bucket-name: recipe-repository-prod
 
-  password-reset-url: https://recipes.ronbodnar.com/app/auth/reset-password?token=
+  password-reset-url: https://recipe-repo.ronbodnar.com/app/auth/reset-password?token=
 
   registration:
     codeRequired: true
-    url: https://recipes.ronbodnar.com/app/auth/register?code=
+    url: https://recipe-repo.ronbodnar.com/app/auth/register?code=
 
   groups:
-    enabled: false
-    invitation-url: https://recipes.ronbodnar.com/app/groups/GROUP_ID/invite/
+    enabled: true
+    invitation-url: https://recipe-repo.ronbodnar.com/app/groups/GROUP_ID/invite/
 
 spring:
   jpa:
