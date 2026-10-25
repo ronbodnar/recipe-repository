@@ -11,7 +11,8 @@ import { environment } from '@env';
   styleUrl: './landing.component.css',
 })
 export class LandingComponent {
-  environmentName = environment.name;
+  isSelfHosting = environment.enableSelfHosting;
+  isRegistrationEnabled = environment.enableRegistration;
 
   readonly cards = [
     {

@@ -3,7 +3,7 @@
 >
   <main class="min-h-full flex flex-col gap-15 text-center max-w-4xl">
     <div class="flex flex-col items-center gap-2 xl:mt-10">
-      @if (environmentName === 'family') {
+      @if (isSelfHosting) {
         <img
           src="assets/images/full-logo.png"
           width="200"
@@ -21,15 +21,17 @@
       </p>
 
       <div class="flex justify-center gap-3 my-2">
-        <app-button
-          color="primary"
-          size="lg"
-          label="landing.primaryCtaButton"
-          routerLink="/app/auth/register"
-        />
+        @if (isRegistrationEnabled) {
+          <app-button
+            color="primary"
+            size="lg"
+            label="landing.primaryCtaButton"
+            routerLink="/app/auth/register"
+          />
+        }
 
         <app-button
-          color="secondary"
+          [color]="isRegistrationEnabled ? 'secondary' : 'primary'"
           size="lg"
           label="landing.secondaryCtaButton"
           routerLink="/app/auth/login"

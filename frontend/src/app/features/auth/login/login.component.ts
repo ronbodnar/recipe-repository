@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { catchError } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { environment } from '@env';
 import { ErrorService } from '@core/errors/error.service';
 import { ApiError } from '@core/models/api-error.model';
 import { AuthService } from '@features/auth/auth.service';
@@ -32,6 +33,8 @@ export class UserLoginComponent extends FormOrchestrator {
   private errorService = inject(ErrorService);
   private authService = inject(AuthService);
   private sidenav = inject(SidenavComponent);
+
+  isRegistrationEnabled = environment.enableRegistration;
 
   isSubmitting = computed(() => this.status() === 'submitting');
 

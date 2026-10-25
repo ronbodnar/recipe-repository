@@ -36,9 +36,7 @@ export class AuthService {
 
     if (!this.authRequest$) {
       this.authRequest$ = this.fetchApiService.getData<UserAccount>('auth/me').pipe(
-        tap((user) => {
-          this._authUser.set(user ?? null);
-        }),
+        tap((user) => this._authUser.set(user ?? null)),
         catchError(() => {
           this.clearAuthentication();
           this._authUser.set(null);
@@ -49,6 +47,10 @@ export class AuthService {
     }
 
     return this.authRequest$;
+  }
+
+  hasRole(role: string): boolean {
+    return this.authenticatedRoles().includes(role.toUpperCase());
   }
 
   login(username: string, password: string) {

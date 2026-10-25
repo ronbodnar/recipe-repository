@@ -44,7 +44,7 @@ public class RecipeRepositoryRecipeApplication {
     ) {
         return args -> {
             if (!userAccountRepository.existsByUsername("admin")) {
-                Role userRole = roleRepository.findByName("USER").orElseThrow(() ->
+                Role adminRole = roleRepository.findByName("ADMIN").orElseThrow(() ->
                         new BusinessException(
                                 ErrorCode.ROLE_NOT_FOUND,
                                 "Failed to find Administrator role during initialization"
@@ -55,7 +55,7 @@ public class RecipeRepositoryRecipeApplication {
                 admin.setUsername("admin");
                 admin.setPassword(passwordEncoder.encode(defaultAdminPassword));
                 admin.setEmail("admin@email.com");
-                admin.setRoles(Set.of(userRole));
+                admin.setRoles(Set.of(adminRole));
                 userAccountRepository.save(admin);
             }
         };

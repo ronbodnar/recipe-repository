@@ -1,10 +1,9 @@
 export const environment = {
-  name: 'family',
+  name: 'self-hosting',
   production: true,
   apiUrl: 'https://recipes.ronbodnar.com/api/v1',
   cdnUrl: 'https://d3w0olhduc0wyv.cloudfront.net',
   appName: 'Bodnar Family Recipes',
-  enableDiscover: false,
-  enableGroups: false,
-  landingImageType: 'logo',
+  enableSelfHosting: true,
+  enableRegistration: false,
 };

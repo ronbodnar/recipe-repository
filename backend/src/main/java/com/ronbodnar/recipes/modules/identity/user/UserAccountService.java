@@ -5,21 +5,28 @@ import com.ronbodnar.recipes.exception.ErrorCode;
 import com.ronbodnar.recipes.exception.payload.FieldError;
 import com.ronbodnar.recipes.modules.identity.role.RoleService;
 import com.ronbodnar.recipes.modules.auth.dto.RegisterRequest;
+import com.ronbodnar.recipes.modules.identity.user.dto.RegistrationInvitationRequest;
 import com.ronbodnar.recipes.modules.identity.user.dto.UserAccountChangeRequest;
 import com.ronbodnar.recipes.modules.identity.user.dto.UserAccountSummaryDTO;
+import com.ronbodnar.recipes.modules.identity.user.registrationinvitation.RegistrationInvitation;
+import com.ronbodnar.recipes.modules.identity.user.registrationinvitation.RegistrationInvitationService;
 import com.ronbodnar.recipes.modules.image.ImageService;
 import com.ronbodnar.recipes.security.adapter.SecurityUserDetails;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Slf4j
 @Service
 public class UserAccountService {
+
+    private final boolean registrationCodeRequired;
 
     private final RoleService roleService;
     private final ImageService imageService;
@@ -28,16 +35,22 @@ public class UserAccountService {
 
     private final UserAccountRepository repository;
 
+    private final RegistrationInvitationService registrationInvitationService;
+
     public UserAccountService(
+            @Value("${app.registration.codeRequired}") boolean registrationCodeRequired,
             RoleService roleService,
             PasswordEncoder passwordEncoder,
             ImageService imageService,
-            UserAccountRepository repository
+            UserAccountRepository repository,
+            RegistrationInvitationService registrationInvitationService
     ) {
+        this.registrationCodeRequired = registrationCodeRequired;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
         this.imageService = imageService;
         this.repository = repository;
+        this.registrationInvitationService = registrationInvitationService;
     }
 
     public UserAccount getById(Long id) {
@@ -125,6 +138,7 @@ public class UserAccountService {
         return repository.save(userAccount);
     }
 
+    @Transactional
     public UserAccount create(RegisterRequest registerRequest) {
         List<FieldError> fieldErrorList = new ArrayList<>();
         if (repository.existsByUsername(registerRequest.username())) {
@@ -164,6 +178,17 @@ public class UserAccountService {
             );
         }
 
+        if (registrationCodeRequired
+                && !registrationInvitationService.isValidCode(registerRequest.code(), registerRequest.email())) {
+            fieldErrorList.add(
+                    new FieldError(
+                            ErrorCode.INVALID_REGISTRATION_CODE,
+                            "code",
+                            "Registration code is required, but is invalid."
+                    )
+            );
+        }
+
         if (!fieldErrorList.isEmpty()) {
             throw new BusinessException(ErrorCode.VALIDATION_FAILED, fieldErrorList);
         }
@@ -178,6 +203,15 @@ public class UserAccountService {
         userAccount.setFamilyName(registerRequest.familyName());
         userAccount.setRoles(Set.of(roleService.findByName("USER")));
 
+        registrationInvitationService.markCodeClaimed(registerRequest.code());
+
         return repository.save(userAccount);
+    }
+
+    @Transactional
+    public void inviteToRegister(RegistrationInvitationRequest invitation) {
+        RegistrationInvitation registrationInvitation = registrationInvitationService.createInvitation(invitation);
+
+        registrationInvitationService.sendRegistrationInvitationEmail(invitation.email(), registrationInvitation.getRegistrationCode());
     }
 }

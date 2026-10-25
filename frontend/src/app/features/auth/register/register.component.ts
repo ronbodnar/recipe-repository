@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { catchError } from 'rxjs';
@@ -13,6 +13,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { passwordMatchValidator } from '../password-match.validator';
 import { AuthService } from '@features/auth/auth.service';
 import { SidenavComponent } from '@features/navigation/sidenav/sidenav.component';
+import { environment } from '@env';
 
 @Component({
   selector: 'app-user-register',
@@ -22,17 +23,21 @@ import { SidenavComponent } from '@features/navigation/sidenav/sidenav.component
 })
 export class UserRegisterComponent extends FormOrchestrator {
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private formBuilder = inject(FormBuilder);
   private errorService = inject(ErrorService);
   private snackBar = inject(SnackbarService);
   private authService = inject(AuthService);
   private sidenav = inject(SidenavComponent);
 
+  enableRegistrationCodes = environment.enableRegistration;
   isSubmitting = computed(() => this.status() === 'submitting');
   passwordMismatch = signal(false);
 
   constructor(hydrator: FormHydrator, serializer: FormSerializer) {
     super(hydrator, serializer);
+
+    const registrationCode = this.route.snapshot.queryParams['code'];
 
     const form = this.formBuilder.group(
       {
@@ -44,6 +49,10 @@ export class UserRegisterComponent extends FormOrchestrator {
         confirmPassword: [
           '',
           [Validators.required, Validators.minLength(8), Validators.maxLength(255)],
+        ],
+        code: [
+          this.enableRegistrationCodes ? (registrationCode ?? '') : crypto.randomUUID(),
+          [Validators.required, Validators.minLength(36), Validators.maxLength(36)],
         ],
       },
       {

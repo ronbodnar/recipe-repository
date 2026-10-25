@@ -54,11 +54,11 @@
                 }
               ]
             },
-            "family": {
+            "self-hosting": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.family.ts"
+                  "with": "src/environments/environment.self-hosting.ts"
                 }
               ]
             }
@@ -74,8 +74,8 @@
             "development": {
               "buildTarget": "frontend:build:development"
             },
-            "family": {
-              "buildTarget": "frontend:build:family"
+            "self-hosting": {
+              "buildTarget": "frontend:build:self-hosting"
             }
           },
           "defaultConfiguration": "development"

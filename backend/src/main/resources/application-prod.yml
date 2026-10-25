@@ -5,8 +5,12 @@ app:
 
   password-reset-url: https://recipes.ronbodnar.com/app/auth/reset-password?token=
 
+  registration:
+    codeRequired: true
+    url: https://recipes.ronbodnar.com/app/auth/register?code=
+
   groups:
-    enabled: true
+    enabled: false
     invitation-url: https://recipes.ronbodnar.com/app/groups/GROUP_ID/invite/
 
 spring:

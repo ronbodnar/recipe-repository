@@ -11,4 +11,8 @@ export class UserService {
   loadUserSummary(id: number) {
     return this.fetchApi.getData<UserAccountSummary>(`identity/users/${id}/summary`);
   }
+
+  inviteUserToRegister(email: string) {
+    return this.fetchApi.postData(`identity/users/invite`, { email });
+  }
 }

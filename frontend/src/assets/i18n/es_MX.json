@@ -58,6 +58,7 @@
     "groups": "Grupos",
     "myGroups": "Mis grupos",
     "addGroup": "Agregar grupo",
+    "inviteUser": "Invitar usuario",
     "settings": "Configuración",
     "logout": "Cerrar sesión"
   },
@@ -99,6 +100,8 @@
       "givenNamePlaceholder": "Nombre (opcional)",
       "familyNameLabel": "Apellido",
       "familyNamePlaceholder": "Apellido (opcional)",
+      "registrationCodeLabel": "Código de registro",
+      "registrationCodePlaceholder": "Ingresa tu código de registro",
       "haveAccount": "¿Ya tienes una cuenta?",
       "successMessage": "¡Registro exitoso! Has iniciado sesión automáticamente."
     },
@@ -115,6 +118,13 @@
       "success": "Tu contraseña se ha restablecido exitosamente. Inicia sesión con tu nueva contraseña.",
       "missingToken": "Falta el token de restablecimiento de contraseña. Solicita uno nuevo y sigue el enlace en tu correo electrónico.",
       "invalidToken": "El token de restablecimiento de contraseña no es válido o ha expirado. Solicita uno nuevo y sigue el enlace en tu correo electrónico."
+    },
+    "inviteToRegister": {
+      "title": "Invitar a registrarse",
+      "instructions": "Ingresa el correo electrónico del usuario que deseas invitar a registrarse.",
+      "submitButton": "Enviar invitación",
+      "successMessage": "La invitación se ha enviado correctamente.",
+      "errorMessage": "No se pudo enviar la invitación. Inténtalo de nuevo."
     }
   },
   "recipes": {
@@ -508,7 +518,8 @@
       "duplicateRecipe": "Ya existe una receta con este nombre.",
       "emailAlreadyInUse": "Este correo electrónico ya está en uso.",
       "usernameAlreadyInUse": "Este nombre de usuario ya está en uso.",
-      "groupNameAlreadyInUse": "Ya existe un grupo con este nombre."
+      "groupNameAlreadyInUse": "Ya existe un grupo con este nombre.",
+      "invalidRegistrationCode": "Este código de registro ya no es válido o no coincide con el correo electrónico proporcionado."
     }
   }
 }

@@ -4,7 +4,6 @@ export const environment = {
   apiUrl: 'https://recipes.ronbodnar.com/api/v1',
   cdnUrl: 'https://d3w0olhduc0wyv.cloudfront.net',
   appName: 'Recipe Repository',
-  enableDiscover: true,
-  enableGroups: true,
-  landingImageType: 'icon',
+  enableSelfHosting: false,
+  enableRegistration: true,
 };

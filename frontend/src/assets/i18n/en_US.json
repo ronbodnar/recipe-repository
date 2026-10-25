@@ -58,6 +58,7 @@
     "groups": "Groups",
     "myGroups": "My Groups",
     "addGroup": "Add Group",
+    "inviteUser": "Invite User",
     "settings": "Settings",
     "logout": "Log Out"
   },
@@ -99,6 +100,8 @@
       "givenNamePlaceholder": "First name (optional)",
       "familyNameLabel": "Last Name",
       "familyNamePlaceholder": "Last name (optional)",
+      "codeLabel": "Registration Code",
+      "codePlaceholder": "Enter your registration code",
       "haveAccount": "Already have an account?",
       "successMessage": "Registration successful! You have been logged in automatically."
     },
@@ -115,6 +118,13 @@
       "success": "Your password has been successfully reset. Please log in with your new password.",
       "missingToken": "Missing password reset token. Please request a new one and follow the link in your email.",
       "invalidToken": "The password reset token is invalid or has expired. Please request a new one and follow the link in your email."
+    },
+    "inviteToRegister": {
+      "title": "Invite User",
+      "instructions": "Enter the email address of the user you want to invite to register.",
+      "submitButton": "Send Invitation",
+      "successMessage": "Invitation sent successfully.",
+      "errorMessage": "Failed to send invitation. Please try again."
     }
   },
   "recipes": {
@@ -508,7 +518,8 @@
       "duplicateRecipe": "A recipe with this name already exists.",
       "emailAlreadyInUse": "This email is already in use.",
       "usernameAlreadyInUse": "This username is already in use.",
-      "groupNameAlreadyInUse": "A group with this name already exists."
+      "groupNameAlreadyInUse": "A group with this name already exists.",
+      "invalidRegistrationCode": "This registration code is no longer valid or does not match the email provided."
     }
   }
 }

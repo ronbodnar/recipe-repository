@@ -170,7 +170,7 @@ export class EditRecipeComponent {
   })).sort((a, b) => a.label.localeCompare(b.label));
 
   visibilityOptions = VISIBILITY_TYPES.filter(
-    (visibility) => environment.enableGroups || visibility !== 'GROUP',
+    (visibility) => !environment.enableSelfHosting || visibility !== 'GROUP',
   )
     .map((visibility) => ({
       value: visibility,

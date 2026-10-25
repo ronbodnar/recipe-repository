@@ -13,35 +13,35 @@ export const routes: Routes = [
     },
   },
 
-  ...(environment.enableDiscover
-    ? [
+  {
+    path: 'discover',
+    title: 'recipes.list.discover.title',
+    loadComponent: () =>
+      import('./recipe-list/recipe-list.component').then((m) => m.RecipeListComponent),
+    data: {
+      source: 'discover',
+    },
+  },
+
+  ...(environment.enableSelfHosting
+    ? []
+    : [
         {
-          path: 'discover',
-          title: 'recipes.list.discover.title',
+          path: 'groups',
+          title: 'recipes.list.groupRecipes.title',
           loadComponent: () =>
             import('./recipe-list/recipe-list.component').then((m) => m.RecipeListComponent),
           data: {
-            source: 'discover',
+            source: 'groupRecipes',
           },
         },
-      ]
-    : []),
+      ]),
 
   {
     path: 'search',
     title: 'recipes.search.title',
     loadComponent: () =>
       import('./recipe-search/recipe-search.component').then((m) => m.RecipeSearchComponent),
-  },
-
-  {
-    path: 'groups',
-    title: 'recipes.list.groupRecipes.title',
-    loadComponent: () =>
-      import('./recipe-list/recipe-list.component').then((m) => m.RecipeListComponent),
-    data: {
-      source: 'groupRecipes',
-    },
   },
 
   {

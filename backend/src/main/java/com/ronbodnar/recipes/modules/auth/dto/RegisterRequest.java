@@ -33,5 +33,8 @@ public record RegisterRequest(
         String email,
 
         @NotNull
-        UUID deviceId
+        UUID deviceId,
+
+        @NotNull
+        UUID code
 ) {}

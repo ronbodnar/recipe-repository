@@ -14,8 +14,12 @@ app:
     default-admin-password: ${DEFAULT_ADMIN_PASSWORD}
     jwt-secret: ${JWT_SECRET}
 
+  registration:
+    codeRequired: true
+    url: http://localhost:4200/app/auth/register?code=
+
   groups:
-    enabled: true
+    enabled: false
     invitation-url: http://localhost:4200/app/groups/GROUP_ID/invite/
 
 server:

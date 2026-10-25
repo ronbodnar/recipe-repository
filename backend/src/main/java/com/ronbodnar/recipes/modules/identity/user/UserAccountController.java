@@ -1,5 +1,6 @@
 package com.ronbodnar.recipes.modules.identity.user;
 
+import com.ronbodnar.recipes.modules.identity.user.dto.RegistrationInvitationRequest;
 import com.ronbodnar.recipes.modules.identity.user.dto.UserAccountSummaryDTO;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,5 +27,10 @@ public class UserAccountController {
         return userAccountService.getById(id);
     }
 
+    @PostMapping("/invite")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void inviteToRegister(@RequestBody RegistrationInvitationRequest invitation) {
+        userAccountService.inviteToRegister(invitation);
+    }
 
 }

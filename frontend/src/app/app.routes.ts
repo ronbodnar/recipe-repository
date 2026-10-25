@@ -14,15 +14,15 @@ export const routes: Routes = [
     path: 'app/auth',
     loadChildren: () => import('./features/auth/auth.routes').then((m) => m.routes),
   },
-  ...(environment.enableGroups
-    ? [
+  ...(environment.enableSelfHosting
+    ? []
+    : [
         {
           path: 'app/groups',
           canActivate: [authGuard],
           loadChildren: () => import('./features/groups/group.routes').then((m) => m.routes),
         },
-      ]
-    : []),
+      ]),
   {
     path: 'app/users',
     canActivate: [authGuard],
